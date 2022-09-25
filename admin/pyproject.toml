@@ -4,10 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Alan Berns <alan_berns@yahoo.com.ar>"]
 readme = "README.md"
-packages = [{include = "web", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 Flask = "^2.2.2"
 
 
