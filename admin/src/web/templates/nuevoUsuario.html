@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<h1>Datos nuevo usuario</h1>
+<form action="{{ url_for('usuarios.add_usuario')}}" method="post">
+  <input type="text" name="username" placeholder="Ingrese el username">
+  <button>Enviar</button>
+</form>
+<a href="{{url_for('home')}}"> Volver al inicio </a>
+{% endblock %}
