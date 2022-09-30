@@ -2,7 +2,7 @@
 name = "web"
 version = "0.1.0"
 description = ""
-authors = ["Alan Berns <alan_berns@yahoo.com.ar>"]
+authors = ["Pablo Ormeño <pablo.d.ormeno@ygmail.com.ar>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
