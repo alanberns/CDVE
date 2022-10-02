@@ -25,7 +25,7 @@
 
 
 {% for config in configuracion %}
-    <form class="row g-3 mx-5" action="{{ url_for('configuracion.configuracion_index')}}" method="post">
+    <form class="row g-3 mx-5" action="{{ url_for('configuracion.configuracion_index')}}" method="post" onsubmit="return confirm('¿Estas seguro que deseas editar la configuracion?');">
         <div class="form-floating mb-3">
             <input type="text" name="elementos_pagina" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.elementos_pagina}}">
             <label for="floatingInput">Elementos por pagina</label>
