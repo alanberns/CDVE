@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = SQLAlchemy()
 
 
@@ -13,6 +14,7 @@ def config_db(app):
     def init_database():
         db.create_all()
 
-    @app.teardown_request
-    def close_session(exception=None):
-        db.session.remove()
+
+    # @app.teardown_request
+    # def close_session(exception=None):
+    #     db.session.remove()

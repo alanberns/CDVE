@@ -1,9 +1,10 @@
+from unicodedata import name
 from flask import Flask
 from flask import render_template
-
 from src.core import database
 from src.web.config import config
 from src.web.helpers import handlers
+from src.core import seeds
 from src.web.controllers.usuarios import usuario_blueprint
 
 
@@ -14,6 +15,7 @@ def create_app(env="development", static_folder="static"):
 
     database.init_app(app)
     
+    
     @app.get("/")
     def home():
         return render_template("home.html")
@@ -23,5 +25,10 @@ def create_app(env="development", static_folder="static"):
 
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(500, handlers.internal_server_error)
+
+    @app.cli.command(name="seeds")
+    def seeds_configuracion():
+        database.init_app(app)
+        seeds.run()
 
     return app
