@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import flash
 
 from src.core import board
 
@@ -24,4 +25,5 @@ def configuracion_update():
     }
     board.update_configuracion(**kwargs)
     configuracion = board.list_configuracion()
+    flash("La configuracion se actualizo correctamente","success")
     return render_template("configuracion.html", configuracion=configuracion)
