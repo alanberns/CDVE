@@ -12,9 +12,16 @@ def create_usuario(**kwargs):
     db.session.commit()
 
 def list_configuracion():
+    """
+    Lista los datos de la configuracion, devuelve una sola tupla
+    """
     return Configuracion.query.all()
 
-def create_or_update_configuracion(**kwargs):
-    configuracion = Configuracion(**kwargs)
+def update_configuracion(**kwargs):
+    """
+    Actualiza los datos de la configuracion
+    """
+    configuracion = Configuracion.query.first()
+    configuracion.update(**kwargs)
     db.session.merge(configuracion)
     db.session.commit()

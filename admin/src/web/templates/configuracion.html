@@ -19,7 +19,7 @@
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" name="estado_info_contactos" type="checkbox" value="" id="flexCheckDefault" checked="{{config.estado_info_contactos}}">
+            <input class="form-check-input" name="estado_info_contactos" type="checkbox" id="flexCheckDefault" checked="{{config.estado_info_contactos}}">
             <label class="form-check-label" for="flexCheckDefault">
             Mostrar Info de contactos
             </label>
@@ -37,7 +37,7 @@
             <label for="floatingInput">Porcentaje de recargo cuotas adeudadas</label>
         </div>
         <div class="col-12">
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            <button type="submit" class="btn btn-primary" href="{{url_for('configuracion.configuracion_update')}}">Enviar</button>
         </div>
     </form>
 {%endfor%}
