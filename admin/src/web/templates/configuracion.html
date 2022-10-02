@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Configuracion{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<h1 class = "mx-5">Configuracion</h1>
+{% for config in configuracion %}
+    <form class="row g-3 mx-5" action="{{ url_for('configuracion.configuracion_index')}}" method="post">
+        <input type="text" hidden value="{{config.id}}">
+        <div class="form-floating mb-3">
+            <input type="text" name="elementos_pagina" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.elementos_pagina}}">
+            <label for="floatingInput">Elementos por pagina</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" name="estado_pago" type="checkbox" id="flexCheckDefault" checked="{{config.estado_pago}}">
+            <label class="form-check-label" for="flexCheckDefault">
+            Mostrar tabla de pagos
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" name="estado_info_contactos" type="checkbox" value="" id="flexCheckDefault" checked="{{config.estado_info_contactos}}">
+            <label class="form-check-label" for="flexCheckDefault">
+            Mostrar Info de contactos
+            </label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="texto_recibo" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.texto_recibo}}">
+            <label for="floatingInput">Texto para encabezado del recibo</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="valor_base_cuota" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.valor_base_cuota}}">
+            <label for="floatingInput">Valor base para la cuota</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="porcentaje_cuota" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.porcentaje_cuota}}">
+            <label for="floatingInput">Porcentaje de recargo cuotas adeudadas</label>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+{%endfor%}
+
+<a class = "mx-5" href="{{url_for('home')}}"> Volver al inicio </a>
+{% endblock %}
