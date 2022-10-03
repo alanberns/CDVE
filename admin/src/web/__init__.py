@@ -31,5 +31,10 @@ def create_app(env="development", static_folder="static"):
     def seeds_configuracion():
         database.init_app(app)
         seeds.run()
+        print("Datos creados correctamente")
+
+    @app.cli.command(name="resetdb")
+    def resetdb():
+        database.reset_db()
 
     return app

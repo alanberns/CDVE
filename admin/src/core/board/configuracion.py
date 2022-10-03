@@ -16,7 +16,7 @@ class Configuracion(db.Model):
 
     def __init__(self, elementos_pagina,estado_pago,estado_info_contactos,texto_recibo,valor_base_cuota,porcentaje_cuota):
         self.elementos_pagina = elementos_pagina
-        self.name = estado_pago
+        self.estado_pago = estado_pago
         self.estado_info_contactos = estado_info_contactos
         self.texto_recibo = texto_recibo
         self.valor_base_cuota = valor_base_cuota
