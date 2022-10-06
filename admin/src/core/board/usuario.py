@@ -8,4 +8,6 @@ class Usuario(db.Model):
     __tablename__ = "usuarios"
     id = db.Column(db.Integer, primary_key=True, unique=True)
     username = db.Column(db.String(255))
+    mail = db.Column(db.String(255))
+    contraseña = db.Column(db.String(255))
     
