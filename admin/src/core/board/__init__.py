@@ -13,8 +13,8 @@ def create_usuario(**kwargs):
     db.session.commit()
     return usuario
 
-def find_user_by_mail_and_pass(mail,contraseña):
-    usuario = Usuario.query.filter_by(mail=mail, contraseña = contraseña).first()
+def find_user_by_mail(mail):
+    usuario = Usuario.query.filter_by(mail=mail).first()
     return usuario
 
 def list_configuracion():

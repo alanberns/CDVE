@@ -1,9 +1,11 @@
+from core.board import Usuario
 from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import flash
 from flask import redirect
 from flask import url_for
+from flask import session
 
 from src.core import board
 
@@ -18,10 +20,11 @@ def login():
 @auth_blueprint.post("/authenticate")
 def authenticate():
     params = request.form
-    user = board.find_user_by_mail_and_pass(params["email"],params["contraseña"])
-    if not user:
+    user = board.find_user_by_mail(params["email"])
+    if not user or not user.verify_password(params['contraseña']):
         flash("email o clave incorrecta","danger")
         return redirect(url_for("auth.login"))
+    session["user"] = user.mail
     return redirect(url_for("usuarios.usuario_index"))
 
 
