@@ -38,4 +38,17 @@ def run():
         nombre = "show" 
     )
     board.rol_assign_permiso(rol_administrador,[permiso_index,permiso_show])
+
+    socio1 = board.create_socio(
+        id_usuario = 1,
+        #el id de usuario debería obtenerse desde el usuario
+        tipo_documento = "DNI",
+        numero_documento = 44556677,
+        genero = "femenino",
+        numero_socio = "AAA111",
+        direccion = "calle falsa 123",
+        telefono = 14141414,
+        email = "socio1@mail.com"
+        #el usuario tiene mail también, arreglar.
+    )
     

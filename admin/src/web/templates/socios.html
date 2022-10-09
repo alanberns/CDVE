@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Socios{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <div class="column">
+    <h1> Socios </h1>
+    <table class="index-table box">
+      <thead>
+        <tr>
+          <th>Documento</th>
+          <th>#</th>
+          <th>Genero</th>
+          <th>Mail</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for socio in socios %}
+        <tr>
+          <th>{{ socio.tipo_documento }}</th>
+          <th>{{ socio.numero_documento }}</th>
+          <th>{{ socio.genero }}</th>
+          <th>{{ socio.email }}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

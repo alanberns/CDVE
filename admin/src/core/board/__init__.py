@@ -3,6 +3,7 @@ from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
+from src.core.board.socio import Socio
 
 def list_usuarios():
     return Usuario.query.all()
@@ -73,3 +74,18 @@ def rol_assign_permiso(rol,permisos):
     db.session.add(rol)
     db.session.commit()
     return rol
+
+def create_socio(**kwargs):
+    socio = Socio(**kwargs)
+    db.session.add(socio)
+    db.session.commit()
+    return socio
+
+def list_socios():
+    socios = Socio.query.filter_by(activo=True)
+    return socios
+
+def find_socio(id):
+    socio = Socio.query.filter_by(id=id).first()
+    return socio
+
