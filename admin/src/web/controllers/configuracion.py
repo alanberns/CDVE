@@ -4,11 +4,13 @@ from flask import request
 from flask import flash
 
 from src.core import board
-
+from src.web.helpers.auth import login_required
 
 configuracion_blueprint = Blueprint("configuracion", __name__, url_prefix="/configuracion")
 
+
 @configuracion_blueprint.get("/")
+@login_required
 def configuracion_index():
     configuracion = board.list_configuracion()
     return render_template("configuracion.html", configuracion=configuracion)
