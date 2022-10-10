@@ -25,10 +25,17 @@ def authenticate():
         flash("email o clave incorrecta","danger")
         return redirect(url_for("auth.login"))
     session["user"] = user.mail
+    flash("Se Ha iniciado la sesion correctamente","success")
     return redirect(url_for("usuarios.usuario_index"))
 
 
 @auth_blueprint.get("/logout")
 def logout():
-    pass
+    del session["user"]
+    session.clear()
+    flash("La sesion se cerro correctamente","success")
+    return redirect(url_for("auth.login"))
 
+@auth_blueprint.get("/register")
+def register():
+    pass

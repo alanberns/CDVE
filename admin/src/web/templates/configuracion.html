@@ -11,19 +11,6 @@
 {% block content %}
 <div class="d-flex flex-column align-items-center">
 <h1 class="mx-5">Configuracion</h1>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-        <div> {{message}} </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-
 {% for config in configuracion %}
     <form class="row g-3 mx-5" action="{{ url_for('configuracion.configuracion_index')}}" method="post" onsubmit="return confirm('¿Estas seguro que deseas editar la configuracion?');">
         <div class="form-floating form-control-sm mb-3">
@@ -57,7 +44,7 @@
             <input type="text" name="porcentaje_cuota" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.porcentaje_cuota}}">
             <label for="floatingInput">Porcentaje de recargo cuotas adeudadas</label>
         </div>
-        <div class="d-flex flex-row justify-content-center bg-danger">
+        <div class="d-flex flex-row justify-content-center">
             <button type="submit" class="btn btn-primary" href="{{url_for('configuracion.configuracion_update')}}">Editar</button>
         </div>
     </form>
