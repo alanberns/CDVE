@@ -10,19 +10,19 @@ from src.core import seeds
 from src.web.controllers.usuarios import usuario_blueprint
 from src.web.controllers.configuracion import configuracion_blueprint
 from src.web.controllers.auth import auth_blueprint
+from flask_wtf.csrf import CSRFProtect
+
 
 def create_app(env="development", static_folder="static"):
     app = Flask(__name__, static_folder=static_folder)
-
     app.config.from_object(config[env])
-
+    csrf = CSRFProtect()
+    csrf.init_app(app)
     database.init_app(app)
-    
-    
+
     @app.get("/")
     def home():
         return render_template("home.html")
-
 
     app.register_blueprint(usuario_blueprint)
     app.register_blueprint(configuracion_blueprint)

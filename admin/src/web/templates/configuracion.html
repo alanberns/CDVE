@@ -16,6 +16,7 @@ block head %} {{ super() }}
     method="post"
     onsubmit="return confirm('¿Estas seguro que deseas editar la configuracion?');"
   >
+    {{ form.csrf_token }}
     <div class="form-floating form-control-sm mb-3">
       {{form.elementos_pagina(class="form-control")}}
       <label for="floatingInput">{{form.elementos_pagina.label}}</label>
