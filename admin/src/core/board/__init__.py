@@ -3,9 +3,11 @@ from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
+from src.core.board.disciplinas import Disciplinas
 
 def list_usuarios():
     return Usuario.query.all()
+
 
 def create_usuario(**kwargs):
     usuario = Usuario(**kwargs)
@@ -73,3 +75,18 @@ def rol_assign_permiso(rol,permisos):
     db.session.add(rol)
     db.session.commit()
     return rol
+
+
+   
+def create_disciplina(**kwargs):
+    """
+    Crea una Disciplina y lo agrega la db"
+    """
+
+    id = Disciplinas(**kwargs)
+    db.session.add(Disciplinas)
+    db.session.commit()
+    return Disciplinas
+
+def list_disciplinas():
+      return Disciplinas.query.all() 

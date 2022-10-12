@@ -39,3 +39,33 @@ def run():
     )
     board.rol_assign_permiso(rol_administrador,[permiso_index,permiso_show])
     
+    ##Disciplinas
+    t_disciplina = board.create_disciplina(
+        id = "1",
+        nombre = "Futbol",
+        categoria = "2010",
+        instructor = "Cosme fulanito",
+        dia = "martes",
+        hora = "17 Hs",
+        costo = "5000"
+    ) 
+
+    t_disciplina2 = board.create_disciplina(
+        id = "3",
+        nombre = "Bascket",
+        categoria = "Mini",
+        instructor = "Cosme fulanito",
+        dia = "Viernes",
+        hora = "16 Hs",
+        costo = "3000"
+    )
+
+    t_disciplina3 = board.create_disciplina(
+        id = "7",
+        nombre = "Bascket",
+        categoria = "Mini",
+        instructor = "Cosme fulanito",
+        dia = "Viernes",
+        hora = "17 Hs",
+        costo = "4000",
+    ) 

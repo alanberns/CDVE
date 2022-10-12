@@ -19,6 +19,7 @@ def reset_db():
     db.drop_all()
     print("Volviendo a crear las tablas")
     db.create_all()
+    print("Done!")
 
 def config_db(app):
     @app.before_first_request
