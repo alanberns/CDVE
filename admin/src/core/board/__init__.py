@@ -5,8 +5,10 @@ from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
 from src.core.board.socio import Socio
 
+
 def list_usuarios():
     return Usuario.query.all()
+
 
 def create_usuario(**kwargs):
     usuario = Usuario(**kwargs)
@@ -14,9 +16,11 @@ def create_usuario(**kwargs):
     db.session.commit()
     return usuario
 
-def find_user_by_mail_and_pass(mail,contraseña):
-    usuario = Usuario.query.filter_by(mail=mail, contraseña = contraseña).first()
+
+def find_user_by_mail_and_pass(mail, contraseña):
+    usuario = Usuario.query.filter_by(mail=mail, contraseña=contraseña).first()
     return usuario
+
 
 def list_configuracion():
     """
@@ -24,6 +28,7 @@ def list_configuracion():
     """
 
     return Configuracion.query.all()
+
 
 def init_configuracion(**kwargs):
     """
@@ -34,6 +39,7 @@ def init_configuracion(**kwargs):
     db.session.commit()
 
     return configuracion
+
 
 def update_configuracion(**kwargs):
     """
@@ -46,6 +52,7 @@ def update_configuracion(**kwargs):
 
     return configuracion
 
+
 def create_rol(**kwargs):
     """
     Crea un rol y lo agrega a la bd
@@ -55,6 +62,7 @@ def create_rol(**kwargs):
     db.session.commit()
 
     return rol
+
 
 def create_permiso(**kwargs):
     """
@@ -66,7 +74,8 @@ def create_permiso(**kwargs):
 
     return permiso
 
-def rol_assign_permiso(rol,permisos):
+
+def rol_assign_permiso(rol, permisos):
     """
     A un rol le asigna un permiso, agregando ambos a la tabla intermedia rol_tiene_permiso
     """
@@ -75,17 +84,19 @@ def rol_assign_permiso(rol,permisos):
     db.session.commit()
     return rol
 
+
 def create_socio(**kwargs):
     socio = Socio(**kwargs)
     db.session.add(socio)
     db.session.commit()
     return socio
 
+
 def list_socios():
     socios = Socio.query.filter_by(activo=True)
     return socios
 
+
 def find_socio(id):
     socio = Socio.query.filter_by(id=id).first()
     return socio
-

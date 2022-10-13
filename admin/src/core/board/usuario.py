@@ -10,4 +10,3 @@ class Usuario(db.Model):
     username = db.Column(db.String(255))
     mail = db.Column(db.String(255))
     contraseña = db.Column(db.String(255))
-    
