@@ -5,6 +5,16 @@ def run():
     Crea datos por defecto para la base de datos
     """
 
+    test_user = board.create_usuario(
+        username = "test",
+        mail = "test@test.com",
+        contraseña = "1234"
+    )
+    test_user2 = board.create_usuario(
+        username = "test2",
+        mail = "test2@test2.com",
+        contraseña = "1234"
+    )
     ###Configuracion
     default_config = board.init_configuracion(
         elementos_pagina = 20,

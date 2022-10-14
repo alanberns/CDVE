@@ -90,6 +90,10 @@ def filter_usuarios(email, activo, page=1, per_page=10):
             usuarios = Usuario.query.filter_by(email=email).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
 
+def find_user_by_mail_and_pass(mail,contraseña):
+    usuario = Usuario.query.filter_by(mail=mail, contraseña = contraseña).first()
+    return usuario
+
 def list_configuracion():
     """
     Lista los datos de la configuracion, devuelve una sola tupla
