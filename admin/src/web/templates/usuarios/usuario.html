@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1> Usuario </h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+        <div> {{message}} </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+    <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" onsubmit="return confirm('¿Estas seguro que deseas editar el usuario?');">
+        
+      <div class="form-floating mb-3">
+        <input type="text" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
+        <label for="floatingInput">ID</label>
+      </div>
+      {% if usuario.activo %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="hola" value="Si" class="form-control" readonly>
+        <label for="floatingInput">Activo</label>
+      </div>
+      {% endif %}
+      {% if not usuario.activo %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="hola" value="No" class="form-control" readonly>
+        <label for="floatingInput">Activo</label>
+      </div>
+      {% endif %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="{{ usuario.created_at }}" class="form-control" readonly>
+        <label for="floatingInput">Fecha de alta</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="{{usuario.updated_at}}" class="form-control" readonly>
+        <label for="floatingInput">Última modificación</label>
+      </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" name="username" class="form-control" id="floatingInput" value="{{ usuario.username }}"
+            required>
+            <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" name="email" class="form-control" id="floatingInput" value="{{ usuario.email }}" required>
+          <label for="floatingInput">email</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" name="first_name" class="form-control" id="floatingInput" value="{{ usuario.first_name }}"
+          required>
+          <label for="floatingInput">Nombre</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" name="last_name" class="form-control" id="floatingInput" value="{{ usuario.last_name }}"
+          required>
+          <label for="floatingInput">Aellido</label>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary" >Modificar</button>
+        </div>
+    </form>
+  <a href="{{url_for('home')}}"> <button>Volver al inicio</button> </a>
+{% endblock %}

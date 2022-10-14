@@ -4,22 +4,6 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1> Usuarios </h1>
-  <table class="index-table box">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Username</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for usuario in usuarios %}
-      <tr>
-        <th>{{ usuario.id }}</th>
-        <th>{{ usuario.username }}</th>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <a href="{{url_for('usuarios.add_usuario_view')}}"> Add usuario </a>
+  <h1> Home </h1>
+  <a href="{{url_for('usuarios.usuario_index')}}"> Ver usuarios </a>
 {% endblock %}
