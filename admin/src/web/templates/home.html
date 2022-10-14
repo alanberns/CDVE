@@ -1,28 +1,12 @@
-{% extends "layout.html" %}
-{% block title %}Home{% endblock %}
-{% block head %}
-  {{ super() }}
-{% endblock %}
-{% block content %}
-  <div class="column">
-    <h1> Usuarios </h1>
-    <table class="index-table box">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Username</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for usuario in usuarios %}
-        <tr>
-          <th>{{ usuario.id }}</th>
-          <th>{{ usuario.username }}</th>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <a href="{{url_for('usuarios.add_usuario_view')}}"> Add usuario </a>
+{% extends "layout.html" %} {% block title %}Home{% endblock %} {% block head %}
+{{ super() }} {% endblock %} {% block content %}
+<div class="card">
+  <div class="card-header">Bienvenido</div>
+  <div class="card-body">
+    <h5 class="card-title">Aplicacion Privada</h5>
+    <p class="card-text">
+      Bienvenido al home de la aplicacion privada del Club Deportivo Villa Elisa
+    </p>
   </div>
-
+</div>
 {% endblock %}
