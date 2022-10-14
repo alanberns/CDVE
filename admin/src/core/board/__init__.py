@@ -97,6 +97,6 @@ def list_socios():
     return socios
 
 
-def find_socio(id):
-    socio = Socio.query.filter_by(id=id).first()
+def find_socio(numero_documento):
+    socio = Socio.query.filter_by(numero_documento=numero_documento)
     return socio

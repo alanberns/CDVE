@@ -20,6 +20,13 @@ def add_socio_view():
 
 
 @socio_blueprint.post("/")
+def buscar_socio():
+    numero_documento = (request.form.get("numero_documento"),)
+    socios = board.find_socio(numero_documento)
+    return render_template("socios.html", socios=socios)
+
+
+@socio_blueprint.post("/add")
 def add_socio():
     kwargs = {
         "id_usuario": request.form.get("id_usuario"),
