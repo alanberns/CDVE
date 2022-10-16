@@ -4,7 +4,8 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1> Usuarios </h1>
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5">Usuarios </h1>
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, message in messages %}
@@ -85,4 +86,5 @@
     {%- endfor %}
 </div>
   <a href="{{url_for('usuarios.add_usuario_view')}}"> <button>Add usuario</button></a>
+</div>
 {% endblock %}

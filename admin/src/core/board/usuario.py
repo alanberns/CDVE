@@ -15,4 +15,5 @@ class Usuario(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now, nullable=False)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
+    roles = db.relationship("Rol", secondary="usuario_tiene_rol")
     

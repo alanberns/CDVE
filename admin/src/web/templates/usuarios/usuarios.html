@@ -4,7 +4,8 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1> Usuarios </h1>
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5"> Usuarios </h1>
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, message in messages %}
@@ -17,18 +18,18 @@
   {% endif %}
 {% endwith %}
 
-  <section>Buscar
-    <form action="{{ url_for('usuarios.busqueda_filtrada') }}" method="get">
+  <section>Buscar por:
+    <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="get">
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email" >
 
-      <label for="email">Ingrese el email:</label>
-      <input type="text" name="email" id="email">
-      <label for="estado" >Estado de usuario:</label>
-      <select name="estado" id="estado">
-        <option >todos</option>
-        <option >inactivo</option>
-        <option >activo</option>
-      </select>
-      <button>Buscar</button>
+        <label for="estado" >Estado de usuario:</label>
+        <select name="estado" id="estado">
+          <option >todos</option>
+          <option >inactivo</option>
+          <option >activo</option>
+        </select>
+        <button>Buscar</button>
     </form>
   </section>
 
@@ -87,6 +88,7 @@
             <span class=ellipsis>…</span>
         {% endif %}
     {%- endfor %}
-</div>
+  </div>
   <a href="{{url_for('usuarios.add_usuario_view')}}"> <button>Add usuario</button></a>
+</div>
 {% endblock %}

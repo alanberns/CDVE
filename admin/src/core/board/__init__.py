@@ -3,6 +3,7 @@ from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
+from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
 
 def list_usuarios(page=1, per_page=10):
     """
@@ -89,6 +90,33 @@ def filter_usuarios(email, activo, page=1, per_page=10):
         else:
             usuarios = Usuario.query.filter_by(email=email).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
+
+def quitar_rol(rol_id, usuario_id):
+    """
+    Elimina una tupla de 'usuario_tiene_rol', quita un rol a un usuario
+    """
+    usuario_tiene_rol = Usuario_tiene_rol.query.filter_by(usuario_id=usuario_id, rol_id=rol_id).first()
+    db.session.delete(usuario_tiene_rol)
+    db.session.commit()
+
+def asignar_rol(rol_id, usuario_id):
+    """
+    Asigna un rol a un usuario
+    """
+    usuario = get_usuario(usuario_id)
+    rol = db.session.get(Rol, rol_id)
+    rol_list = []
+    rol_list.append(rol)
+    usuario.roles.extend(rol_list)
+    db.session.add(usuario)
+    db.session.commit()
+
+def get_roles():
+    """
+    Retorna los roles
+    """
+    return Rol.query.all()
+
 
 def find_user_by_mail_and_pass(mail,contraseña):
     usuario = Usuario.query.filter_by(mail=mail, contraseña = contraseña).first()

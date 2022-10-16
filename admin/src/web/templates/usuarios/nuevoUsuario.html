@@ -4,7 +4,8 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Añadir nuevo usuario</h1>
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5">Añadir nuevo usuario</h1>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -42,5 +43,6 @@
 
   <button>Enviar</button>
 </form>
-<a href="{{url_for('home')}}"> Volver al inicio </a>
+<a href="{{url_for('home')}}"> <button> Volver al inicio</button> </a>
+</div>
 {% endblock %}

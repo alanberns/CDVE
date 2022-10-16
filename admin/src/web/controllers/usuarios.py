@@ -58,10 +58,10 @@ def add_usuario():
     Añadir usuario. Se necesita chequear que no se repita email ni username. Vuelve a menu usuarios
     """
     if (board.exist_email(request.form.get("email"))):
-        flash("El email ingresado ya está registrado")
+        flash("El email ingresado ya está registrado", "error")
         return redirect(url_for('usuarios.add_usuario_view'))
     if (board.exist_username(request.form.get("username"))):
-        flash("El username ingresado ya está registrado")
+        flash("El username ingresado ya está registrado", "error")
         return redirect(url_for('usuarios.add_usuario_view'))
 
     kwargs = {
@@ -75,6 +75,7 @@ def add_usuario():
         "last_name": request.form.get("last_name"),
     }
     board.create_usuario(**kwargs)
+    flash("Se creó el nuevo usuario", "success")
     return redirect(url_for('usuarios.usuario_index'))
 
 @usuario_blueprint.get("/<int:id>")
@@ -83,7 +84,8 @@ def view_usuario(id):
     Vista detallada con la informacion de un usuario
     """
     usuario = board.get_usuario(id)
-    return render_template("usuarios/usuario.html", usuario=usuario)
+    roles = board.get_roles()
+    return render_template("usuarios/usuario.html", usuario=usuario, roles=roles)
 
 @usuario_blueprint.post("/<int:id>")
 def update_usuario(id):
@@ -115,6 +117,7 @@ def update_usuario(id):
             "last_name": request.form.get("last_name"),
         }
     board.update_usuario(**kwargs)
+    flash("Se actualizaron los datos del usuario", "success")
     return redirect(url_for('usuarios.usuario_index'))
 
 @usuario_blueprint.get("/modifyActivo/<int:id>")
@@ -123,8 +126,8 @@ def modify_activo(id):
     Cambia el estado de activo a su inverso.
     No se puede dar de baja a un administrador
     """
-
     board.update_activo_usuario(id)
+    flash("Se actualizo el estado del usuario", "success")
     return redirect(url_for('usuarios.usuario_index', id=id))
 
 @usuario_blueprint.post("/")
@@ -133,4 +136,28 @@ def delete_usuario():
     Recibe el id de un usuario para eliminarlo de la BD
     """
     board.delete_usuario(request.form.get("id"))
+    flash("Se eliminó al usuario", "success")
     return (redirect(url_for('usuarios.usuario_index')))
+
+@usuario_blueprint.get("/quitarRol")
+def quitar_rol():
+    """
+    Quitar un rol a un usuario
+    """
+    rol_id = request.args.get("rol_id")
+    usuario_id = request.args.get("usuario_id")
+    board.quitar_rol(rol_id, usuario_id)
+    flash("Se quitó el rol exitosamente", "success")
+    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+
+
+@usuario_blueprint.get("/asignarRol")
+def asignar_rol():
+    """
+    Asignar un rol a un usuario
+    """
+    rol_id = request.args.get("rol_id")
+    usuario_id = request.args.get("usuario_id")
+    board.asignar_rol(rol_id, usuario_id)
+    flash("Se asignó el rol al usuario", "success")
+    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
