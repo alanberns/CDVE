@@ -28,7 +28,7 @@ class SocioForm(FlaskForm):
     direccion = StringField("direccion", validators=[DataRequired()])
     telefono = StringField("telefono", validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired()])
-    submit = SubmitField("Crear")
+    submit = SubmitField("Guardar")
 
 
 class DocumentoForm(FlaskForm):

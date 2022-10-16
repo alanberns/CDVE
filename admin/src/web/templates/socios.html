@@ -21,7 +21,7 @@
         </div>
       </form>
     </div>
-    <a href="{{url_for('socios.buscar_socio')}}"> Listar Socios </a>
+    <a href="{{url_for('socios.list_socios')}}"> Listar Socios </a>
     <table class="index-table box">
       <thead>
         <tr>
@@ -30,6 +30,7 @@
           <th>Genero</th>
           <th>Mail</th>
           <th>Accion</th>
+          <th>Estado</th>
         </tr>
       </thead>
       <tbody>
@@ -39,7 +40,10 @@
           <th>{{ socio.numero_documento }}</th>
           <th>{{ socio.genero }}</th>
           <th>{{ socio.email }}</th>
-          <th><a href="{{ url_for('socios.update_socio', socio_id=socio.id) }}"> Editar </a></th>
+          <th>{{ socio.habilitado }}</th>
+          <th>
+            <a href="{{ url_for('socios.ver_socio', socio_id=socio.id) }}"> Ver </a>
+          </th>
         </tr>
         {% endfor %}
       </tbody>

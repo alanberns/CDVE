@@ -101,15 +101,35 @@ def find_socio(numero_documento):
     socio = Socio.query.filter_by(numero_documento=numero_documento)
     return socio
 
+
 def find_socio_by_id(socio_id):
     socio = Socio.query.filter_by(id=socio_id).first()
     return socio
 
+
 def update_socio(socio_id, **kwargs):
-    
-    socio = Socio.query.filter_by(id=socio_id).first()
+
+    socio = find_socio_by_id(socio_id)
     socio.update(**kwargs)
     db.session.merge(socio)
     db.session.commit()
 
+    return socio
+
+
+def soft_delete_socio(socio_id):
+    socio = find_socio_by_id(socio_id)
+    socio.activo = False
+    db.session.merge(socio)
+    db.session.commit()
+    
+    return socio
+
+
+def switch_state_socio(socio_id):
+    socio = find_socio_by_id(socio_id)
+    socio.habilitado = not socio.habilitado
+    db.session.merge(socio)
+    db.session.commit()
+    
     return socio
