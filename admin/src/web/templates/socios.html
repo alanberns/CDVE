@@ -8,11 +8,20 @@
     <h1> Socios </h1>
     <div class="column">
       <h2>Buscar socio</h2>
-      <form action="{{ url_for('socios.buscar_socio')}}" method="post">
-        <input type="text" name="numero_documento" placeholder="numero_documento">
-        <button>Buscar</button>
+      <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group"></fieldset>
+          <div class="form-group">
+            {{ form.numero_documento.label(class="form=control-label") }}
+            {{ form.numero_documento(class="form-control form=control-lg") }}
+          </div>
+        </fieldset>
+        <div class="form-group">
+          {{ form.submit(class="btn btn-outline-info") }}
+        </div>
       </form>
     </div>
+    <a href="{{url_for('socios.buscar_socio')}}"> Listar Socios </a>
     <table class="index-table box">
       <thead>
         <tr>
@@ -20,6 +29,7 @@
           <th>#</th>
           <th>Genero</th>
           <th>Mail</th>
+          <th>Accion</th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +39,7 @@
           <th>{{ socio.numero_documento }}</th>
           <th>{{ socio.genero }}</th>
           <th>{{ socio.email }}</th>
+          <th><a href="{{ url_for('socios.update_socio', socio_id=socio.id) }}"> Editar </a></th>
         </tr>
         {% endfor %}
       </tbody>

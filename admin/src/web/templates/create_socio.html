@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Socios{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4"> Create Socio</legend>
+                <div class="form-group">
+                    {{ form.tipo_documento.label(class="form=control-label") }}
+                    {{ form.tipo_documento(class="form-control form=control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.numero_documento.label(class="form=control-label") }}
+                    {{ form.numero_documento(class="form-control form=control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.numero_socio.label(class="form=control-label") }}
+                    {{ form.numero_socio(class="form-control form=control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.genero.label(class="form=control-label") }}
+                    {{ form.genero(class="form-control form=control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.direccion.label(class="form=control-label") }}
+                    {{ form.direccion(class="form-control form=control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.telefono.label(class="form=control-label") }}
+                    {{ form.telefono(class="form-control form=control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form=control-label") }}
+                    {{ form.email(class="form-control form=control-lg") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
