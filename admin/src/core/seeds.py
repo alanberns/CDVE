@@ -42,3 +42,16 @@ def run():
         email="socio1@mail.com"
         # el usuario tiene mail también, arreglar.
     )
+
+    juan = board.create_socio(
+        id_usuario=2,
+        # el id de usuario debería obtenerse desde el usuario
+        tipo_documento="DNI",
+        numero_documento=43123123,
+        genero="caballo",
+        numero_socio="AAA12",
+        direccion="7 y 32",
+        telefono=221420,
+        email="juan@juan.juan"
+        # el usuario tiene mail también, arreglar.
+    )
