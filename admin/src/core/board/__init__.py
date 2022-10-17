@@ -3,9 +3,15 @@ from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
+from src.core.board.disciplina import Disciplina
+from src.core.board.socio import Socio
+from src.core.board.cuota import Cuota
+from src.core.board.inscripcion import Inscripcion
+
 
 def list_usuarios():
     return Usuario.query.all()
+
 
 def create_usuario(**kwargs):
     usuario = Usuario(**kwargs)
@@ -13,9 +19,11 @@ def create_usuario(**kwargs):
     db.session.commit()
     return usuario
 
+
 def find_user_by_mail(mail):
     usuario = Usuario.query.filter_by(mail=mail).first()
     return usuario
+
 
 def list_configuracion():
     """
@@ -23,6 +31,7 @@ def list_configuracion():
     """
 
     return Configuracion.query.all()
+
 
 def init_configuracion(**kwargs):
     """
@@ -33,6 +42,7 @@ def init_configuracion(**kwargs):
     db.session.commit()
 
     return configuracion
+
 
 def update_configuracion(**kwargs):
     """
@@ -45,6 +55,7 @@ def update_configuracion(**kwargs):
 
     return configuracion
 
+
 def create_rol(**kwargs):
     """
     Crea un rol y lo agrega a la bd
@@ -54,6 +65,7 @@ def create_rol(**kwargs):
     db.session.commit()
 
     return rol
+
 
 def create_permiso(**kwargs):
     """
@@ -65,7 +77,8 @@ def create_permiso(**kwargs):
 
     return permiso
 
-def rol_assign_permiso(rol,permisos):
+
+def rol_assign_permiso(rol, permisos):
     """
     A un rol le asigna un permiso, agregando ambos a la tabla intermedia rol_tiene_permiso
     """
@@ -73,3 +86,37 @@ def rol_assign_permiso(rol,permisos):
     db.session.add(rol)
     db.session.commit()
     return rol
+
+
+def create_disciplina(**kwargs):
+    """
+    Crea una Disciplina y lo agrega la db"
+    """
+
+    disciplina = Disciplina(**kwargs)
+    db.session.add(disciplina)
+    db.session.commit()
+    return disciplina
+
+
+def create_socio(**kwargs):
+    socio = Socio(**kwargs)
+    db.session.add(socio)
+    db.session.commit()
+    return socio
+
+
+def create_cuota(**kwargs):
+    cuota = Cuota(**kwargs)
+    db.session.add(cuota)
+    db.session.commit()
+    return cuota
+
+
+def socio_assign_disciplina(socio, disciplina):
+    inscripcion = Inscripcion()
+    inscripcion.disciplina = disciplina
+    socio.disciplina.append(inscripcion)
+    db.session.add(socio)
+    db.session.commit()
+    return socio
