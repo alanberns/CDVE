@@ -13,4 +13,4 @@ class Inscripcion(db.Model):
         "Socio", back_populates="disciplina")
     disciplina = db.relationship(
         "Disciplina", back_populates="socio")
-    cuota_id = db.Column(db.Integer, db.ForeignKey("cuotas.id"))
+    cuota_id = db.relationship('Cuota')
