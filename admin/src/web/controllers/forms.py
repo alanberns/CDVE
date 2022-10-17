@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length
 
 
@@ -32,5 +32,8 @@ class SocioForm(FlaskForm):
 
 
 class DocumentoForm(FlaskForm):
-    numero_documento = StringField("Numero", validators=[DataRequired()])
+    apellido = StringField("Apellido")
+    habilitado = SelectField(
+            "Mostrar",
+            choices=((0, "Todos"), (1, "Activos"), (2, "Inactivos")), coerce=int)
     submit = SubmitField("Buscar")

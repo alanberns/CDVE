@@ -93,14 +93,21 @@ def create_socio(**kwargs):
 
 
 def list_socios():
-    socios = Socio.query.filter_by(activo=True)
+    socios = Socio.query.filter_by(activo=True).all()
     return socios
 
+def list_socios_habilitado(habilitado):
+    socios = Socio.query.filter_by(activo=True, habilitado=habilitado).all()
+    return socios
 
-def find_socio(numero_documento):
-    socio = Socio.query.filter_by(numero_documento=numero_documento)
+def find_socio_by_apellido(username):
+    socio = Socio.query.filter_by(activo=True).join(Usuario).filter_by(username=username).all() 
     return socio
 
+def find_socio_habilitado_by_apellido(username, habilitado):
+    socio = Socio.query.filter_by(activo=True, habilitado=habilitado).join(Usuario).filter_by(username=username).all() 
+    #reemplazar "username" por apellido cuando haya
+    return socio
 
 def find_socio_by_id(socio_id):
     socio = Socio.query.filter_by(id=socio_id).first()

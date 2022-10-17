@@ -13,8 +13,22 @@ socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 def list_socios():
     form = DocumentoForm()
     if form.validate_on_submit():
-        numero_documento = form.numero_documento.data
-        socios = board.find_socio(numero_documento)
+        apellido = form.apellido.data
+        habilitado = form.habilitado.data
+        if habilitado == 0:
+            if apellido:
+                socios = board.find_socio_by_apellido(apellido)
+            else:
+                socios = board.list_socios()
+        else:
+            if habilitado == 1: 
+                activo = True
+            else: 
+                activo = False
+            if apellido:
+                socios = board.find_socio_habilitado_by_apellido(apellido, activo)
+            else:
+                socios = board.list_socios_habilitado(activo)
     else:
         socios = board.list_socios()
     return render_template("socios.html", socios=socios, form=form)
@@ -71,7 +85,6 @@ def update_socio(socio_id):
         form.telefono.data = socio.telefono
         form.numero_socio.data = socio.numero_socio
     return render_template("create_socio.html", form=form)
-
 
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])

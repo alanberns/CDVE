@@ -12,8 +12,12 @@
         {{ form.hidden_tag() }}
         <fieldset class="form-group"></fieldset>
           <div class="form-group">
-            {{ form.numero_documento.label(class="form=control-label") }}
-            {{ form.numero_documento(class="form-control form=control-lg") }}
+            {{ form.apellido.label(class="form=control-label") }}
+            {{ form.apellido(class="form-control form=control-lg") }}
+          </div>
+          <div class="form-group">
+            {{ form.habilitado.label(class="form=control-label") }}
+            {{ form.habilitado }}
           </div>
         </fieldset>
         <div class="form-group">
@@ -21,7 +25,6 @@
         </div>
       </form>
     </div>
-    <a href="{{url_for('socios.list_socios')}}"> Listar Socios </a>
     <table class="index-table box">
       <thead>
         <tr>
@@ -29,8 +32,8 @@
           <th>#</th>
           <th>Genero</th>
           <th>Mail</th>
-          <th>Accion</th>
-          <th>Estado</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
