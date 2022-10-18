@@ -7,22 +7,119 @@ from src.core.board.disciplina import Disciplina
 from src.core.board.socio import Socio
 from src.core.board.cuota import Cuota
 from src.core.board.inscripcion import Inscripcion
+from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
 
-
-def list_usuarios():
-    return Usuario.query.all()
-
+def list_usuarios(page=1, per_page=10):
+    """
+    Lista los datos de los usuarios.
+    """
+    return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
 
 def create_usuario(**kwargs):
+    """
+    Crea un usuario y lo agrega en la BD. Devuelve el usuario creado.
+    No se puede repetir: Email ni username.
+    """
     usuario = Usuario(**kwargs)
     db.session.add(usuario)
     db.session.commit()
     return usuario
 
-
-def find_user_by_mail(mail):
-    usuario = Usuario.query.filter_by(mail=mail).first()
+def get_usuario(id):
+    """
+    Busca un usuario por su id y lo devuelve
+    """
+    usuario = db.session.get(Usuario, id)
     return usuario
+
+def update_usuario(**kwargs):
+    """
+    Actualiza la informacion del usuario
+    """
+    usuario = get_usuario(kwargs['id'])
+    usuario.update(**kwargs)
+    db.session.commit()
+
+    return usuario
+
+def update_activo_usuario(id):
+    """
+    Actualiza el estado (Activo) del usuario.
+    """    
+    usuario = get_usuario(id)
+    usuario.activo = not usuario.activo
+
+    db.session.commit()
+
+    return usuario
+
+def exist_email(email):
+    """
+    Verifica que un email existe en la BD
+    """
+    return Usuario.query.filter(Usuario.email == email).first() != None
+
+def exist_username(username):
+    """
+    Verifica que un username existe en la BD
+    """
+    return Usuario.query.filter(Usuario.username == username).first() != None
+
+def delete_usuario(id):
+    """
+    Elimina el usuario de la BD
+    """
+    db.session.delete(get_usuario(id))
+    db.session.commit()
+
+def filter_usuarios(email, activo, page=1, per_page=10):
+    """
+    Filtra a usuarios por email y estado. Si el email ingresado es vacio y el estado que se pide es ambos 
+    no se incluye en el filtrado.
+    """
+    if (email == ""):
+        if (activo == ""):
+            usuarios = Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+        else: 
+            usuarios = Usuario.query.filter_by(activo=activo).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+    else:
+        if (activo != ""):
+            usuarios = Usuario.query.filter_by(activo=activo, email=email).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+        else:
+            usuarios = Usuario.query.filter_by(email=email).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+    return usuarios
+
+def quitar_rol(rol_id, usuario_id):
+    """
+    Elimina una tupla de 'usuario_tiene_rol', quita un rol a un usuario
+    """
+    usuario_tiene_rol = Usuario_tiene_rol.query.filter_by(usuario_id=usuario_id, rol_id=rol_id).first()
+    db.session.delete(usuario_tiene_rol)
+    db.session.commit()
+
+def asignar_rol(rol_id, usuario_id):
+    """
+    Asigna un rol a un usuario
+    """
+    usuario = get_usuario(usuario_id)
+    rol = db.session.get(Rol, rol_id)
+    rol_list = []
+    rol_list.append(rol)
+    usuario.roles.extend(rol_list)
+    db.session.add(usuario)
+    db.session.commit()
+
+def get_roles():
+    """
+    Retorna los roles
+    """
+    return Rol.query.all()
+
+
+def find_user_by_email(email):
+    usuario = Usuario.query.filter_by(email=email).first()
+    return usuario
+
 
 
 def list_configuracion():

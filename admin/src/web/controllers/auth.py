@@ -23,15 +23,15 @@ def login():
 @auth_blueprint.post("/authenticate")
 def authenticate():
     form = AuthForm(request.form)
-    user = board.find_user_by_mail(form.email.data)
+    user = board.find_user_by_email(form.email.data)
     if not form.validate:
         flash("Error validando los datos, por favor intenta otra vez", "danger")
     if not user or not user.verify_password(form.contraseña.data):
         flash("email o clave incorrecta", "danger")
         return redirect(url_for("auth.login"))
     session["user"] = form.email.data
-    flash("Se Ha iniciado la sesion correctamente", "success")
-    return redirect(url_for("usuarios.usuario_index"))
+    flash("Se ha iniciado la sesion correctamente", "success")
+    return redirect(url_for("home"))
 
 
 @auth_blueprint.get("/logout")

@@ -1,5 +1,6 @@
 from src.core import board
 from dateutil.parser import parse
+from datetime import datetime
 
 
 
@@ -10,13 +11,21 @@ def run():
 
     test_user = board.create_usuario(
         username="test",
-        mail="test@test.com",
-        contraseña="1234"
+        email="test@test.com",
+        password="1234",
+        first_name="Aa",
+        last_name="Bb",
+        created_at = datetime.now(),
+        updated_at = datetime.now(),
     )
     test_user2 = board.create_usuario(
         username="test2",
-        mail="test2@test2.com",
-        contraseña="1234"
+        email="test2@test2.com",
+        password="1234",
+        first_name="Aa",
+        last_name="Bb",
+        created_at = datetime.now(),
+        updated_at = datetime.now(),
     )
     # Configuracion
     default_config = board.init_configuracion(
