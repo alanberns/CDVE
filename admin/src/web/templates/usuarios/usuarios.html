@@ -20,10 +20,10 @@
 
   <section>Buscar por:
     <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="get">
-        <label for="email">Email:</label>
+        <label for="email" class="form-label">Email:</label>
         <input type="text" name="email" id="email" >
 
-        <label for="estado" >Estado de usuario:</label>
+        <label for="estado" class="form-label">Estado de usuario:</label>
         <select name="estado" id="estado">
           <option >todos</option>
           <option >inactivo</option>
