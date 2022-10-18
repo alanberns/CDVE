@@ -72,7 +72,6 @@ def add_usuario():
         username = request.form.get("username"),
         email = request.form.get("email"),
         password = request.form.get("password"),
-        activo = True,
         created_at = datetime.now(),
         updated_at = datetime.now(),
         first_name = request.form.get("first_name"),

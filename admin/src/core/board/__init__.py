@@ -116,9 +116,10 @@ def get_roles():
     return Rol.query.all()
 
 
-def find_user_by_mail_and_pass(email,contraseña):
-    usuario = Usuario.query.filter_by(email=email, password = contraseña).first()
+def find_user_by_email(email):
+    usuario = Usuario.query.filter_by(email=email).first()
     return usuario
+
 
 
 def list_configuracion():

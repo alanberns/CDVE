@@ -12,19 +12,6 @@
 <div class="d-flex flex-column align-items-center">
   <h1 class="mx-5"> Usuario </h1>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-        <div> {{message}} </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-
     <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" onsubmit="return confirm('¿Estas seguro que deseas editar el usuario?');">
         
       <div class="form-floating mb-3">
@@ -104,6 +91,7 @@
     </table>
     
     <a href="{{url_for('home')}}"><button>Volver al inicio</button> </a>
+    <a href="{{url_for('usuarios.usuario_index')}}"><button>Menú  usuarios</button></a>
   
 </div>
 {% endblock %}

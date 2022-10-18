@@ -7,6 +7,7 @@ from src.core.database import db
 class Usuario(db.Model):
 
     __tablename__ = "usuarios"
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -17,12 +18,11 @@ class Usuario(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     roles = db.relationship("Rol", secondary="usuario_tiene_rol")
 
-    def __init__(self,username,email,password,activo,created_at,updated_at,first_name,last_name):
+    def __init__(self,username,email,password,created_at,updated_at,first_name,last_name):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
-        self.activo = activo,
-        self.created_at = created_at  ##probar sifunciona
+        self.created_at = created_at  
         self.updated_at = updated_at
         self.first_name = first_name
         self.last_name = last_name
