@@ -11,18 +11,10 @@ class Configuracion(db.Model):
     estado_pago = db.Column(db.Boolean)
     estado_info_contactos = db.Column(db.Boolean)
     texto_recibo = db.Column(db.String(255))
-    valor_base_cuota = db.Column(db.Integer)
+    valor_base_cuota = db.Column(db.Float)
     porcentaje_cuota = db.Column(db.Float)
 
-    def __init__(
-        self,
-        elementos_pagina,
-        estado_pago,
-        estado_info_contactos,
-        texto_recibo,
-        valor_base_cuota,
-        porcentaje_cuota,
-    ):
+    def __init__(self, elementos_pagina, estado_pago, estado_info_contactos, texto_recibo, valor_base_cuota, porcentaje_cuota):
         self.elementos_pagina = elementos_pagina
         self.estado_pago = estado_pago
         self.estado_info_contactos = estado_info_contactos

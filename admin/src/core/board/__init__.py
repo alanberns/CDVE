@@ -3,7 +3,10 @@ from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
+from src.core.board.disciplina import Disciplina
 from src.core.board.socio import Socio
+from src.core.board.cuota import Cuota
+from src.core.board.inscripcion import Inscripcion
 
 
 def list_usuarios():
@@ -17,8 +20,8 @@ def create_usuario(**kwargs):
     return usuario
 
 
-def find_user_by_mail_and_pass(mail, contraseña):
-    usuario = Usuario.query.filter_by(mail=mail, contraseña=contraseña).first()
+def find_user_by_mail(mail):
+    usuario = Usuario.query.filter_by(mail=mail).first()
     return usuario
 
 
@@ -85,6 +88,17 @@ def rol_assign_permiso(rol, permisos):
     return rol
 
 
+def create_disciplina(**kwargs):
+    """
+    Crea una Disciplina y lo agrega la db"
+    """
+
+    disciplina = Disciplina(**kwargs)
+    db.session.add(disciplina)
+    db.session.commit()
+    return disciplina
+
+
 def create_socio(**kwargs):
     socio = Socio(**kwargs)
     db.session.add(socio)
@@ -139,4 +153,18 @@ def switch_state_socio(socio_id):
     db.session.merge(socio)
     db.session.commit()
     
+    return socio
+def create_cuota(**kwargs):
+    cuota = Cuota(**kwargs)
+    db.session.add(cuota)
+    db.session.commit()
+    return cuota
+
+
+def socio_assign_disciplina(socio, disciplina):
+    inscripcion = Inscripcion()
+    inscripcion.disciplina = disciplina
+    socio.disciplina.append(inscripcion)
+    db.session.add(socio)
+    db.session.commit()
     return socio

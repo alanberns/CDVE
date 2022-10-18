@@ -3,7 +3,7 @@ from os import environ
 
 class Config(object):
     """Base configuration."""
-
+    WTF_CSRF_SECRET_KEY = "grupo14"
     SECRET_KEY = "secret"
     DEBUG = False
     TESTING = False

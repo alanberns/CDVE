@@ -19,6 +19,8 @@ class Socio(db.Model):
     telefono = db.Column(db.Integer())
     email = db.Column(db.String(255))
     activo = db.Column(db.Boolean, default=True)
+    disciplina = db.relationship(
+    'Inscripcion', back_populates='socio')
 
     def __init__(
         self,
@@ -44,4 +46,6 @@ class Socio(db.Model):
     def update(self, **kwargs):
   
         for key in kwargs:
-            setattr(self, key, kwargs[key])    # falta relacion con cuota y disciplina
+            setattr(self, key, kwargs[key])    
+
+

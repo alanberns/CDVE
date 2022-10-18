@@ -1,17 +1,20 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
-
+from pathlib import Path
 from src.core import board
 
 
-usuario_blueprint = Blueprint("usuarios", __name__, url_prefix="/usuarios")
+usuario_blueprint = Blueprint(
+    "usuarios", __name__, url_prefix="/usuarios")
+
 
 
 @usuario_blueprint.get("/")
 def usuario_index():
     usuarios = board.list_usuarios()
-    return render_template("home.html", usuarios=usuarios)
+    return render_template("home.html")
+
 
 
 @usuario_blueprint.get("/add")

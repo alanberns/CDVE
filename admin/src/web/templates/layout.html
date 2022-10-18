@@ -8,15 +8,56 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <title>{% block title %}{% endblock %}</title>
+    <!-- Iconos de bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    </svg>
     {% endblock %}
   </head>
   <body>
+      {% block navbar %}
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+              <div class="col">
+                <div class="navbar-nav">
+                  <a class="nav-link" aria-current="page" href="{{ url_for('usuarios.usuario_index') }}">Home</a>
+                  <a class="nav-link" href="#">Usuarios</a>
+                  <a class="nav-link" href="#">Disciplinas</a>
+                  <a class="nav-link" href="#">Socios</a>
+                  <a class="nav-link" href="#">Pagos</a>
+                  <a class="nav-link" href="{{ url_for('configuracion.configuracion_index') }}">Configuracion</a>
+                </div>
+              </div>
+              <div class="col d-flex flex-row-reverse">
+                <div class="navbar-nav justify-content-end">
+                  {% if is_authenticated(session) %}
+                  <span class="h5 text-light pe-3">
+                    <i class="bi bi-person-circle">{{session["user"]}}</i>                    
+                  </span>
+                  <a href="{{url_for('auth.logout')}}" class="btn btn-danger btn-sm">Cerrar Sesion</a>
+                  {% else %}
+                  <a href="#" class="btn btn-primary btn-sm me-2">Registrarse</a>
+                  <a href="{{url_for('auth.login')}}" class="btn btn-success btn-sm">Iniciar Sesion</a>
+                  {% endif %}               
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>      
+      {% endblock %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <div> {{message}} </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}   
     <div id="container bg-white">
       <div class="d-flex justify-content-center m-3 mx-5">
-        <div class="nav">
-          {% block navbar %}
-          {% endblock %}
-        </div>
       <div class ="d-flex justify-content-center p-2"id="main">
         {% block content %}
         {% endblock %}
