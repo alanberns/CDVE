@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request, redirect, url_for, flash
-from src.web.controllers.forms import SocioForm, DocumentoForm
+from src.core.forms.socio_form import SocioForm, DocumentoForm
 
 from src.core import board
 
@@ -31,7 +31,7 @@ def socios_index():
                 socios = board.list_socios_habilitado(activo)
     else:
         socios = board.list_socios()
-    return render_template("socios.html", socios=socios, form=form)
+    return render_template("socios/socios.html", socios=socios, form=form)
 
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
@@ -56,7 +56,7 @@ def add_socio():
         }
         board.create_socio(**kwargs)
         return redirect(url_for("socios.socios_index"))
-    return render_template("create_socio.html", form=form)
+    return render_template("socios/create_socio.html", form=form)
 
 
 @socio_blueprint.route("/<int:socio_id>/update", methods=["get", "post"])
@@ -84,7 +84,7 @@ def update_socio(socio_id):
         form.tipo_documento.data = socio.tipo_documento
         form.telefono.data = socio.telefono
         form.numero_socio.data = socio.numero_socio
-    return render_template("create_socio.html", form=form)
+    return render_template("socios/create_socio.html", form=form)
 
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])
@@ -96,4 +96,4 @@ def switch_state_socio(socio_id):
 @socio_blueprint.route("/<int:socio_id>/", methods=["get", "post"])
 def ver_socio(socio_id):
     socio = board.find_socio_by_id(socio_id)
-    return render_template("socio.html", socio=socio)
+    return render_template("socios/socio.html", socio=socio)
