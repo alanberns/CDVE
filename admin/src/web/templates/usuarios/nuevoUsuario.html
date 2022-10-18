@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5">Añadir nuevo usuario</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+        <div> {{message}} </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('usuarios.add_usuario')}}" method="post" id="nuevoUsuario">
+  <div class="form-floating mb-3">
+    <input type="email" name="email" id="email" class="form-control" required>
+    <label for="email">Email</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="text" name="username" id="username" class="form-control" required>
+    <label for="username">Username</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="password" name="password" id="password" class="form-control" required>
+    <label for="password">Password</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="text" name="first_name" id="first_name" class="form-control" required>
+    <label for="first_name">Nombre</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="text" name="last_name" id="last_name" class="form-control" required>
+    <label for="last_name">Apellido</label>
+  </div>
+
+  <button>Enviar</button>
+</form>
+<a href="{{url_for('home')}}"> <button> Volver al inicio</button> </a>
+</div>
+{% endblock %}

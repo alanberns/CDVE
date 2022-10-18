@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5">Usuarios </h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+        <div> {{message}} </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <section>Buscar
+    <form action="{{ url_for('usuarios.usuario_index') }}" method="get">
+      <button>Limpiar filtros de busqueda</button>
+    </form>
+  </section>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Activo</th>
+        <th>Cambiar estado</th>
+        <th>Eliminar</th>
+        <th>Ver detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios_pag.items %}
+      <tr>
+        <th>{{ usuario.id }}</th>
+        <th>{{ usuario.username }}</th>
+        <th>{{ usuario.email }}</th>
+        <th>{{ usuario.first_name }}</th>
+        <th>{{ usuario.last_name }}</th>
+        {% if usuario.activo %}
+        <th>Si</th>
+        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de baja</button></a></th>
+        {% endif %}
+        {% if not usuario.activo %}
+        <th>No</th>
+        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
+        {% endif %}
+        <th><form href="{{url_for('usuarios.delete_usuario')}}" method="post" 
+          onsubmit="return confirm('¿Estas seguro que deseas eliminar el usuario?');">
+          <input type="hidden" name="id" value="{{usuario.id}}">
+          <button>Eliminar</button>
+          </form>
+        </th>
+        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button>Ver detalle</button></a></th>
+      </tr>
+      {% else %}
+      <th>No hay resultados</th>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class=pagination>
+    {%- for page in usuarios_pag.iter_pages() %}
+        {% if page %}
+            {% if page != usuarios_pag.page %}
+                <form href="{{ url_for('usuarios.busqueda_filtrada', page=page) }}" method="get">
+                    <input type="hidden" value="{{page}}" name="page">
+                    <input type="hidden" value="{{email}}" name="email">
+                    <input type="hidden" value="{{activo}}" name="estado">
+                    <button>{{ page }}</button>
+                </form>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {%- endfor %}
+</div>
+  <a href="{{url_for('usuarios.add_usuario_view')}}"> <button>Add usuario</button></a>
+</div>
+{% endblock %}
