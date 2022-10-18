@@ -20,6 +20,6 @@
     <form action="{{ url_for('socios.switch_state_socio', socio_id=socio.id)}}" method="post">
         <button>Deshabilitar</button>
     </form>
-    <a href="{{url_for('socios.list_socios')}}"> Volver</a>
+    <a href="{{url_for('socios.socios_index')}}"> Volver</a>
 </fieldset>
 {% endblock content %}

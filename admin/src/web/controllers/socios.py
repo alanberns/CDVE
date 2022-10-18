@@ -10,7 +10,7 @@ socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 
 
 @socio_blueprint.route("/", methods=["get", "post"])
-def list_socios():
+def socios_index():
     form = DocumentoForm()
     if form.validate_on_submit():
         apellido = form.apellido.data
@@ -37,7 +37,7 @@ def list_socios():
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
 def soft_delete_socio(socio_id):
     board.soft_delete_socio(socio_id)
-    return redirect(url_for("socios.list_socios"))
+    return redirect(url_for("socios.socios_index"))
 
 
 @socio_blueprint.route("/add", methods=["get", "post"])
@@ -55,7 +55,7 @@ def add_socio():
             "email": form.email.data,
         }
         board.create_socio(**kwargs)
-        return redirect(url_for("socios.list_socios"))
+        return redirect(url_for("socios.socios_index"))
     return render_template("create_socio.html", form=form)
 
 
@@ -75,7 +75,7 @@ def update_socio(socio_id):
             "email": form.email.data,
         }
         board.update_socio(socio_id, **kwargs)
-        return redirect(url_for("socios.list_socios"))
+        return redirect(url_for("socios.socios_index"))
     else:
         form.direccion.data = socio.direccion
         form.email.data = socio.email
@@ -90,7 +90,7 @@ def update_socio(socio_id):
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])
 def switch_state_socio(socio_id):
     board.switch_state_socio(socio_id)
-    return redirect(url_for("socios.list_socios"))
+    return redirect(url_for("socios.socios_index"))
 
 
 @socio_blueprint.route("/<int:socio_id>/", methods=["get", "post"])

@@ -1,11 +1,12 @@
 from unicodedata import name
 from flask import Flask
 from flask import render_template
-from web.helpers.auth import is_authenticated
+
 from src.core import database
 from src.web.config import config
-from src.web.helpers import handlers
+from src.web.helpers.auth import is_authenticated
 from src.web.helpers import auth
+from src.web.helpers import handlers
 from src.core import seeds
 from src.web.controllers.usuarios import usuario_blueprint
 from src.web.controllers.configuracion import configuracion_blueprint
@@ -17,8 +18,8 @@ from flask_wtf.csrf import CSRFProtect
 def create_app(env="development", static_folder="static"):
     app = Flask(__name__, static_folder=static_folder)
     app.config.from_object(config[env])
-    csrf = CSRFProtect()
-    csrf.init_app(app)
+#    csrf = CSRFProtect()
+#    csrf.init_app(app)
     database.init_app(app)
 
     @app.get("/")
