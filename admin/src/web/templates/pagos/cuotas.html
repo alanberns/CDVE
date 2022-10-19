@@ -1,0 +1,30 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block content %}
+
+<div class="container">
+  <h2>Buscar socio</h2>
+  <table class="table table-bordered border-primary table-responsive">
+    <thead>
+      <tr class="table-dark">
+        <th>Vencimiento</th>
+        <th>Valor Cuota</th>
+        <th>estado_pago</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for cuota in cuotas%}
+      <tr class="table-secondary">
+        <th>{{cuota.fecha_vencimiento}}</th>
+        <th>{{cuota.valor_cuota}}</th>
+        <th>{{ 'Impaga' if not cuota.estado_pago else 'Pagada' }}</th>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+  <a
+  class="btn btn-primary"
+  href="{{ url_for('pagos.pagos_index') }}"
+  >Atras</a
+</div>
+
+{% endblock %}

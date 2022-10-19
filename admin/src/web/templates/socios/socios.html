@@ -4,30 +4,27 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <div class="column">
-    <h1> Socios </h1>
-    <div class="column">
-      <h2>Buscar socio</h2>
-      <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group"></fieldset>
-          <div class="form-group">
-            {{ form.apellido.label(class="form=control-label") }}
-            {{ form.apellido(class="form-control form=control-lg") }}
-          </div>
-          <div class="form-group">
-            {{ form.habilitado.label(class="form=control-label") }}
-            {{ form.habilitado }}
-          </div>
-        </fieldset>
-        <div class="form-group">
-          {{ form.submit(class="btn btn-outline-info") }}
+
+  <div class="container">
+
+    <h2>Buscar socio</h2>
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <fieldset class="form-group">
+        <div class="input-group mb-3">
+          {{ form.apellido(class="form-control", placeholder="Apellido") }}
+          {{ form.submit(class="btn btn-primary") }}
         </div>
-      </form>
-    </div>
-    <table class="index-table box">
+        <div class="form-group">
+          {{ form.habilitado.label(class="form=control-label") }}
+          {{ form.habilitado }}
+        </div>
+      </fieldset>
+    </form>
+    <br>
+    <table class="table table-hover">
       <thead>
-        <tr>
+        <tr class="table-dark">
           <th>Documento</th>
           <th>#</th>
           <th>Genero</th>
@@ -38,7 +35,7 @@
       </thead>
       <tbody>
         {% for socio in socios %}
-        <tr>
+        <tr class="table-active">
           <th>{{ socio.tipo_documento }}</th>
           <th>{{ socio.numero_documento }}</th>
           <th>{{ socio.genero }}</th>

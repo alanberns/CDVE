@@ -20,7 +20,6 @@ def configuracion_index():
     return render_template("configuracion.html", form=form)
 
 
-
 @configuracion_blueprint.post("/")
 def configuracion_update():
     form = ConfigurationForm(request.form)

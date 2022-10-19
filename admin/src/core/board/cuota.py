@@ -14,4 +14,5 @@ class Cuota(db.Model):
     valor_cuota = db.Column(db.Float)
     valor_pago = db.Column(db.Float)
     activo = db.Column(db.Boolean, default=True)
-    inscripcion = db.Column(db.Integer, db.ForeignKey("inscripciones.id"))
+    inscripcion_id = db.Column(db.Integer, db.ForeignKey("inscripciones.id"))
+    inscripcion = db.relationship('Inscripcion', back_populates="cuota")

@@ -9,11 +9,13 @@ from src.core.board.cuota import Cuota
 from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
 
+
 def list_usuarios(page=1, per_page=10):
     """
     Lista los datos de los usuarios.
     """
     return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+
 
 def create_usuario(**kwargs):
     """
@@ -25,12 +27,14 @@ def create_usuario(**kwargs):
     db.session.commit()
     return usuario
 
+
 def get_usuario(id):
     """
     Busca un usuario por su id y lo devuelve
     """
     usuario = db.session.get(Usuario, id)
     return usuario
+
 
 def update_usuario(**kwargs):
     """
@@ -42,10 +46,11 @@ def update_usuario(**kwargs):
 
     return usuario
 
+
 def update_activo_usuario(id):
     """
     Actualiza el estado (Activo) del usuario.
-    """    
+    """
     usuario = get_usuario(id)
     usuario.activo = not usuario.activo
 
@@ -53,17 +58,20 @@ def update_activo_usuario(id):
 
     return usuario
 
+
 def exist_email(email):
     """
     Verifica que un email existe en la BD
     """
     return Usuario.query.filter(Usuario.email == email).first() != None
 
+
 def exist_username(username):
     """
     Verifica que un username existe en la BD
     """
     return Usuario.query.filter(Usuario.username == username).first() != None
+
 
 def delete_usuario(id):
     """
@@ -72,6 +80,7 @@ def delete_usuario(id):
     db.session.delete(get_usuario(id))
     db.session.commit()
 
+
 def filter_usuarios(email, activo, page=1, per_page=10):
     """
     Filtra a usuarios por email y estado. Si el email ingresado es vacio y el estado que se pide es ambos 
@@ -79,23 +88,30 @@ def filter_usuarios(email, activo, page=1, per_page=10):
     """
     if (email == ""):
         if (activo == ""):
-            usuarios = Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
-        else: 
-            usuarios = Usuario.query.filter_by(activo=activo).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+            usuarios = Usuario.query.order_by(Usuario.id.asc()).paginate(
+                page=page, per_page=per_page, error_out=False)
+        else:
+            usuarios = Usuario.query.filter_by(activo=activo).order_by(
+                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
     else:
         if (activo != ""):
-            usuarios = Usuario.query.filter_by(activo=activo, email=email).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+            usuarios = Usuario.query.filter_by(activo=activo, email=email).order_by(
+                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
         else:
-            usuarios = Usuario.query.filter_by(email=email).order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+            usuarios = Usuario.query.filter_by(email=email).order_by(
+                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
+
 
 def quitar_rol(rol_id, usuario_id):
     """
     Elimina una tupla de 'usuario_tiene_rol', quita un rol a un usuario
     """
-    usuario_tiene_rol = Usuario_tiene_rol.query.filter_by(usuario_id=usuario_id, rol_id=rol_id).first()
+    usuario_tiene_rol = Usuario_tiene_rol.query.filter_by(
+        usuario_id=usuario_id, rol_id=rol_id).first()
     db.session.delete(usuario_tiene_rol)
     db.session.commit()
+
 
 def asignar_rol(rol_id, usuario_id):
     """
@@ -109,6 +125,7 @@ def asignar_rol(rol_id, usuario_id):
     db.session.add(usuario)
     db.session.commit()
 
+
 def get_roles():
     """
     Retorna los roles
@@ -119,7 +136,6 @@ def get_roles():
 def find_user_by_email(email):
     usuario = Usuario.query.filter_by(email=email).first()
     return usuario
-
 
 
 def list_configuracion():
@@ -207,18 +223,24 @@ def list_socios():
     socios = Socio.query.filter_by(activo=True).all()
     return socios
 
+
 def list_socios_habilitado(habilitado):
     socios = Socio.query.filter_by(activo=True, habilitado=habilitado).all()
     return socios
 
+
 def find_socio_by_apellido(username):
-    socio = Socio.query.filter_by(activo=True).join(Usuario).filter_by(username=username).all() 
+    socio = Socio.query.filter_by(activo=True).join(
+        Usuario).filter_by(username=username).all()
     return socio
 
+
 def find_socio_habilitado_by_apellido(username, habilitado):
-    socio = Socio.query.filter_by(activo=True, habilitado=habilitado).join(Usuario).filter_by(username=username).all() 
-    #reemplazar "username" por apellido cuando haya
+    socio = Socio.query.filter_by(activo=True, habilitado=habilitado).join(
+        Usuario).filter_by(username=username).all()
+    # reemplazar "username" por apellido cuando haya
     return socio
+
 
 def find_socio_by_id(socio_id):
     socio = Socio.query.filter_by(id=socio_id).first()
@@ -240,7 +262,7 @@ def soft_delete_socio(socio_id):
     socio.activo = False
     db.session.merge(socio)
     db.session.commit()
-    
+
     return socio
 
 
@@ -249,8 +271,10 @@ def switch_state_socio(socio_id):
     socio.habilitado = not socio.habilitado
     db.session.merge(socio)
     db.session.commit()
-    
+
     return socio
+
+
 def create_cuota(**kwargs):
     cuota = Cuota(**kwargs)
     db.session.add(cuota)
@@ -265,3 +289,46 @@ def socio_assign_disciplina(socio, disciplina):
     db.session.add(socio)
     db.session.commit()
     return socio
+
+
+def get_elementos_pagina():
+    """
+    Devuelve los elementos por pagina seteados en la configuracion
+    """
+    configuracion = Configuracion.query.first()
+
+    return configuracion.elementos_pagina
+
+
+def get_inscripciones():
+    """
+    Retorna las Inscripciones
+    """
+    return Inscripcion.query.all()
+
+
+def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
+    """
+    Retorna una inscripcion, dado un socio y una disciplina
+    """
+    inscripcion = Inscripcion.query.filter_by(
+        socio_id=socio.id, disciplina_id=disciplina.id).first()
+    return inscripcion
+
+
+def inscripion_assign_cuotas(socio, disciplina, cuotas):
+    """
+    Agrega una lista de cuotas a una inscripcion
+    """
+    inscripcion = get_inscripcion_by_socio_and_disciplina(socio, disciplina)
+    inscripcion.cuota.extend(cuotas)
+    db.session.add(inscripcion)
+    db.session.commit()
+    return inscripcion
+
+
+def get_cuotas_by_socio_id(socio_id):
+    """
+    Retorna las cuotas para un socio dado su id
+    """
+    return Cuota.query.join(Inscripcion).filter_by(socio_id=socio_id).all()
