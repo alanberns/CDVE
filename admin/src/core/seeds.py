@@ -3,7 +3,6 @@ from dateutil.parser import parse
 from datetime import datetime
 
 
-
 def run():
     """
     Crea datos por defecto para la base de datos
@@ -15,8 +14,8 @@ def run():
         password="1234",
         first_name="Aa",
         last_name="Bb",
-        created_at = datetime.now(),
-        updated_at = datetime.now(),
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     test_user2 = board.create_usuario(
         username="test2",
@@ -24,8 +23,8 @@ def run():
         password="1234",
         first_name="Aa",
         last_name="Bb",
-        created_at = datetime.now(),
-        updated_at = datetime.now(),
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     # Configuracion
     default_config = board.init_configuracion(
@@ -37,10 +36,10 @@ def run():
         porcentaje_cuota=0.15,
     )
 
-    ###Roles
+    # Roles
     rol_administrador = board.create_rol(nombre="administrador")
 
-    ###Permisos
+    # Permisos
     permiso_index = board.create_permiso(nombre="index")
     permiso_show = board.create_permiso(nombre="show")
     board.rol_assign_permiso(rol_administrador, [permiso_index, permiso_show])
@@ -93,12 +92,12 @@ def run():
 
     t_disciplina2 = board.create_disciplina(
         id="3",
-        nombre="Bascket",
+        nombre="Basket",
     )
 
     t_disciplina3 = board.create_disciplina(
         id="7",
-        nombre="Bascket",
+        nombre="Natacion",
     )
 
     cuota_enero = board.create_cuota(
@@ -129,3 +128,7 @@ def run():
     )
 
     board.socio_assign_disciplina(socio1, t_disciplina)
+    board.socio_assign_disciplina(socio1, t_disciplina2)
+    board.socio_assign_disciplina(socio1, t_disciplina3)
+    board.socio_assign_disciplina(juan, t_disciplina2)
+    board.socio_assign_disciplina(juan, t_disciplina3)

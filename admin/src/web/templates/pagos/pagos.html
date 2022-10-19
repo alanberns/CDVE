@@ -1,0 +1,30 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block content %}
+
+<div class="container">
+  <h2>Buscar socio</h2>
+  <table class="table table-bordered border-primary table-responsive">
+    <thead>
+      <tr class="table-dark">
+        <th>Nro Socio</th>
+        <th>Apellido</th>
+        <th>Disciplina</th>
+        <th>Cuotas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for inscripcion in inscripciones%}
+      <tr class="table-secondary">
+        <th>{{inscripcion.socio.numero_socio}}</th>
+        <th>{{inscripcion.socio.email}}</th>
+        <th>{{inscripcion.disciplina.nombre}}</th>
+        <th>
+          <a href="#"> Ver </a>
+        </th>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

@@ -29,7 +29,7 @@ class DevelopmentConfig(Config):
     DB_USER = "postgres"
     DB_PASS = "postgres"
     DB_HOST = "localhost"
-    DB_NAME = "grupo14"
+    DB_NAME = "club"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
