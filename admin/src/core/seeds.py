@@ -132,3 +132,6 @@ def run():
     board.socio_assign_disciplina(socio1, t_disciplina3)
     board.socio_assign_disciplina(juan, t_disciplina2)
     board.socio_assign_disciplina(juan, t_disciplina3)
+
+    board.inscripion_assign_cuotas(
+        socio1, t_disciplina, [cuota_enero, cuota_febrero, cuota_marzo])

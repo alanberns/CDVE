@@ -302,6 +302,33 @@ def get_elementos_pagina():
 
 def get_inscripciones():
     """
-    Retorna los roles
+    Retorna las Inscripciones
     """
     return Inscripcion.query.all()
+
+
+def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
+    """
+    Retorna una inscripcion, dado un socio y una disciplina
+    """
+    inscripcion = Inscripcion.query.filter_by(
+        socio_id=socio.id, disciplina_id=disciplina.id).first()
+    return inscripcion
+
+
+def inscripion_assign_cuotas(socio, disciplina, cuotas):
+    """
+    Agrega una lista de cuotas a una inscripcion
+    """
+    inscripcion = get_inscripcion_by_socio_and_disciplina(socio, disciplina)
+    inscripcion.cuota.extend(cuotas)
+    db.session.add(inscripcion)
+    db.session.commit()
+    return inscripcion
+
+
+def get_cuotas_by_socio_id(socio_id):
+    """
+    Retorna las cuotas para un socio dado su id
+    """
+    return Cuota.query.join(Inscripcion).filter_by(socio_id=socio_id).all()

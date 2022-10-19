@@ -15,11 +15,19 @@
     <tbody>
       {%for inscripcion in inscripciones%}
       <tr class="table-secondary">
-        <th>{{inscripcion.socio.numero_socio}}</th>
-        <th>{{inscripcion.socio.email}}</th>
-        <th>{{inscripcion.disciplina.nombre}}</th>
-        <th>
-          <a href="#"> Ver </a>
+        <th class="text-center align-middle">
+          {{inscripcion.socio.numero_socio}}
+        </th>
+        <th class="text-center align-middle">{{inscripcion.socio.email}}</th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.nombre}}
+        </th>
+        <th class="text-center align-middle">
+          <a
+            class="btn btn-primary"
+            href="{{ url_for('pagos.cuotas_index', socio_id = inscripcion.socio_id) }}"
+            >Ver</a
+          >
         </th>
       </tr>
       {%endfor%}

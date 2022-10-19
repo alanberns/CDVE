@@ -13,6 +13,12 @@ pago_blueprint = Blueprint(
 @pago_blueprint.get("/")
 @login_required
 def pagos_index():
-
     inscripciones = board.get_inscripciones()
     return render_template("pagos/pagos.html", inscripciones=inscripciones)
+
+
+@pago_blueprint.get("/cuotas/<int:socio_id>")
+@login_required
+def cuotas_index(socio_id):
+    cuotas = board.get_cuotas_by_socio_id(socio_id)
+    return render_template("pagos/cuotas.html", cuotas=cuotas)
