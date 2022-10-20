@@ -15,7 +15,6 @@ class Socio(db.Model):
     numero_socio = db.Column(db.Integer, autoincrement=True, unique=True)
     direccion = db.Column(db.String(255))
     telefono = db.Column(db.Integer())
-    email = db.Column(db.String(255))
     activo = db.Column(db.Boolean, default=True)
     disciplina = db.relationship(
     'Inscripcion', back_populates='socio')
@@ -30,7 +29,6 @@ class Socio(db.Model):
         genero,
         direccion,
         telefono,
-        email,
     ):
         self.id_usuario = id_usuario
         self.tipo_documento = tipo_documento
@@ -38,7 +36,6 @@ class Socio(db.Model):
         self.genero = genero
         self.direccion = direccion
         self.telefono = telefono
-        self.email = email
 
 
     def update(self, **kwargs):

@@ -23,11 +23,9 @@ class LoginForm(FlaskForm):
 class SocioForm(FlaskForm):
     tipo_documento = StringField("Tipo Documento", validators=[DataRequired()])
     numero_documento = StringField("Numero", validators=[DataRequired()])
-    numero_socio = StringField("numero_socio", validators=[DataRequired()])
     genero = StringField("genero", validators=[DataRequired()])
     direccion = StringField("direccion", validators=[DataRequired()])
     telefono = StringField("telefono", validators=[DataRequired()])
-    email = StringField("email", validators=[DataRequired()])
     submit = SubmitField("Guardar")
 
 

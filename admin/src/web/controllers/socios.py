@@ -18,7 +18,6 @@ def socios_index():
         if habilitado == 0:
             if apellido:
                 socios = board.find_socio_by_apellido(apellido)
-                print (socios)
             else:
                 socios = board.list_socios()
         else:
@@ -50,11 +49,9 @@ def add_socio():
             "id_usuario": 1,
             "tipo_documento": form.tipo_documento.data,
             "numero_documento": form.numero_documento.data,
-            "numero_socio": form.numero_socio.data,
             "genero": form.genero.data,
             "direccion": form.direccion.data,
             "telefono": form.telefono.data,
-            "email": form.email.data,
         }
         board.create_socio(**kwargs)
         return redirect(url_for("socios.socios_index"))
@@ -65,27 +62,26 @@ def add_socio():
 def update_socio(socio_id):
     socio = board.find_socio_by_id(socio_id)
     form = SocioForm()
-    if form.validate_on_submit():
-        kwargs = {
-            "id_usuario": 2,
-            "tipo_documento": form.tipo_documento.data,
-            "numero_documento": form.numero_documento.data,
-            "numero_socio": form.numero_socio.data,
-            "genero": form.genero.data,
-            "direccion": form.direccion.data,
-            "telefono": form.telefono.data,
-            "email": form.email.data,
-        }
-        board.update_socio(socio_id, **kwargs)
-        return redirect(url_for("socios.socios_index"))
+    if form.validate_on_submit():       
+        if (board.exist_socio_documento_id(form.numero_documento.data, socio_id)):
+            kwargs = {
+                "id_usuario": 2,
+                "tipo_documento": form.tipo_documento.data,
+                "numero_documento": form.numero_documento.data,
+                "genero": form.genero.data,
+                "direccion": form.direccion.data,
+                "telefono": form.telefono.data,
+            }
+            board.update_socio(socio_id, **kwargs)
+            return redirect(url_for("socios.socios_index"))
+        else:
+            flash("El documento ingresado pertenece a otro Socio", "danger")
     else:
         form.direccion.data = socio.direccion
-        form.email.data = socio.email
         form.genero.data = socio.genero
         form.numero_documento.data = socio.numero_documento
         form.tipo_documento.data = socio.tipo_documento
         form.telefono.data = socio.telefono
-        form.numero_socio.data = socio.numero_socio
     return render_template("socios/create_socio.html", form=form)
 
 
