@@ -19,7 +19,6 @@ def login():
     return render_template("auth/login.html", form=form)
 
 
-
 @auth_blueprint.post("/authenticate")
 def authenticate():
     form = AuthForm(request.form)

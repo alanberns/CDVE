@@ -21,6 +21,7 @@ def configuracion_index():
 
 
 @configuracion_blueprint.post("/")
+@login_required
 def configuracion_update():
     form = ConfigurationForm(request.form)
     if not form.validate:

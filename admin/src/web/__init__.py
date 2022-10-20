@@ -1,7 +1,8 @@
 from unicodedata import name
 from flask import Flask
 from flask import render_template
-
+from flask import redirect
+from flask import url_for
 from src.core import database
 from src.web.config import config
 from src.web.helpers import auth
@@ -13,6 +14,7 @@ from src.web.controllers.auth import auth_blueprint
 from src.web.controllers.socios import socio_blueprint
 from src.web.controllers.pagos import pago_blueprint
 from flask_wtf.csrf import CSRFProtect
+from src.web.helpers.auth import login_required
 
 
 def create_app(env="development", static_folder="static"):
@@ -23,8 +25,13 @@ def create_app(env="development", static_folder="static"):
     database.init_app(app)
 
     @app.get("/")
+    def entry():
+        return redirect(url_for('auth.login'))
+
+    @app.get("/home")
+    @login_required
     def home():
-        return render_template("home.html")
+        return render_template('home.html')
 
     app.register_blueprint(usuario_blueprint)
     app.register_blueprint(configuracion_blueprint)
