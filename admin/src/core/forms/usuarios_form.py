@@ -57,7 +57,3 @@ class ModificarUsuarioForm(FlaskForm):
         self.username.data = usuario.username
         self.first_name.data = usuario.first_name
         self.last_name.data = usuario.last_name
-
-class EliminarUsuarioForm(FlaskForm):
-    id = IntegerField(label=("id"), validators=[DataRequired()])
-    eliminar = SubmitField(label=("Eliminar"))

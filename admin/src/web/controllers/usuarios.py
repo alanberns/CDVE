@@ -9,10 +9,10 @@ from datetime import datetime
 
 from src.core.forms.usuarios_form import UsuarioNuevoForm
 from src.core.forms.usuarios_form import ModificarUsuarioForm
-from src.core.forms.usuarios_form import EliminarUsuarioForm
 from src.core import board
 from src.web.helpers.auth import login_required
-from src.web.helpers.permissions.user_permission import *
+from src.web.helpers.permissions.user_permission import user_create_req, user_index_req, \
+user_rol_update_req, user_update_req, user_show_req
 
 
 usuario_blueprint = Blueprint(
@@ -31,9 +31,8 @@ def usuario_index():
     elementos_pagina = configuracion[0].elementos_pagina
     page = int(request.args.get('page', 1))
 
-    form = EliminarUsuarioForm()
     usuarios_pag = board.list_usuarios(page,elementos_pagina)
-    return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form)
+    return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag)
 
 @usuario_blueprint.get("/res")
 @login_required
@@ -59,9 +58,8 @@ def busqueda_filtrada():
     elementos_pagina = configuracion[0].elementos_pagina
     page = int(request.args.get('page', 1))
     usuarios_pag = board.filter_usuarios(email, activo, page, elementos_pagina)
-    
-    form = EliminarUsuarioForm()
-    return render_template("usuarios/usuariosFilter.html", form=form,
+
+    return render_template("usuarios/usuariosFilter.html",
     usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
 
 @usuario_blueprint.get("/add")
@@ -169,16 +167,6 @@ def modify_activo(id):
     flash("Se actualizo el estado del usuario", "success")
     return redirect(url_for('usuarios.usuario_index', id=id))
 
-@usuario_blueprint.post("/")
-@login_required
-@user_delete_req
-def delete_usuario():
-    """
-    Recibe el id de un usuario para eliminarlo de la BD
-    """
-    board.delete_usuario(request.form.get("id"))
-    flash("Se eliminó al usuario", "success")
-    return (redirect(url_for('usuarios.usuario_index')))
 
 @usuario_blueprint.get("/quitarRol")
 @login_required
