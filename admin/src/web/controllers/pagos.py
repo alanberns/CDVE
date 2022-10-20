@@ -19,12 +19,12 @@ def pagos_index():
     return render_template("pagos/pagos.html", inscripciones=inscripciones)
 
 
-@pago_blueprint.get("/cuotas/<int:socio_id>")
+@pago_blueprint.get("/cuotas/<int:inscripcion_id>")
 @login_required
-def cuotas_index(socio_id):
-    cuotas = board.get_cuotas_by_socio_id(socio_id)
+def cuotas_index(inscripcion_id):
+    cuotas = board.get_cuotas_by_inscripcion_id(inscripcion_id)
     form = EditForm(data={"items": cuotas})
-    return render_template("pagos/cuotas.html", cuotas=cuotas, socio_id=socio_id, form=form)
+    return render_template("pagos/cuotas.html", cuotas=cuotas, form=form)
 
 
 @pago_blueprint.post("/pago")
