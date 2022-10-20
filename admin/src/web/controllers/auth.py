@@ -29,6 +29,11 @@ def authenticate():
     if not user or not user.verify_password(form.contraseña.data):
         flash("email o clave incorrecta", "danger")
         return redirect(url_for("auth.login"))
+    
+    # Validar que el usuario este activo para iniciar sesion
+    if not user.activo:
+        flash("No puede acceder al sistema: usuario inactivo", "danger")
+        return redirect(url_for("auth.login"))
     session["user"] = form.email.data
     flash("Se ha iniciado la sesion correctamente", "success")
     return redirect(url_for("home"))

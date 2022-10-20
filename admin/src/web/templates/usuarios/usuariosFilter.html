@@ -18,7 +18,7 @@
 
   <table class="table table-striped">
     <thead>
-      <tr>
+      <tr class="table-dark">
         <th>#</th>
         <th>Username</th>
         <th>Email</th>
@@ -26,7 +26,6 @@
         <th>Apellido</th>
         <th>Activo</th>
         <th>Cambiar estado</th>
-        <th>Eliminar</th>
         <th>Ver detalle</th>
       </tr>
     </thead>
@@ -46,12 +45,6 @@
         <th>No</th>
         <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
         {% endif %}
-        <th><form href="{{url_for('usuarios.delete_usuario')}}" method="post" 
-          onsubmit="return confirm('¿Estas seguro que deseas eliminar el usuario?');">
-          <input type="hidden" name="id" value="{{usuario.id}}">
-          <button>Eliminar</button>
-          </form>
-        </th>
         <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button>Ver detalle</button></a></th>
       </tr>
       {% else %}

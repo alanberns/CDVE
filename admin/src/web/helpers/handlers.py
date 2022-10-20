@@ -15,6 +15,13 @@ def unauthorized(e):
     }
     return render_template("error.html", **kwargs), 404
 
+def forbbiden(e):
+    kwargs = {
+        "error_name": "403 Forbbiden error",
+        "error_description": "No tiene permiso para acceder al recurso",
+    }
+    return render_template("error.html", **kwargs), 403
+
 def internal_server_error(e):
     kwargs = {
         "error_name": "500 Internal server error",

@@ -18,8 +18,8 @@ from flask_wtf.csrf import CSRFProtect
 def create_app(env="development", static_folder="static"):
     app = Flask(__name__, static_folder=static_folder)
     app.config.from_object(config[env])
-#    csrf = CSRFProtect()
-#    csrf.init_app(app)
+    csrf = CSRFProtect()
+    csrf.init_app(app)
     database.init_app(app)
 
     @app.get("/")
@@ -34,6 +34,7 @@ def create_app(env="development", static_folder="static"):
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(500, handlers.internal_server_error)
+    app.register_error_handler(403, handlers.forbbiden)
 
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
 
