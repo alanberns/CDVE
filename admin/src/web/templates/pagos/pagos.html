@@ -1,0 +1,38 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block content %}
+
+<div class="container">
+  <h2>Buscar socio</h2>
+  <table class="table table-bordered border-primary table-responsive">
+    <thead>
+      <tr class="table-dark">
+        <th>Nro Socio</th>
+        <th>Apellido</th>
+        <th>Disciplina</th>
+        <th>Cuotas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for inscripcion in inscripciones%}
+      <tr class="table-secondary">
+        <th class="text-center align-middle">
+          {{inscripcion.socio.numero_socio}}
+        </th>
+        <th class="text-center align-middle">{{inscripcion.socio.email}}</th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.nombre}}
+        </th>
+        <th class="text-center align-middle">
+          <a
+            class="btn btn-primary"
+            href="{{ url_for('pagos.cuotas_index', socio_id = inscripcion.socio_id) }}"
+            >Ver</a
+          >
+        </th>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

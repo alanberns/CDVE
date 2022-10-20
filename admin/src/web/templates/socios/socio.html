@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="media-body">
+    <h2 class="article-content">{{ socio.tipo_documento }}</h2>
+    <h2 class="article-content">{{ socio.numero_documento }}</h2>
+    <h2 class="article-content">{{ socio.genero }}</h2>
+    <h2 class="article-content">{{ socio.email }}</h2>
+</div>
+<fieldset class="form-group">
+    <form action="{{ url_for('socios.soft_delete_socio', socio_id=socio.id)}}" method="post">
+        <button>Eliminar</button>
+    </form>
+    <form action="{{ url_for('socios.update_socio', socio_id=socio.id)}}" method="post">
+        <button>Editar</button>
+    </form>
+    <form action="{{ url_for('socios.switch_state_socio', socio_id=socio.id)}}" method="post">
+        <button>Deshabilitar</button>
+    </form>
+    <a href="{{url_for('socios.socios_index')}}"> Volver</a>
+</fieldset>
+{% endblock content %}
