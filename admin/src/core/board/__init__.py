@@ -73,14 +73,6 @@ def exist_username(username):
     return Usuario.query.filter(Usuario.username == username).first() != None
 
 
-def delete_usuario(id):
-    """
-    Elimina el usuario de la BD
-    """
-    db.session.delete(get_usuario(id))
-    db.session.commit()
-
-
 def filter_usuarios(email, activo, page=1, per_page=10):
     """
     Filtra a usuarios por email y estado. Si el email ingresado es vacio y el estado que se pide es ambos 
