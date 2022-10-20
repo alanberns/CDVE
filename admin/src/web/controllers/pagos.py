@@ -1,8 +1,10 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import redirect
+from flask import url_for
 from flask import flash
-
+from src.core.forms.pagos_form import EditForm
 from src.core import board
 from src.web.helpers.auth import login_required
 
@@ -21,4 +23,16 @@ def pagos_index():
 @login_required
 def cuotas_index(socio_id):
     cuotas = board.get_cuotas_by_socio_id(socio_id)
-    return render_template("pagos/cuotas.html", cuotas=cuotas)
+    form = EditForm(data={"items": cuotas})
+    return render_template("pagos/cuotas.html", cuotas=cuotas, socio_id=socio_id, form=form)
+
+
+@pago_blueprint.post("/pago")
+@login_required
+def pago():
+    form = EditForm(request.form)
+    if form.validate_on_submit():
+        [board.pagar_cuota_by_id(cuota["id"])
+         for cuota in form.items.data if cuota["check"]]
+        flash("Pago realizado correctamente", "success")
+    return redirect(url_for('pagos.pagos_index'))

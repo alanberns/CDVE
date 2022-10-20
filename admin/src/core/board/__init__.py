@@ -332,3 +332,11 @@ def get_cuotas_by_socio_id(socio_id):
     Retorna las cuotas para un socio dado su id
     """
     return Cuota.query.join(Inscripcion).filter_by(socio_id=socio_id).all()
+
+
+def pagar_cuota_by_id(id_cuota):
+    cuota = Cuota.query.filter_by(id=id_cuota).first()
+    cuota.estado_pago = True
+    db.session.add(cuota)
+    db.session.commit()
+    return cuota
