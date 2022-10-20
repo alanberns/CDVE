@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Configuracion{% endblock %}
+{% block head %}
+  {{ super() }}
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+  </svg>
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+<h1 class="mx-5">Configuracion</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}} d-flex align-items-center alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+        <div> {{message}} </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+{% for config in configuracion %}
+    <form class="row g-3 mx-5" action="{{ url_for('configuracion.configuracion_index')}}" method="post" onsubmit="return confirm('¿Estas seguro que deseas editar la configuracion?');">
+        <div class="form-floating form-control-sm mb-3">
+            <input type="text" name="elementos_pagina" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.elementos_pagina}}">
+            <label for="floatingInput">Elementos por pagina</label>
+        </div>
+        <div class="d-flex flex-row">
+          <div class="form-check">
+            <input class="form-check-input" name="estado_pago" type="checkbox" id="flexCheckDefault" {{'checked="checked"' if config.estado_pago else ""}}">
+            <label class="form-check-label" for="flexCheckDefault">
+            Mostrar tabla de pagos
+            </label>
+          </div>
+          <div class="form-check">
+              <input class="form-check-input ms-2" name="estado_info_contactos" type="checkbox" id="flexCheckDefault"  {{'checked="checked"' if config.estado_info_contactos else ""}}>
+              <label class="form-check-label" for="flexCheckDefault">
+              Mostrar Info de contactos
+              </label>
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" name="texto_recibo" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.texto_recibo}}">
+            <label for="floatingInput">Texto para encabezado del recibo</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="valor_base_cuota" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.valor_base_cuota}}">
+            <label for="floatingInput">Valor base para la cuota</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="porcentaje_cuota" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{config.porcentaje_cuota}}">
+            <label for="floatingInput">Porcentaje de recargo cuotas adeudadas</label>
+        </div>
+        <div class="d-flex flex-row justify-content-center bg-danger">
+            <button type="submit" class="btn btn-primary" href="{{url_for('configuracion.configuracion_update')}}">Editar</button>
+        </div>
+    </form>
+{%endfor%}
+<a class = "mx-5" href="{{url_for('home')}}"> Volver al inicio </a>
+</div>
+{% endblock %}

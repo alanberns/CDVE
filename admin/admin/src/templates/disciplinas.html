@@ -1,0 +1,35 @@
+{%  extends "layout.html" %}
+{% block title %}Disciplinas{% endblock title %}
+{% block head  %} 
+  {{ super() }} 
+{% endblock title %}
+{% block content  %}  
+<h1>Disciplinas</h1>
+<table class="dis-table box">
+    <thead>
+          <tr>
+              <th>#Id</th>
+              <th>Nombre</th>
+              <th>Categoria</th>
+              <th>Instructor</th>
+              <th>Dia</th>
+              <th>Hora</th>
+              <th>Costo mensual</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for disciplina in disciplina %}
+            <tr>
+              <th>{{ disciplina.id }}</th>
+              <th>{{ disciplina.nombre }}</th>
+              <th>{{ disciplina.categoria }}</th>
+              <th>{{ disciplina.instructor }}</th>
+              <th>{{ disciplina.dia }}</th>
+              <th>{{ disciplina.hora }}</th>
+              <th>{{ disciplina.costo }}</th>
+            </tr>
+            {% endfor %}
+          </tbody>
+</table>
+
+{% endblock %}

@@ -2,15 +2,26 @@
 name = "web"
 version = "0.1.0"
 description = ""
+<<<<<<< HEAD
 authors = ["Pablo Ormeno <pablo.d.ormeno@gmail.com>"]
+=======
+authors = ["Pablo Ormeño <pablo.d.ormeno@ygmail.com.ar>"]
+>>>>>>> 83a18280ac87c87a8777e3039a432fcdd068fffc
 readme = "README.md"
 packages = [{include = "web", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+<<<<<<< HEAD
 flask = "^2.2.2"
 psycopg2-binary = "^2.9.4"
 flask-sqlalchemy = "^3.0.2"
+=======
+Flask = "^2.2.2"
+psycopg2-binary = "^2.9.4"
+Flask-SQLAlchemy = "^2.5.1"
+flask-sqlalchemy = "^3.0.1"
+>>>>>>> 83a18280ac87c87a8777e3039a432fcdd068fffc
 
 
 [tool.poetry.group.dev.dependencies]

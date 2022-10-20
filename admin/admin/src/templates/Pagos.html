@@ -1,0 +1,26 @@
+{%  extends "layout.html" %}
+{% block title %}Pagos{% endblock title %}
+{% block head  %}  {{ super()   }}  {% endblock title %}
+{% block content  %}  
+<h1>Pagos / Cuotas </h1>
+<table class="pag-table box">
+    <thead>
+          <tr>
+               <th>#IdPago</th>
+              <th>Socio</th>
+               <th>Disciplina</th>
+               <th>Periodo/Mes</th>
+           </tr>
+          </thead>
+           <tbody>
+                {% for issue in issues %}
+           <tr>
+               <th>{{ issue.idpago }}</th>
+               <th>{{ issue.socio }}</th>
+                <th>{{ issue.disciplina }}</th>
+                 <th>{{ issue.periodo }}</th>
+             </tr>
+         {% endfor %}
+      </tbody>
+  </table>
+{% endblock %}
