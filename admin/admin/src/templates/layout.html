@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=""en">
+<html lang="en">
  <head>
      {% block head %} 
      <link
@@ -11,13 +11,7 @@
   </head>
   <body>
     <div id="navbar">{% block navbar %} {% endblock %} </div>
-    <div id="main">{% block content %}
-      <h1>Inicio</h1>
-      <p>Pagina de inicio de la aplicacion</p>
-      {% endblock %} 
-    </div>
-    <div id="footer">{% block footer %} {% endblock %} 
-    <a href="/disciplinas"> Disciplinas</a>
+    <div id="main">{% block content %} {% endblock %} </div>
+    <div id="footer">{% block footer %} {% endblock %} </div>
   </body>
 </html>
-
