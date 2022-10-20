@@ -51,7 +51,6 @@ def run():
         tipo_documento="DNI",
         numero_documento=44556677,
         genero="femenino",
-        numero_socio="AAA111",
         direccion="calle falsa 123",
         telefono=14141414,
         email="socio1@mail.com"
@@ -64,7 +63,6 @@ def run():
         tipo_documento="DNI",
         numero_documento=43123123,
         genero="caballo",
-        numero_socio="AAA12",
         direccion="7 y 32",
         telefono=221420,
         email="juan@juan.juan"

@@ -18,6 +18,7 @@ def socios_index():
         if habilitado == 0:
             if apellido:
                 socios = board.find_socio_by_apellido(apellido)
+                print (socios)
             else:
                 socios = board.list_socios()
         else:
@@ -30,7 +31,8 @@ def socios_index():
             else:
                 socios = board.list_socios_habilitado(activo)
     else:
-        socios = board.list_socios()
+        socios = board.list_socios_join_users()
+
     return render_template("socios/socios.html", socios=socios, form=form)
 
 
@@ -95,5 +97,7 @@ def switch_state_socio(socio_id):
 
 @socio_blueprint.route("/<int:socio_id>/", methods=["get", "post"])
 def ver_socio(socio_id):
-    socio = board.find_socio_by_id(socio_id)
-    return render_template("socios/socio.html", socio=socio)
+    query = board.find_socio_join_usuario_by_id(socio_id)
+    socio = query[0]
+    usuario = query[1]
+    return render_template("socios/socio.html", socio=socio, usuario=usuario)

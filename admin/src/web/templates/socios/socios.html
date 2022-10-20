@@ -25,24 +25,35 @@
     <table class="table table-hover">
       <thead>
         <tr class="table-dark">
+          <th>Apellido</th>
+          <th>Nombre</th>
           <th>Documento</th>
-          <th>#</th>
           <th>Genero</th>
-          <th>Mail</th>
-          <th></th>
+          <th>Email</th>
+          <th>Estado</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         {% for socio in socios %}
         <tr class="table-active">
-          <th>{{ socio.tipo_documento }}</th>
-          <th>{{ socio.numero_documento }}</th>
-          <th>{{ socio.genero }}</th>
-          <th>{{ socio.email }}</th>
-          <th>{{ socio.habilitado }}</th>
+          <th>{{ socio[1].last_name }}</th>
+          <th>{{ socio[1].first_name }}</th>
+          <th>{{ socio[0].tipo_documento }} {{ socio[0].numero_documento }}</th>
+          <th>{{ socio[0].genero }}</th>
+          <th>{{ socio[0].email }}</th>
+          {% if socio[0].habilitado %}
           <th>
-            <a href="{{ url_for('socios.ver_socio', socio_id=socio.id) }}"> Ver </a>
+            <span class="badge rounded-pill bg-success">Habilitado</span>
+          </th>
+          {% endif %}
+          {% if not socio[0].habilitado %}
+          <th>
+            <span class="badge rounded-pill bg-secondary">Deshabilitado</span>
+          </th>
+          {% endif %}
+          <th>
+            <a href="{{ url_for('socios.ver_socio', socio_id=socio[0].id) }}"> Ver </a>
           </th>
         </tr>
         {% endfor %}
