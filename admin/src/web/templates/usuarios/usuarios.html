@@ -33,7 +33,7 @@
 
   <table class="table table-striped">
     <thead>
-      <tr>
+      <tr class="table-dark">
         <th>#</th>
         <th>Username</th>
         <th>Email</th>
@@ -63,8 +63,10 @@
         {% endif %}
         <th><form href="{{url_for('usuarios.delete_usuario')}}" method="post" 
           onsubmit="return confirm('¿Estas seguro que deseas eliminar el usuario?');">
-          <input type="hidden" name="id" value="{{usuario.id}}">
-          <button>Eliminar</button>
+          {{ form.csrf_token }}
+          {{form.id(class="form-control", type="hidden", value=usuario.id)}}
+          <label for="id"></label>
+          {{form.eliminar}}
           </form>
         </th>
         <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button>Ver detalle</button></a></th>

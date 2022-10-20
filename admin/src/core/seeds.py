@@ -8,21 +8,22 @@ def run():
     Crea datos por defecto para la base de datos
     """
 
+    # Usuarios
     test_user = board.create_usuario(
         username="test",
         email="test@test.com",
-        password="1234",
-        first_name="Aa",
-        last_name="Bb",
+        password="12345",
+        first_name="Aaa",
+        last_name="Bbb",
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     test_user2 = board.create_usuario(
         username="test2",
         email="test2@test2.com",
-        password="1234",
-        first_name="Aa",
-        last_name="Bb",
+        password="12345",
+        first_name="Ccc",
+        last_name="Ddd",
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -37,12 +38,24 @@ def run():
     )
 
     # Roles
-    rol_administrador = board.create_rol(nombre="administrador")
+    rol_administrador = board.create_rol(nombre="Administrador")
+    rol_opeador = board.create_rol(nombre="Operador")
+    rol_usuario = board.create_rol(nombre="Socio")
 
     # Permisos
     permiso_index = board.create_permiso(nombre="index")
     permiso_show = board.create_permiso(nombre="show")
     board.rol_assign_permiso(rol_administrador, [permiso_index, permiso_show])
+
+    # Permisos modulo usuarios
+    user_index = board.create_permiso(nombre="user_index")
+    user_create = board.create_permiso(nombre="user_create")
+    user_delete = board.create_permiso(nombre="user_delete")
+    user_update = board.create_permiso(nombre="user_update")
+    user_show = board.create_permiso(nombre="user_show")
+    user_rol_update = board.create_permiso(nombre="user_rol_update")
+    board.rol_assign_permiso(rol_administrador, [user_index, user_create, user_show, \
+                                                user_delete, user_rol_update, user_update])
 
     socio1 = board.create_socio(
         id_usuario=1,
@@ -68,11 +81,6 @@ def run():
         telefono=221420,
         email="juan@juan.juan"
         # el usuario tiene mail también, arreglar.
-    )
-
-    # Roles
-    rol_administrador = board.create_rol(
-        nombre="administrador"
     )
 
     # Permisos
@@ -135,3 +143,6 @@ def run():
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina, [cuota_enero, cuota_febrero, cuota_marzo])
+
+    board.asignar_rol(1,1)
+    board.asignar_rol(2,2)

@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, EmailField
+from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, \
     Email, Length, NumberRange
 
@@ -57,3 +57,7 @@ class ModificarUsuarioForm(FlaskForm):
         self.username.data = usuario.username
         self.first_name.data = usuario.first_name
         self.last_name.data = usuario.last_name
+
+class EliminarUsuarioForm(FlaskForm):
+    id = IntegerField(label=("id"), validators=[DataRequired()])
+    eliminar = SubmitField(label=("Eliminar"))
