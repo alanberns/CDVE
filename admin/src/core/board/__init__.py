@@ -358,8 +358,24 @@ def inscripion_assign_cuotas(socio, disciplina, cuotas):
     return inscripcion
 
 
-def get_cuotas_by_socio_id(socio_id):
+def get_cuotas_by_inscripcion_id(inscripcion_id):
     """
     Retorna las cuotas para un socio dado su id
     """
-    return Cuota.query.join(Inscripcion).filter_by(socio_id=socio_id).all()
+    return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
+
+
+def pagar_cuota_by_id(id_cuota):
+    cuota = Cuota.query.filter_by(id=id_cuota).first()
+    cuota.estado_pago = True
+    db.session.add(cuota)
+    db.session.commit()
+    return cuota
+
+
+# def user_get_permisos(user_id):
+#     roles = Rol.query.join(
+#         Usuario.roles).filter_by(id=user_id).all()
+#     permisos = list(
+#         {permiso.nombre for rol in roles for permiso in rol.permisos})
+#     return permisos

@@ -19,7 +19,6 @@ def login():
     return render_template("auth/login.html", form=form)
 
 
-
 @auth_blueprint.post("/authenticate")
 def authenticate():
     form = AuthForm(request.form)
@@ -35,6 +34,7 @@ def authenticate():
         flash("No puede acceder al sistema: usuario inactivo", "danger")
         return redirect(url_for("auth.login"))
     session["user"] = form.email.data
+    # session["permisos"] = board.user_get_permisos(user.id)
     flash("Se ha iniciado la sesion correctamente", "success")
     return redirect(url_for("home"))
 

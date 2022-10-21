@@ -54,8 +54,8 @@ def run():
     user_update = board.create_permiso(nombre="user_update")
     user_show = board.create_permiso(nombre="user_show")
     user_rol_update = board.create_permiso(nombre="user_rol_update")
-    board.rol_assign_permiso(rol_administrador, [user_index, user_create, user_show, \
-                                                user_delete, user_rol_update, user_update])
+    board.rol_assign_permiso(rol_administrador, [user_index, user_create, user_show,
+                                                 user_delete, user_rol_update, user_update])
 
     socio1 = board.create_socio(
         id_usuario=1,
@@ -131,6 +131,32 @@ def run():
         activo=True
     )
 
+    cuota1_disciplina2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-01-30 22:00:00'),
+        fecha_pago=parse('2022-03-15 22:00:00'),
+        valor_cuota=500,
+        valor_pago=500,
+        activo=True
+    )
+
+    cuota2_disciplina2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-02-28 22:00:00'),
+        fecha_pago=parse('2022-03-15 20:00:00'),
+        valor_cuota=520,
+        valor_pago=520,
+        activo=True
+    )
+
+    cuota3_disciplina2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-03-30 22:00:00'),
+        fecha_pago=parse('2022-03-15 22:00:00'),
+        valor_cuota=550,
+        valor_pago=550,
+        activo=True
+    )
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
@@ -140,5 +166,7 @@ def run():
     board.inscripion_assign_cuotas(
         socio1, t_disciplina, [cuota_enero, cuota_febrero, cuota_marzo])
 
-    board.asignar_rol(1,1)
-    board.asignar_rol(2,2)
+    board.inscripion_assign_cuotas(
+        socio1, t_disciplina2, [cuota1_disciplina2, cuota2_disciplina2, cuota3_disciplina2])
+    board.asignar_rol(1, 1)
+    board.asignar_rol(2, 2)
