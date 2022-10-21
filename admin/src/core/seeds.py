@@ -65,19 +65,17 @@ def run():
         genero="femenino",
         direccion="calle falsa 123",
         telefono=14141414,
-        email="socio1@mail.com"
         # el usuario tiene mail también, arreglar.
     )
 
-    juan = board.create_socio(
+    socio2 = board.create_socio(
         id_usuario=2,
         # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=43123123,
-        genero="caballo",
+        genero="Masculino",
         direccion="7 y 32",
         telefono=221420,
-        email="juan@juan.juan"
         # el usuario tiene mail también, arreglar.
     )
 
@@ -136,8 +134,8 @@ def run():
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
-    board.socio_assign_disciplina(juan, t_disciplina2)
-    board.socio_assign_disciplina(juan, t_disciplina3)
+    board.socio_assign_disciplina(socio2, t_disciplina2)
+    board.socio_assign_disciplina(socio2, t_disciplina3)
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina, [cuota_enero, cuota_febrero, cuota_marzo])

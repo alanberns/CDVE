@@ -35,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for socio in socios %}
+        {% for socio in socios_pag.items %}
         <tr class="table-active">
           <th>{{ socio[1].last_name }}</th>
           <th>{{ socio[1].first_name }}</th>
@@ -59,6 +59,19 @@
         {% endfor %}
       </tbody>
     </table>
+    <div class=pagination>
+      {%- for page in socios_pag.iter_pages() %}
+          {% if page %}
+              {% if page != socios_pag.page %}
+                  <a href="{{ url_for('socios.socios_index', page=page ) }}"><button>{{ page }}</button></a>
+              {% else %}
+                  <strong>{{ page }}</strong>
+              {% endif %}
+          {% else %}
+              <span class=ellipsis>…</span>
+          {% endif %}
+      {%- endfor %}
+    </div>
   </div>
 
 {% endblock %}

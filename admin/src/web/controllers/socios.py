@@ -12,27 +12,31 @@ socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 @socio_blueprint.route("/", methods=["get", "post"])
 def socios_index():
     form = DocumentoForm()
+   
+    configuracion = board.list_configuracion()
+    elementos_pagina = configuracion[0].elementos_pagina
+    page = int(request.args.get('page', 1))
+
     if form.validate_on_submit():
         apellido = form.apellido.data
         habilitado = form.habilitado.data
         if habilitado == 0:
             if apellido:
-                socios = board.find_socio_by_apellido(apellido)
+                socios_pag = board.find_socio_by_apellido(apellido, page, elementos_pagina)
             else:
-                socios = board.list_socios()
+                socios_pag = board.list_socios_join_users(page, elementos_pagina)
         else:
             if habilitado == 1: 
                 activo = True
             else: 
                 activo = False
             if apellido:
-                socios = board.find_socio_habilitado_by_apellido(apellido, activo)
+                socios_pag = board.find_socio_habilitado_by_apellido(apellido, activo, page, elementos_pagina)
             else:
-                socios = board.list_socios_habilitado(activo)
+                socios_pag = board.list_socios_habilitado(activo, page, elementos_pagina)
     else:
-        socios = board.list_socios_join_users()
-
-    return render_template("socios/socios.html", socios=socios, form=form)
+        socios_pag = board.list_socios_join_users(page, elementos_pagina)
+    return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
 
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
@@ -41,21 +45,25 @@ def soft_delete_socio(socio_id):
     return redirect(url_for("socios.socios_index"))
 
 
-@socio_blueprint.route("/add", methods=["get", "post"])
-def add_socio():
+@socio_blueprint.route("/<int:usuario_id>/add", methods=["get", "post"])
+def add_socio(usuario_id):
     form = SocioForm()
+    
     if form.validate_on_submit():
-        kwargs = {
-            "id_usuario": 1,
-            "tipo_documento": form.tipo_documento.data,
-            "numero_documento": form.numero_documento.data,
-            "genero": form.genero.data,
-            "direccion": form.direccion.data,
-            "telefono": form.telefono.data,
-        }
-        board.create_socio(**kwargs)
-        return redirect(url_for("socios.socios_index"))
-    return render_template("socios/create_socio.html", form=form)
+        if (board.exist_socio_documento(form.numero_documento.data)):
+            kwargs = {
+                "id_usuario": usuario_id,
+                "tipo_documento": form.tipo_documento.data,
+                "numero_documento": form.numero_documento.data,
+                "genero": form.genero.data,
+                "direccion": form.direccion.data,
+                "telefono": form.telefono.data,
+            }
+            board.create_socio(**kwargs)
+            return redirect(url_for("usuarios.view_usuario", id=usuario_id))
+        else:
+            flash("El documento ingresado pertenece a otro Socio", "danger")
+    return render_template("socios/create_socio.html", form=form, title="Crear Socio")
 
 
 @socio_blueprint.route("/<int:socio_id>/update", methods=["get", "post"])
@@ -82,7 +90,7 @@ def update_socio(socio_id):
         form.numero_documento.data = socio.numero_documento
         form.tipo_documento.data = socio.tipo_documento
         form.telefono.data = socio.telefono
-    return render_template("socios/create_socio.html", form=form)
+    return render_template("socios/create_socio.html", form=form, title="Editar Socio")
 
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])

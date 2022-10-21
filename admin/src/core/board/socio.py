@@ -11,10 +11,9 @@ class Socio(db.Model):
     habilitado = db.Column(db.Boolean, default=True)
     tipo_documento = db.Column(db.String(255))
     numero_documento = db.Column(db.Integer(), unique=True, nullable=False)
-    genero = db.Column(db.String(255))
-    numero_socio = db.Column(db.Integer, autoincrement=True, unique=True)
-    direccion = db.Column(db.String(255))
-    telefono = db.Column(db.Integer())
+    genero = db.Column(db.String(255), nullable=False)
+    direccion = db.Column(db.String(255), nullable=False)
+    telefono = db.Column(db.Integer(), nullable=False)
     activo = db.Column(db.Boolean, default=True)
     disciplina = db.relationship(
     'Inscripcion', back_populates='socio')
