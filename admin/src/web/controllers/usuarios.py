@@ -159,10 +159,20 @@ def update_usuario(id):
 @user_update_req
 def modify_activo(id):
     """
-    Cambia el estado de activo a su inverso.
+    Cambia el estado "activo" a su inverso.
     No se puede dar de baja a un administrador
     """
-    # IF USUARIO NO ES ADMIN
+    # Chequear que el usuario no sea administrador
+    usuario = board.get_usuario(id)
+    roles = board.get_roles()
+    for rol in roles:
+        if rol.nombre == "Administrador":
+            rol_administrador = rol
+    if (rol_administrador in usuario.roles):
+        flash("No se puede inactivar a un administrador", "danger")
+        return redirect(url_for('usuarios.usuario_index', id=id))
+    
+    # Inactivar usuario
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
     return redirect(url_for('usuarios.usuario_index', id=id))
