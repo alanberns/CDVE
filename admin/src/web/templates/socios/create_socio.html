@@ -6,25 +6,22 @@
 {% block content %}
     <div class="content-section">
         <form method="POST" action="">
+            {{ form.csrf_token }} 
             {{ form.hidden_tag() }}
-            {{ form.csrf_token }}
+
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4"> Create Socio</legend>
+                <legend class="border-bottom mb-4"> {{ title }}</legend>
                 <div class="form-group">
                     {{ form.tipo_documento.label(class="form=control-label") }}
-                    {{ form.tipo_documento(class="form-control form=control-lg") }}
+                    {{ form.tipo_documento(class="form-select") }}
                 </div>
                 <div class="form-group">
                     {{ form.numero_documento.label(class="form=control-label") }}
                     {{ form.numero_documento(class="form-control form=control-lg") }}
                 </div>
                 <div class="form-group">
-                    {{ form.numero_socio.label(class="form=control-label") }}
-                    {{ form.numero_socio(class="form-control form=control-lg") }}
-                </div>
-                <div class="form-group">
-                    {{ form.genero.label(class="form=control-label") }}
-                    {{ form.genero(class="form-control form=control-lg") }}
+                    {{ form.genero.label(class="form-label mt-4") }}
+                    {{ form.genero(class="form-select") }}
                 </div>
                 <div class="form-group">
                     {{ form.direccion.label(class="form=control-label") }}
@@ -34,15 +31,17 @@
                     {{ form.telefono.label(class="form=control-label") }}
                     {{ form.telefono(class="form-control form=control-lg") }}
                 </div>
-                <div class="form-group">
-                    {{ form.email.label(class="form=control-label") }}
-                    {{ form.email(class="form-control form=control-lg") }}
-                </div>
             </fieldset>
+            <br>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
+        {% if title == "Crear Socio" %}
         <a href="{{url_for('socios.socios_index')}}"> Volver</a>
+        {% endif %}
+        {% if title == "Editar Socio" %}
+        <a href="{{url_for('socios.socios_index')}}"> Volver</a>
+        {% endif %}
     </div>
 {% endblock %}
