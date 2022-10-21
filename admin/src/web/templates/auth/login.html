@@ -10,11 +10,7 @@
 {% endblock %} {% block content %}
 <div class="d-flex flex-column align-items-center">
   <h1 class="mx-5">Login</h1>
-  <form
-    action="{{url_for('auth.authenticate')}}"
-    method="POST"
-    onsubmit="return confirm('¿Estas seguro que deseas editar la configuracion?');"
-  >
+  <form action="{{url_for('auth.authenticate')}}" method="POST">
     {{ form.csrf_token }}
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label"
