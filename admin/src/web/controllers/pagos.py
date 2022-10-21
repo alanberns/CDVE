@@ -7,6 +7,7 @@ from flask import flash
 from src.core.forms.pagos_form import EditForm
 from src.core import board
 from src.web.helpers.auth import login_required
+from src.web.helpers.permissions.user_permission import pago_index_req, pago_show_req
 
 pago_blueprint = Blueprint(
     "pagos", __name__, url_prefix="/pagos")
@@ -14,6 +15,7 @@ pago_blueprint = Blueprint(
 
 @pago_blueprint.get("/")
 @login_required
+@pago_index_req
 def pagos_index():
     inscripciones_query = board.get_inscripciones()
     inscripciones = []
@@ -25,6 +27,7 @@ def pagos_index():
 
 @pago_blueprint.get("/cuotas/<int:inscripcion_id>")
 @login_required
+@pago_show_req
 def cuotas_index(inscripcion_id):
     cuotas = board.get_cuotas_by_inscripcion_id(inscripcion_id)
     form = EditForm(data={"items": cuotas})

@@ -83,3 +83,21 @@ def config_all_req(f):
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
+
+
+def pago_index_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("pago_index", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def pago_show_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("pago_show", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
