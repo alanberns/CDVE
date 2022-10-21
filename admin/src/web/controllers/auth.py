@@ -29,6 +29,7 @@ def authenticate():
         flash("email o clave incorrecta", "danger")
         return redirect(url_for("auth.login"))
     session["user"] = form.email.data
+    # session["permisos"] = board.user_get_permisos(user.id)
     flash("Se ha iniciado la sesion correctamente", "success")
     return redirect(url_for("home"))
 
