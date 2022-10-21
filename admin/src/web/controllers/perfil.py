@@ -94,6 +94,11 @@ def change_password():
         flash("Contraseña incorrecta", "danger")
         return (redirect(url_for('perfil.change_password_view')))
 
+    # Contraseñas deben coincidir. No funciona EqualTo
+    if not form.password_nueva == form.password_repetir:
+        flash("Las contraseñas deben coincidir", "danger")
+        return (redirect(url_for('perfil.change_password_view')))
+
     # modificar la contraseña
     kwargs = {
         "id": usuario.id,
