@@ -21,13 +21,15 @@ class LoginForm(FlaskForm):
 
 
 class SocioForm(FlaskForm):
-    tipo_documento = StringField("Tipo Documento", validators=[DataRequired()])
-    numero_documento = StringField("Numero", validators=[DataRequired()])
-    numero_socio = StringField("numero_socio", validators=[DataRequired()])
-    genero = StringField("genero", validators=[DataRequired()])
-    direccion = StringField("direccion", validators=[DataRequired()])
-    telefono = StringField("telefono", validators=[DataRequired()])
-    email = StringField("email", validators=[DataRequired()])
+    tipo_documento = SelectField(
+        "Tipo de Documento",
+        choices=(("", "--Seleccionar--"), ("DNI", "DNI"), ("LE", "LE"), ("LC", "LC")), coerce=str, validators=[DataRequired()])
+    numero_documento = StringField("Número", validators=[DataRequired()])
+    genero = SelectField(
+        "Género",
+        choices=(("", "--Seleccionar--"), ("Femenino", "Femenino"), ("Masculino", "Masculino"), ("Otro", "Otro")), coerce=str, validators=[DataRequired()])
+    direccion = StringField("Dirección", validators=[DataRequired()])
+    telefono = StringField("Teléfono", validators=[DataRequired()])
     submit = SubmitField("Guardar")
 
 
