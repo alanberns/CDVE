@@ -122,7 +122,8 @@ def ver_socio(socio_id):
     """
     Muestra la información de un socio y las posibles operaciones.
     """
+    form = SocioForm()
     query = board.find_socio_join_usuario_by_id(socio_id)
     socio = query[0]
     usuario = query[1]
-    return render_template("socios/socio.html", socio=socio, usuario=usuario)
+    return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form)
