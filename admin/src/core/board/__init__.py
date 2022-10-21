@@ -334,9 +334,9 @@ def pagar_cuota_by_id(id_cuota):
     return cuota
 
 
-# def user_get_permisos(user_id):
-#     roles = Rol.query.join(
-#         Usuario.roles).filter_by(id=user_id).all()
-#     permisos = list(
-#         {permiso.nombre for rol in roles for permiso in rol.permisos})
-#     return permisos
+def user_get_permisos(usuario_id):
+    roles = Rol.query.join(Usuario_tiene_rol).filter_by(
+        usuario_id=usuario_id).all()
+    permisos = list(
+        {permiso.nombre for rol in roles for permiso in rol.permisos})
+    return permisos
