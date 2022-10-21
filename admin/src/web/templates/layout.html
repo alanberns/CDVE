@@ -23,11 +23,13 @@
           <a class="nav-link" href="{{ url_for('pagos.pagos_index') }}"
             >Pagos</a
           >
+          {%if has_permission("configuracion_all",session)%}
           <a
             class="nav-link"
             href="{{ url_for('configuracion.configuracion_index') }}"
             >Configuracion</a
           >
+          {%endif%}
         </div>
       </div>
       <div class="col d-flex flex-row-reverse">
