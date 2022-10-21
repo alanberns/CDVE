@@ -8,21 +8,22 @@ def run():
     Crea datos por defecto para la base de datos
     """
 
+    # Usuarios
     test_user = board.create_usuario(
         username="test",
         email="test@test.com",
-        password="1234",
-        first_name="Aa",
-        last_name="Bb",
+        password="12345",
+        first_name="Aaa",
+        last_name="Bbb",
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
     test_user2 = board.create_usuario(
         username="test2",
         email="test2@test2.com",
-        password="1234",
-        first_name="Aa",
-        last_name="Bb",
+        password="12345",
+        first_name="Ccc",
+        last_name="Ddd",
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -37,12 +38,33 @@ def run():
     )
 
     # Roles
-    rol_administrador = board.create_rol(nombre="administrador")
+    rol_administrador = board.create_rol(nombre="Administrador")
+    rol_operador = board.create_rol(nombre="Operador")
+    rol_usuario = board.create_rol(nombre="Socio")
 
-    # Permisos
-    permiso_index = board.create_permiso(nombre="index")
-    permiso_show = board.create_permiso(nombre="show")
-    board.rol_assign_permiso(rol_administrador, [permiso_index, permiso_show])
+    # Permiso Configuracion
+    configuracion_all = board.create_permiso(nombre="configuracion_all")
+
+    # Permisos Pagos
+    pago_index = board.create_permiso(nombre="pago_index")
+    pago_show = board.create_permiso(nombre="pago_show")
+    pago_update = board.create_permiso(nombre="pago_update")
+    pago_delete = board.create_permiso(nombre="pago_delete")
+    board.rol_assign_permiso(rol_administrador, [
+                             configuracion_all, pago_index, pago_show, pago_update, pago_delete])
+
+    board.rol_assign_permiso(rol_operador, [
+                             pago_index, pago_show, pago_update])
+
+    # Permisos modulo usuarios
+    user_index = board.create_permiso(nombre="user_index")
+    user_create = board.create_permiso(nombre="user_create")
+    user_delete = board.create_permiso(nombre="user_delete")
+    user_update = board.create_permiso(nombre="user_update")
+    user_show = board.create_permiso(nombre="user_show")
+    user_rol_update = board.create_permiso(nombre="user_rol_update")
+    board.rol_assign_permiso(rol_administrador, [user_index, user_create, user_show,
+                                                 user_delete, user_rol_update, user_update])
 
     socio1 = board.create_socio(
         id_usuario=1,
@@ -50,29 +72,20 @@ def run():
         tipo_documento="DNI",
         numero_documento=44556677,
         genero="femenino",
-        numero_socio="AAA111",
         direccion="calle falsa 123",
         telefono=14141414,
-        email="socio1@mail.com"
         # el usuario tiene mail también, arreglar.
     )
 
-    juan = board.create_socio(
+    socio2 = board.create_socio(
         id_usuario=2,
         # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=43123123,
-        genero="caballo",
-        numero_socio="AAA12",
+        genero="Masculino",
         direccion="7 y 32",
         telefono=221420,
-        email="juan@juan.juan"
         # el usuario tiene mail también, arreglar.
-    )
-
-    # Roles
-    rol_administrador = board.create_rol(
-        nombre="administrador"
     )
 
     # Permisos
@@ -127,11 +140,42 @@ def run():
         activo=True
     )
 
+    cuota1_disciplina2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-01-30 22:00:00'),
+        fecha_pago=parse('2022-03-15 22:00:00'),
+        valor_cuota=500,
+        valor_pago=500,
+        activo=True
+    )
+
+    cuota2_disciplina2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-02-28 22:00:00'),
+        fecha_pago=parse('2022-03-15 20:00:00'),
+        valor_cuota=520,
+        valor_pago=520,
+        activo=True
+    )
+
+    cuota3_disciplina2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-03-30 22:00:00'),
+        fecha_pago=parse('2022-03-15 22:00:00'),
+        valor_cuota=550,
+        valor_pago=550,
+        activo=True
+    )
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
-    board.socio_assign_disciplina(juan, t_disciplina2)
-    board.socio_assign_disciplina(juan, t_disciplina3)
+    board.socio_assign_disciplina(socio2, t_disciplina2)
+    board.socio_assign_disciplina(socio2, t_disciplina3)
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina, [cuota_enero, cuota_febrero, cuota_marzo])
+
+    board.inscripion_assign_cuotas(
+        socio1, t_disciplina2, [cuota1_disciplina2, cuota2_disciplina2, cuota3_disciplina2])
+    board.asignar_rol(1, 1)
+    board.asignar_rol(2, 2)

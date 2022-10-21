@@ -6,6 +6,7 @@ from flask import flash
 from src.core import board
 from src.core.forms.configuration_form import ConfigurationForm
 from src.web.helpers.auth import login_required
+from src.web.helpers.permissions.user_permission import config_all_req
 
 configuracion_blueprint = Blueprint(
     "configuracion", __name__, url_prefix="/configuracion")
@@ -13,6 +14,7 @@ configuracion_blueprint = Blueprint(
 
 @configuracion_blueprint.get("/")
 @login_required
+@config_all_req
 def configuracion_index():
     configuracion = board.list_configuracion()
     form = ConfigurationForm(request.form)
@@ -21,6 +23,8 @@ def configuracion_index():
 
 
 @configuracion_blueprint.post("/")
+@login_required
+@config_all_req
 def configuracion_update():
     form = ConfigurationForm(request.form)
     if not form.validate:

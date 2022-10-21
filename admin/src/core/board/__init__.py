@@ -32,7 +32,7 @@ def get_usuario(id):
     """
     Busca un usuario por su id y lo devuelve
     """
-    usuario = db.session.get(Usuario, id)
+    usuario = Usuario.query.filter(Usuario.id == id).first()
     return usuario
 
 
@@ -73,14 +73,6 @@ def exist_username(username):
     return Usuario.query.filter(Usuario.username == username).first() != None
 
 
-def delete_usuario(id):
-    """
-    Elimina el usuario de la BD
-    """
-    db.session.delete(get_usuario(id))
-    db.session.commit()
-
-
 def filter_usuarios(email, activo, page=1, per_page=10):
     """
     Filtra a usuarios por email y estado. Si el email ingresado es vacio y el estado que se pide es ambos 
@@ -118,7 +110,7 @@ def asignar_rol(rol_id, usuario_id):
     Asigna un rol a un usuario
     """
     usuario = get_usuario(usuario_id)
-    rol = db.session.get(Rol, rol_id)
+    rol = Rol.query.filter(Rol.id == rol_id).first()
     rol_list = []
     rol_list.append(rol)
     usuario.roles.extend(rol_list)
@@ -134,6 +126,9 @@ def get_roles():
 
 
 def find_user_by_email(email):
+    """
+    Devuelve un usuario dado un mail.
+    """
     usuario = Usuario.query.filter_by(email=email).first()
     return usuario
 
@@ -213,6 +208,9 @@ def create_disciplina(**kwargs):
 
 
 def create_socio(**kwargs):
+    """
+    Crea un Socio y lo agrega la db"
+    """
     socio = Socio(**kwargs)
     db.session.add(socio)
     db.session.commit()
@@ -220,35 +218,82 @@ def create_socio(**kwargs):
 
 
 def list_socios():
-    socios = Socio.query.filter_by(activo=True).all()
+    """
+    Devuelve la lista de socios activos (sin borrado lógico)
+    """
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).all()
+    return socios
+
+def list_usuarios(page=1, per_page=10):
+    """
+    Lista los datos de los usuarios.
+    """
+    return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+
+
+def list_socios_join_users(page=1, per_page=10):
+    """
+    Devuelve la lista de socios activos (sin borrado lógico)
+    """
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
-def list_socios_habilitado(habilitado):
-    socios = Socio.query.filter_by(activo=True, habilitado=habilitado).all()
+def list_socios_habilitado(habilitado, page=1, per_page=10):
+    """
+    Devuelve la lista de socios activos habilitados o deshabilitados
+    """
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
+def find_socio_by_apellido(last_name, page=1, per_page=10):
+    """
+    Devuelve los socios activos dado un apellido
+    """
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    return socios
 
-def find_socio_by_apellido(username):
-    socio = Socio.query.filter_by(activo=True).join(
-        Usuario).filter_by(username=username).all()
-    return socio
-
-
-def find_socio_habilitado_by_apellido(username, habilitado):
-    socio = Socio.query.filter_by(activo=True, habilitado=habilitado).join(
-        Usuario).filter_by(username=username).all()
-    # reemplazar "username" por apellido cuando haya
-    return socio
+def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
+    """
+    Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
+    """
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    return socios
 
 
 def find_socio_by_id(socio_id):
+    """
+    Devuelve un socio dado un id.
+    """
     socio = Socio.query.filter_by(id=socio_id).first()
     return socio
 
+def find_socio_join_usuario_by_id(socio_id):
+    """
+    Devuelve la información de un socio junto con su información de usuario.
+    """
+    socio = db.session.query(Socio, Usuario).filter_by(activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
+    return socio
+
+def exist_socio_documento(documento):
+    """
+    Verifica que el documento dado está disponible y no le pertenece a otro socio activo
+    """
+    return Socio.query.filter(Socio.numero_documento == documento, Socio.activo == True).first() == None
+
+
+def exist_socio_documento_id(documento, id):
+    """
+    Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
+    """
+    return Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first() == None
+
+
 
 def update_socio(socio_id, **kwargs):
-
+    """
+    Actualiza la información de un socio dado un id.
+    """
     socio = find_socio_by_id(socio_id)
     socio.update(**kwargs)
     db.session.merge(socio)
@@ -258,6 +303,9 @@ def update_socio(socio_id, **kwargs):
 
 
 def soft_delete_socio(socio_id):
+    """
+    Realiza la baja lógica de un socio dado un id.
+    """
     socio = find_socio_by_id(socio_id)
     socio.activo = False
     db.session.merge(socio)
@@ -267,6 +315,9 @@ def soft_delete_socio(socio_id):
 
 
 def switch_state_socio(socio_id):
+    """
+    Cambia el estado del campo "habilitado" de un socio dado un id.
+    """
     socio = find_socio_by_id(socio_id)
     socio.habilitado = not socio.habilitado
     db.session.merge(socio)
@@ -327,8 +378,24 @@ def inscripion_assign_cuotas(socio, disciplina, cuotas):
     return inscripcion
 
 
-def get_cuotas_by_socio_id(socio_id):
+def get_cuotas_by_inscripcion_id(inscripcion_id):
     """
     Retorna las cuotas para un socio dado su id
     """
-    return Cuota.query.join(Inscripcion).filter_by(socio_id=socio_id).all()
+    return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
+
+
+def pagar_cuota_by_id(id_cuota):
+    cuota = Cuota.query.filter_by(id=id_cuota).first()
+    cuota.estado_pago = True
+    db.session.add(cuota)
+    db.session.commit()
+    return cuota
+
+
+def user_get_permisos(usuario_id):
+    roles = Rol.query.join(Usuario_tiene_rol).filter_by(
+        usuario_id=usuario_id).all()
+    permisos = list(
+        {permiso.nombre for rol in roles for permiso in rol.permisos})
+    return permisos

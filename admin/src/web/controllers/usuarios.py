@@ -7,33 +7,41 @@ from flask import url_for
 from flask import flash
 from datetime import datetime
 
+from src.core.forms.usuarios_form import UsuarioNuevoForm
+from src.core.forms.usuarios_form import ModificarUsuarioForm
 from src.core import board
+from src.web.helpers.auth import login_required
+from src.web.helpers.permissions.user_permission import user_create_req, user_index_req, \
+user_rol_update_req, user_update_req, user_show_req
 
 
 usuario_blueprint = Blueprint(
     "usuarios", __name__, url_prefix="/usuarios")
 
 
-
-
 @usuario_blueprint.get("/")
+@login_required
+@user_index_req
 def usuario_index():
     """
     Menu inicial de usuarios: lista de usuarios
     """
+    # Paginación
     configuracion = board.list_configuracion()
     elementos_pagina = configuracion[0].elementos_pagina
     page = int(request.args.get('page', 1))
+
     usuarios_pag = board.list_usuarios(page,elementos_pagina)
     return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag)
 
 @usuario_blueprint.get("/res")
+@login_required
+@user_index_req
 def busqueda_filtrada():
     """
     Filtrar usuarios por email y estado.
     """
-    configuracion = board.list_configuracion()
-    elementos_pagina = configuracion[0].elementos_pagina
+    # Obtener email y estado para la busqueda
     email = ""
     if (request.args.get("email") != ""):
         email = request.args.get("email")
@@ -44,104 +52,135 @@ def busqueda_filtrada():
             activo = False
         else:
             activo = ""
+
+    # Paginación
+    configuracion = board.list_configuracion()
+    elementos_pagina = configuracion[0].elementos_pagina
     page = int(request.args.get('page', 1))
     usuarios_pag = board.filter_usuarios(email, activo, page, elementos_pagina)
-    return render_template("usuarios/usuariosFilter.html", 
+
+    return render_template("usuarios/usuariosFilter.html",
     usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
 
 @usuario_blueprint.get("/add")
+@login_required
+@user_create_req
 def add_usuario_view():
     """
     Vista para añadir un usuario
     """
-    return render_template("usuarios/nuevoUsuario.html")
+    form = UsuarioNuevoForm()
+    return render_template("usuarios/nuevoUsuario.html", form=form)
 
 @usuario_blueprint.post("/add")
+@login_required
+@user_create_req
 def add_usuario():
     """
     Añadir usuario. Se necesita chequear que no se repita email ni username. Vuelve a menu usuarios
     """
-    if (board.exist_email(request.form.get("email"))):
-        flash("El email ingresado ya está registrado", "danger")
-        return redirect(url_for('usuarios.add_usuario_view'))
-    if (board.exist_username(request.form.get("username"))):
-        flash("El username ingresado ya está registrado", "danger")
-        return redirect(url_for('usuarios.add_usuario_view'))
+    form = UsuarioNuevoForm(request.form)
+    if form.validate:
+        if (board.exist_email(form.email.data)):
+            flash("El email ingresado ya está registrado", "danger")
+            return redirect(url_for('usuarios.add_usuario_view'))
+        if (board.exist_username(form.username.data)):
+            flash("El username ingresado ya está registrado", "danger")
+            return redirect(url_for('usuarios.add_usuario_view'))
 
-    board.create_usuario(
-        username = request.form.get("username"),
-        email = request.form.get("email"),
-        password = request.form.get("password"),
-        created_at = datetime.now(),
-        updated_at = datetime.now(),
-        first_name = request.form.get("first_name"),
-        last_name = request.form.get("last_name"),
-        )
-    flash("Se creó el nuevo usuario", "success")
-    return redirect(url_for('usuarios.usuario_index'))
+        usuario = board.create_usuario(
+            username = form.username.data,
+            email = form.email.data,
+            password = form.password.data,
+            created_at = datetime.now(),
+            updated_at = datetime.now(),
+            first_name = form.first_name.data,
+            last_name = form.last_name.data,
+            )
+        flash("Se creó el nuevo usuario", "success")
+        return redirect(url_for('usuarios.view_usuario', id=usuario.id))
+    flash("No se pudo añadir al nuevo usuario", "danger")
+    return redirect(url_for('usuarios.add_usuario_view'))
 
 @usuario_blueprint.get("/<int:id>")
+@login_required
+@user_show_req
 def view_usuario(id):
     """
     Vista detallada con la informacion de un usuario
     """
     usuario = board.get_usuario(id)
+    form = ModificarUsuarioForm()
+    form.set_from_usuarios(usuario)
     roles = board.get_roles()
-    return render_template("usuarios/usuario.html", usuario=usuario, roles=roles)
+    return render_template("usuarios/usuario.html", usuario=usuario, form=form, roles=roles)
 
 @usuario_blueprint.post("/<int:id>")
+@login_required
+@user_update_req
 def update_usuario(id):
     """
     #Actualiza los datos de un usuario. Se necesita chequear que no se repita email ni username
     """
     usuario = board.get_usuario(id)
-    #Comprobar si se modificó el email
-    if (request.form.get("email") != usuario.email):
-        #Si se modificó, comprobar que el nuevo email no esté en uso
-        if (board.exist_email(request.form.get("email"))):
+    form = ModificarUsuarioForm(request.form)
+    if not form.validate:
+        flash("No se pudo modificar al usuario")
+        return redirect(url_for('usuarios.view_usuario', id=id))
+    # Comprobar si se modificó el email
+    if (form.email.data != usuario.email):
+        # Si se modificó, comprobar que el nuevo email no esté en uso
+        if (board.exist_email(form.email.data)):
             flash("el email ingresado ya esta registrado", "danger")
             return redirect(url_for('usuarios.view_usuario', id=id))
 
-    #Comprobar si se modificó el username
-    if (request.form.get("username") != usuario.username):
-        #Si se modificó, comprobar que el nuevo username no esté en uso
-        if (board.exist_username(request.form.get("username"))):
+    # Comprobar si se modificó el username
+    if (form.username.data != usuario.username):
+        # Si se modificó, comprobar que el nuevo username no esté en uso
+        if (board.exist_username(form.username.data)):
             flash("el username ingresado ya está registrado", "danger")
             return redirect(url_for('usuarios.view_usuario', id=id))
     
-    #Si no están en uso el email nuevo ni el username nuevo actualiza los datos en la BD
+    # Si no están en uso el email nuevo ni el username nuevo actualiza los datos en la BD
     kwargs = {
             "id": id,
-            "email": request.form.get("email"),
-            "username": request.form.get("username"),
+            "email": form.email.data,
+            "username": form.username.data,
             "updated_at": datetime.now(),
-            "first_name": request.form.get("first_name"),
-            "last_name": request.form.get("last_name"),
+            "first_name": form.first_name.data,
+            "last_name": form.last_name.data,
         }
     board.update_usuario(**kwargs)
     flash("Se actualizaron los datos del usuario", "success")
     return redirect(url_for('usuarios.usuario_index'))
 
 @usuario_blueprint.get("/modifyActivo/<int:id>")
+@login_required
+@user_update_req
 def modify_activo(id):
     """
-    Cambia el estado de activo a su inverso.
+    Cambia el estado "activo" a su inverso.
     No se puede dar de baja a un administrador
     """
+    # Chequear que el usuario no sea administrador
+    usuario = board.get_usuario(id)
+    roles = board.get_roles()
+    for rol in roles:
+        if rol.nombre == "Administrador":
+            rol_administrador = rol
+    if (rol_administrador in usuario.roles):
+        flash("No se puede inactivar a un administrador", "danger")
+        return redirect(url_for('usuarios.usuario_index', id=id))
+    
+    # Inactivar usuario
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
     return redirect(url_for('usuarios.usuario_index', id=id))
 
-@usuario_blueprint.post("/")
-def delete_usuario():
-    """
-    Recibe el id de un usuario para eliminarlo de la BD
-    """
-    board.delete_usuario(request.form.get("id"))
-    flash("Se eliminó al usuario", "success")
-    return (redirect(url_for('usuarios.usuario_index')))
 
 @usuario_blueprint.get("/quitarRol")
+@login_required
+@user_rol_update_req
 def quitar_rol():
     """
     Quitar un rol a un usuario
@@ -154,6 +193,8 @@ def quitar_rol():
 
 
 @usuario_blueprint.get("/asignarRol")
+@login_required
+@user_rol_update_req
 def asignar_rol():
     """
     Asignar un rol a un usuario
