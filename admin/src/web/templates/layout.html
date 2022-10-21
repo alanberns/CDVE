@@ -10,21 +10,27 @@
           <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
             >Home</a
           >
+          {%if has_permission("user_index",session)%}
           <a class="nav-link" href="{{ url_for('usuarios.usuario_index')}}"
             >Usuarios</a
           >
+          {%endif%}
+
           <a class="nav-link" href="#">Disciplinas</a>
           <a class="nav-link" href="{{ url_for('socios.socios_index') }}"
             >Socios</a
           >
+          {%if has_permission("pago_index",session)%}
           <a class="nav-link" href="{{ url_for('pagos.pagos_index') }}"
             >Pagos</a
           >
+          {%endif%} {%if has_permission("configuracion_all",session)%}
           <a
             class="nav-link"
             href="{{ url_for('configuracion.configuracion_index') }}"
             >Configuracion</a
           >
+          {%endif%}
         </div>
       </div>
       <div class="col d-flex flex-row-reverse">

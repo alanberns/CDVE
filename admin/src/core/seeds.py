@@ -39,13 +39,22 @@ def run():
 
     # Roles
     rol_administrador = board.create_rol(nombre="Administrador")
-    rol_opeador = board.create_rol(nombre="Operador")
+    rol_operador = board.create_rol(nombre="Operador")
     rol_usuario = board.create_rol(nombre="Socio")
 
-    # Permisos
-    permiso_index = board.create_permiso(nombre="index")
-    permiso_show = board.create_permiso(nombre="show")
-    board.rol_assign_permiso(rol_administrador, [permiso_index, permiso_show])
+    # Permiso Configuracion
+    configuracion_all = board.create_permiso(nombre="configuracion_all")
+
+    # Permisos Pagos
+    pago_index = board.create_permiso(nombre="pago_index")
+    pago_show = board.create_permiso(nombre="pago_show")
+    pago_update = board.create_permiso(nombre="pago_update")
+    pago_delete = board.create_permiso(nombre="pago_delete")
+    board.rol_assign_permiso(rol_administrador, [
+                             configuracion_all, pago_index, pago_show, pago_update, pago_delete])
+
+    board.rol_assign_permiso(rol_operador, [
+                             pago_index, pago_show, pago_update])
 
     # Permisos modulo usuarios
     user_index = board.create_permiso(nombre="user_index")
