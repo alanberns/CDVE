@@ -125,7 +125,7 @@ def update_usuario(id):
     usuario = board.get_usuario(id)
     form = ModificarUsuarioForm(request.form)
     if not form.validate:
-        flash("No se pudo modificar al usuario")
+        flash("No se pudo modificar al usuario","danger")
         return redirect(url_for('usuarios.view_usuario', id=id))
     # Comprobar si se modificó el email
     if (form.email.data != usuario.email):

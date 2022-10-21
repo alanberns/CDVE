@@ -46,6 +46,15 @@ def update_usuario(**kwargs):
 
     return usuario
 
+def update_password(**kwargs):
+    """
+    Actualizar contraseña
+    """
+    usuario = get_usuario(kwargs['id'])
+    usuario.update_password(kwargs['password'])
+    db.session.commit()
+    return usuario
+
 
 def update_activo_usuario(id):
     """

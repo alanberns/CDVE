@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Usuario{% endblock %}
+{% block title %}Mi perfil{% endblock %}
 {% block head %}
   {{ super() }}
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -10,9 +10,10 @@
 {% endblock %}
 {% block content %}
 <div class="d-flex flex-column align-items-center">
-  <h1 class="mx-5"> Usuario </h1>
+  <h1 class="mx-5"> Mi perfil </h1>
 
-    <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" onsubmit="return confirm('¿Estas seguro que deseas editar el usuario?');">
+    <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" 
+    onsubmit="return confirm('¿Estas seguro que deseas modificar tus datos?');">
       {{ form.csrf_token }} 
       <div class="form-floating mb-3">
         <input type="text" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
@@ -58,35 +59,26 @@
       {{form.modificar(class="btn btn-primary")}}
     </form>
 
+    <!---contraseña-->
+    <a href="{{url_for('perfil.change_password_view')}}"><button>Cambiar mi contraseña</button></a>
+
     <h6>Roles</h6>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Nombre del rol</th>
-          <th>Acción</th>
+          <th>Mis roles</th>
         </tr>
       </thead>
       <tbody>
-        {% for rol in roles %}
+        {% for rol in usuario.roles %}
         <tr>
-          {% if rol in usuario.roles %}
-            <th>{{rol.nombre}}</th>
-            <th><a href="{{ url_for('usuarios.quitar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
-              <button>Quitar rol</button></a>
-            </th>
-          {% else %}
-            <th>{{rol.nombre}}</th>
-            <th><a href="{{url_for('usuarios.asignar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
-            <button>Asignar rol</button></a>
-            </th>
-          {% endif %}
+          <th>{{rol.nombre}}</th>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
     <a href="{{url_for('home')}}"><button>Volver al inicio</button> </a>
-    <a href="{{url_for('usuarios.usuario_index')}}"><button>Menú  usuarios</button></a>
   
 </div>
 {% endblock %}
