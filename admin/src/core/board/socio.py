@@ -16,9 +16,10 @@ class Socio(db.Model):
     telefono = db.Column(db.Integer(), nullable=False)
     activo = db.Column(db.Boolean, default=True)
     disciplina = db.relationship(
-    'Inscripcion', back_populates='socio')
+        'Inscripcion', back_populates='socio')
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.now(),
+                           onupdate=datetime.now, nullable=False)
 
     def __init__(
         self,
@@ -36,10 +37,7 @@ class Socio(db.Model):
         self.direccion = direccion
         self.telefono = telefono
 
-
     def update(self, **kwargs):
-  
+
         for key in kwargs:
-            setattr(self, key, kwargs[key])    
-
-
+            setattr(self, key, kwargs[key])

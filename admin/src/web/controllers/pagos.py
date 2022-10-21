@@ -15,7 +15,11 @@ pago_blueprint = Blueprint(
 @pago_blueprint.get("/")
 @login_required
 def pagos_index():
-    inscripciones = board.get_inscripciones()
+    inscripciones_query = board.get_inscripciones()
+    inscripciones = []
+    for inscripcion in inscripciones_query:
+        usuario = board.find_socio_join_usuario_by_id(inscripcion.socio_id)
+        inscripciones.append([inscripcion, usuario[1]])
     return render_template("pagos/pagos.html", inscripciones=inscripciones)
 
 

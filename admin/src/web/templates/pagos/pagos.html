@@ -13,12 +13,10 @@
       </tr>
     </thead>
     <tbody>
-      {%for inscripcion in inscripciones%}
+      {%for inscripcion,usuario in inscripciones%}
       <tr class="table-secondary">
-        <th class="text-center align-middle">
-          {{inscripcion.socio.numero_socio}}
-        </th>
-        <th class="text-center align-middle">{{inscripcion.socio.email}}</th>
+        <th class="text-center align-middle">{{inscripcion.socio.id}}</th>
+        <th class="text-center align-middle">{{usuario.last_name}}</th>
         <th class="text-center align-middle">
           {{inscripcion.disciplina.nombre}}
         </th>
