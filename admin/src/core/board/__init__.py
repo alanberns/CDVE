@@ -8,6 +8,12 @@ from src.core.board.socio import Socio
 from src.core.board.cuota import Cuota
 from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
+from datetime import datetime
+
+
+def record_update(record):
+    db.session.add(record)
+    db.session.commit()
 
 
 def list_usuarios(page=1, per_page=10):
@@ -218,8 +224,10 @@ def list_socios():
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).all()
+    socios = db.session.query(Socio, Usuario).filter_by(
+        activo=True).outerjoin(Usuario, full=True).all()
     return socios
+
 
 def list_usuarios(page=1, per_page=10):
     """
@@ -232,7 +240,8 @@ def list_socios_join_users(page=1, per_page=10):
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(
+        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
@@ -240,18 +249,23 @@ def list_socios_habilitado(habilitado, page=1, per_page=10):
     """
     Devuelve la lista de socios activos habilitados o deshabilitados
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
+        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
+
 
 def find_socio_by_apellido(last_name, page=1, per_page=10):
     """
     Devuelve los socios activos dado un apellido
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(
+        last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
+
 def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
+        Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
@@ -259,9 +273,12 @@ def find_socio_by_id(socio_id):
     socio = Socio.query.filter_by(id=socio_id).first()
     return socio
 
+
 def find_socio_join_usuario_by_id(socio_id):
-    socio = db.session.query(Socio, Usuario).filter_by(activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
+    socio = db.session.query(Socio, Usuario).filter_by(
+        activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
     return socio
+
 
 def exist_socio_documento(documento):
     """
@@ -275,7 +292,6 @@ def exist_socio_documento_id(documento, id):
     Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
     """
     return Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first() == None
-
 
 
 def update_socio(socio_id, **kwargs):
@@ -365,12 +381,13 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
     return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
 
 
-def pagar_cuota_by_id(id_cuota):
-    cuota = Cuota.query.filter_by(id=id_cuota).first()
-    cuota.estado_pago = True
-    db.session.add(cuota)
-    db.session.commit()
-    return cuota
+def pay_cuotas_by_ids(cuota_ids):
+    time_stamp = datetime.now()
+    cuotas = Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
+    for cuota in cuotas:
+        cuota.pagar(time_stamp)
+        record_update(cuota)
+    return cuotas
 
 
 def user_get_permisos(usuario_id):

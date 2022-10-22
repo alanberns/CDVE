@@ -8,6 +8,7 @@ from src.core.forms.pagos_form import EditForm
 from src.core import board
 from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import pago_index_req, pago_show_req
+from datetime import datetime
 
 pago_blueprint = Blueprint(
     "pagos", __name__, url_prefix="/pagos")
@@ -39,7 +40,7 @@ def cuotas_index(inscripcion_id):
 def pago():
     form = EditForm(request.form)
     if form.validate_on_submit():
-        [board.pagar_cuota_by_id(cuota["id"])
-         for cuota in form.items.data if cuota["check"]]
+        cuota_ids = [cuota["id"]for cuota in form.items.data if cuota["check"]]
+        board.pay_cuotas_by_ids(cuota_ids)
         flash("Pago realizado correctamente", "success")
     return redirect(url_for('pagos.pagos_index'))

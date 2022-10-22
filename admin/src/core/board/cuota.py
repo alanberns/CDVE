@@ -16,3 +16,8 @@ class Cuota(db.Model):
     activo = db.Column(db.Boolean, default=True)
     inscripcion_id = db.Column(db.Integer, db.ForeignKey("inscripciones.id"))
     inscripcion = db.relationship('Inscripcion', back_populates="cuota")
+
+    def pagar(self, pay_date):
+        self.estado_pago = True
+        self.fecha_pago = pay_date
+        self.valor_pago = self.valor_cuota
