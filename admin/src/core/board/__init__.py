@@ -6,6 +6,7 @@ from src.core.board.permiso import Permiso
 from src.core.board.disciplina import Disciplina
 from src.core.board.socio import Socio
 from src.core.board.cuota import Cuota
+from src.core.board.pago import Pago
 from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
 from datetime import datetime
@@ -410,3 +411,28 @@ def user_get_permisos(usuario_id):
     permisos = list(
         {permiso.nombre for rol in roles for permiso in rol.permisos})
     return permisos
+
+
+def get_pagos():
+    """
+    Retorna los pagos
+    """
+    return Pago.query.all()
+
+
+def pago_assign_cuotas(pago, cuotas):
+    """
+    Agrega una lista de cuotas a una inscripcion
+    """
+    pago.cuotas.extend(cuotas)
+    record_update(pago)
+    return pago
+
+
+def create_pago(**kwargs):
+    """
+    Crea un rol y lo agrega a la bd
+    """
+    pago = Pago(**kwargs)
+    record_update(pago)
+    return pago

@@ -32,7 +32,7 @@ def run():
         elementos_pagina=20,
         estado_pago=True,
         estado_info_contactos=True,
-        texto_recibo="La cuota XXX ha sido pagada",
+        texto_recibo="Recibimos de X el importe en pesos de XX por el concepto de cuota soscietaria del mes XXX",
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
     )
@@ -154,6 +154,14 @@ def run():
         valor_cuota=550,
         activo=True
     )
+
+    pago1 = board.create_pago(
+        fecha=parse('2022-10-05 22:00:00'),
+        monto=1020,
+    )
+
+    board.pago_assign_cuotas(pago1, [cuota1_disciplina2, cuota2_disciplina2])
+
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
