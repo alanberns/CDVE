@@ -15,42 +15,19 @@ def disciplina_index():
     return render_template("issues/disciplinas.html",disciplinas= disciplinas)
     
 
-@disciplina_blueprint.post("/agregar")
-def agregar_disciplina():
-    kwargs = {
-             "id": request.form.get(id),
-             "nombre":request.form.get("nombre"),
-             "categoria":request.form.get("categoria"),
-             "entrenador":request.form.get("entrenador"),
-             "dia":request.form.get("dia"),
-             "hora":request.form.get("hora"),
-             "costo_mensual":request.form.get("costo_mensual"),
-             "estado": request.form.get("estado"),
-            } 
-    board.create_disciplina(**kwargs)
-    disciplinas = board.list_disciplinas()
-    return render_template("disciplinas.html", disciplina=disciplinas)
-   
-
-
 @disciplina_blueprint.post("/")
-def guardar_disciplina():
+def newdcp():
     kwargs = {
-             "id": request.form.get(id),
+             "id": request.form.get("id"),
              "nombre":request.form.get("nombre"),
              "categoria":request.form.get("categoria"),
              "entrenador":request.form.get("entrenador"),
              "dia":request.form.get("dia"),
              "hora":request.form.get("hora"),
              "costo_mensual":request.form.get("costo_mensual"),
-             "estado": request.form.get("estado"),
+             "estado":request.form.get("estado"),
             } 
     board.create_disciplina(**kwargs)
     disciplinas = board.list_disciplinas()
-    return render_template("disciplinas.html", disciplina=disciplinas)
-  
- 
-
-
-
-
+    return render_template("issues/disciplinas.html", disciplina=disciplinas)
+   
