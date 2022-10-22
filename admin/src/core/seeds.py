@@ -115,42 +115,42 @@ def run():
 
     cuota_enero = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-01-30 22:00:00'),
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
         activo=True
     )
 
     cuota_febrero = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-02-28 22:00:00'),
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
         activo=True
     )
 
     cuota_marzo = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-03-30 22:00:00'),
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
         activo=True
     )
 
     cuota1_disciplina2 = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-01-30 22:00:00'),
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
         activo=True
     )
 
     cuota2_disciplina2 = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-02-28 22:00:00'),
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
         activo=True
     )
 
     cuota3_disciplina2 = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-03-30 22:00:00'),
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
         activo=True
     )

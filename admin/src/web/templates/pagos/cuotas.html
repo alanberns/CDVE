@@ -25,7 +25,7 @@
         {%for cuota in form.items%}
         <tr class="table-secondary">
           {{cuota.hidden_tag()}}
-          <th>{{cuota.data.fecha_vencimiento}}</th>
+          <th>{{cuota.data.fecha_vencimiento.strftime('%Y-%m-%d')}}</th>
           <th>{{cuota.data.valor_cuota}}</th>
           <th>{{ 'Impaga' if not cuota.data.estado_pago else 'Pagada' }}</th>
           <th>
