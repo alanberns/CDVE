@@ -132,6 +132,9 @@ def get_roles():
 
 
 def find_user_by_email(email):
+    """
+    Devuelve un usuario dado un mail.
+    """
     usuario = Usuario.query.filter_by(email=email).first()
     return usuario
 
@@ -270,6 +273,9 @@ def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10
 
 
 def find_socio_by_id(socio_id):
+    """
+    Devuelve un socio dado un id.
+    """
     socio = Socio.query.filter_by(id=socio_id).first()
     return socio
 
@@ -295,7 +301,9 @@ def exist_socio_documento_id(documento, id):
 
 
 def update_socio(socio_id, **kwargs):
-
+    """
+    Actualiza la información de un socio dado un id.
+    """
     socio = find_socio_by_id(socio_id)
     socio.update(**kwargs)
     db.session.merge(socio)
@@ -305,6 +313,9 @@ def update_socio(socio_id, **kwargs):
 
 
 def soft_delete_socio(socio_id):
+    """
+    Realiza la baja lógica de un socio dado un id.
+    """
     socio = find_socio_by_id(socio_id)
     socio.activo = False
     db.session.merge(socio)
@@ -314,6 +325,9 @@ def soft_delete_socio(socio_id):
 
 
 def switch_state_socio(socio_id):
+    """
+    Cambia el estado del campo "habilitado" de un socio dado un id.
+    """
     socio = find_socio_by_id(socio_id)
     socio.habilitado = not socio.habilitado
     db.session.merge(socio)

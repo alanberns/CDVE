@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template
 from flask import request, redirect, url_for, flash
 from src.core.forms.socio_form import SocioForm, DocumentoForm
-
+from src.web.helpers.auth import login_required
 from src.core import board
 
 
@@ -10,13 +10,15 @@ socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 
 
 @socio_blueprint.route("/", methods=["get", "post"])
+@login_required
 def socios_index():
+    """
+    Página principal de socios. Lista y filtrado de socios.
+    """
     form = DocumentoForm()
-   
     configuracion = board.list_configuracion()
     elementos_pagina = configuracion[0].elementos_pagina
     page = int(request.args.get('page', 1))
-
     if form.validate_on_submit():
         apellido = form.apellido.data
         habilitado = form.habilitado.data
@@ -40,15 +42,22 @@ def socios_index():
 
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
+@login_required
 def soft_delete_socio(socio_id):
+    """
+    Eliminado lógico.
+    """
     board.soft_delete_socio(socio_id)
     return redirect(url_for("socios.socios_index"))
 
 
 @socio_blueprint.route("/<int:usuario_id>/add", methods=["get", "post"])
+@login_required
 def add_socio(usuario_id):
+    """
+    Agregado de un socio dado un id de Usuario.
+    """
     form = SocioForm()
-    
     if form.validate_on_submit():
         if (board.exist_socio_documento(form.numero_documento.data)):
             kwargs = {
@@ -67,7 +76,11 @@ def add_socio(usuario_id):
 
 
 @socio_blueprint.route("/<int:socio_id>/update", methods=["get", "post"])
+@login_required
 def update_socio(socio_id):
+    """
+    Edición de un socio cargando su información en un formulario.
+    """
     socio = board.find_socio_by_id(socio_id)
     form = SocioForm()
     if form.validate_on_submit():       
@@ -94,14 +107,23 @@ def update_socio(socio_id):
 
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])
+@login_required
 def switch_state_socio(socio_id):
+    """
+    Cambio de estado de un socio, habilitado o deshabilitado.
+    """
     board.switch_state_socio(socio_id)
     return redirect(url_for("socios.socios_index"))
 
 
 @socio_blueprint.route("/<int:socio_id>/", methods=["get", "post"])
+@login_required
 def ver_socio(socio_id):
+    """
+    Muestra la información de un socio y las posibles operaciones.
+    """
+    form = SocioForm()
     query = board.find_socio_join_usuario_by_id(socio_id)
     socio = query[0]
     usuario = query[1]
-    return render_template("socios/socio.html", socio=socio, usuario=usuario)
+    return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form)
