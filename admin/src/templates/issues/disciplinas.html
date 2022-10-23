@@ -14,10 +14,6 @@
       <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
          <h2> Registrar nueva disciplina </h2> 
          <form action = "{{url_for('disciplinas.newdcp')}}" method="post">
-            <div class="ms-3">
-               <label for="# Disciplina" class="form-label">* #Disciplina</label>
-               <input type="number" class="form-control" name ="id" id="id" placeholder="id">
-             </div>
              <div class="ms-3">
                <label for="Nombre" class="form-label">* Nombre Disciplina</label>
                <input type="text" class="form-control" id="nombre" name = "nombre" placeholder="nombre">
@@ -42,15 +38,10 @@
                <label for="Costo/precio" class="form-label">Costo / Precio</label>
                <input type="number" class="form-control" id="costo" name = "costo" placeholder="costo">
              </div>
-             <div class="ms-3">
-               <label for="Activo" class="form-label">Activo</label>
-               <input type="text" class="form-control" id="estado" name="estado" placeholder="nombre">
-             </div>
              <div class="d-grid gap-2">
                <label for="Activo" class="form-label">(* )Campos obligatorios</label>
                <button class="btn btn-primary">Guardar</button>
-               <button class="btn btn-success">Eliminar</button>
-             </div>
+              </div>
          </form>
        </div>
        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
@@ -58,26 +49,29 @@
          <table class="table table-striped">
             <thead>
                <tr>
-                  <th>Id</th>
                   <th>Nombre Disciplina</th>
                   <th>Categoria</th>
                   <th>Instructor</th>
                   <th>Dia</th>
                   <th>Hora</th>
                   <th>Costo Mensual</th>
-                  <th>Activo</th>
+                  <th>Estado</th>
+                  <th>Eliminar</th>
                 </tr>
                </thead>
                <tbody>
                     {% for disciplina in disciplinas %}
                      <tr>
-                        <th>{{disciplina.id}}</th>
                         <th>{{disciplina.nombre}}</th>
                         <th>{{disciplina.categoria}}</th>
                         <th>{{disciplina.entrenador}}</th>
                         <th>{{disciplina.dia}}</th>
                         <th>{{disciplina.hora}}</th>
                         <th>{{disciplina.costo_mensual}}</th>
+                        <th>{{disciplina.estado}}</th>
+                        <td width="130">
+                            <a href="/deleteds/{{disciplina.id}})" class="btn btn-danger btn-sm" onclick="return confirm('¿Esta seguro que desea eliminar la Disciplina?')">Eliminar</a>
+                        </td>
                        </tr>
                      {% endfor %} 
                     </tbody>          

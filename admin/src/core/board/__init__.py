@@ -12,8 +12,12 @@ def create_disciplina(**kwargs):
    db.session.add(disciplina)
    db.session.commit()
 
+#parte nueva 
 
+def delete_disciplina(id):
+   disciplina = Disciplina.query.get(id)
+   disciplina.estado = "Inactivo",
+   db.session.commit()
 
-
-
+  
 
