@@ -30,6 +30,7 @@ def pagos_index():
 @login_required
 @pago_show_req
 def cuotas_index(inscripcion_id):
+    board.set_nro_cuota_by_inscripcion(inscripcion_id)
     cuotas = board.get_cuotas_by_inscripcion_id(inscripcion_id)
     form = EditForm(data={"items": cuotas})
     return render_template("pagos/cuotas.html", cuotas=cuotas, form=form)

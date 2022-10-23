@@ -436,3 +436,14 @@ def create_pago(**kwargs):
     pago = Pago(**kwargs)
     record_update(pago)
     return pago
+
+
+def set_nro_cuota_by_inscripcion(inscripcion_id):
+    """
+    Crea un rol y lo agrega a la bd
+    """
+    cuotas = Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=None).order_by(
+        Cuota.fecha_vencimiento.asc()).all()
+    for count, cuota in enumerate(cuotas, start=1):
+        cuota.nro_cuota = count
+        record_update(cuota)
