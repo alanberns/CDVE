@@ -25,7 +25,10 @@
         {{form.cambiar}}
     </form>
 
-    <a href="{{url_for('home')}}"><button>Volver al inicio</button> </a>
+    <div id="borde_boton">
+        <a href="{{url_for('home')}}" id="borde_boton"><button>Volver al inicio</button></a>
+        <a href="{{url_for('perfil.show_perfil')}}" id="borde_boton"><button>Ver mi perfil</button></a>
+    </div>
   
 </div>
 {% endblock %}
