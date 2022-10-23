@@ -45,7 +45,7 @@
         <th>No</th>
         <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
         {% endif %}
-        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button>Ver detalle</button></a></th>
+        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button><i class="bi bi-plus-lg"></i></button></a></th>
       </tr>
       {% else %}
       <th>No hay resultados</th>
@@ -60,16 +60,16 @@
                     <input type="hidden" value="{{page}}" name="page">
                     <input type="hidden" value="{{email}}" name="email">
                     <input type="hidden" value="{{activo}}" name="estado">
-                    <button>{{ page }}</button>
+                    <button class="btn btn-secondary">{{ page }}</button>
                 </form>
             {% else %}
-                <strong>{{ page }}</strong>
+                <strong class="btn btn-light">{{ page }}</strong>
             {% endif %}
         {% else %}
             <span class=ellipsis>…</span>
         {% endif %}
     {%- endfor %}
 </div>
-  </form><a href="{{ url_for('usuarios.usuario_index') }}"><button>Limpiar filtros de busqueda</button></a>
+  </form><a href="{{ url_for('usuarios.usuario_index') }}"><button><i class="bi bi-trash3-fill"></i> Limpiar filtros</button></a>
 </div>
 {% endblock %}

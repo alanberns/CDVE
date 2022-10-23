@@ -14,7 +14,7 @@
 <div class="d-flex flex-column align-items-center">
   <h1 class="mx-5"> Usuarios </h1>
 
-  <a href="{{url_for('usuarios.add_usuario_view')}}"> <button>Añadir nuevo usuario</button></a>
+  <a href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
 
   <section><h6>Buscar por:</h6>
     <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="get">
@@ -60,7 +60,7 @@
         <th>No</th>
         <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
         {% endif %}
-        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button>Ver detalle</button></a></th>
+        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button><i class="bi bi-plus-lg"></i></button></a></th>
       </tr>
       {% else %}
       <th>No hay resultados</th>
@@ -71,9 +71,9 @@
     {%- for page in usuarios_pag.iter_pages() %}
         {% if page %}
             {% if page != usuarios_pag.page %}
-                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button>{{ page }}</button></a>
+                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button class="btn btn-secondary">{{ page }}</button></a>
             {% else %}
-                <strong>{{ page }}</strong>
+                <strong class="btn btn-light">{{ page }}</strong>
             {% endif %}
         {% else %}
             <span class=ellipsis>…</span>
