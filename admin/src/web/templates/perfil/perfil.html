@@ -2,17 +2,12 @@
 {% block title %}Mi perfil{% endblock %}
 {% block head %}
   {{ super() }}
-  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-    </symbol>
-  </svg>
 {% endblock %}
 {% block content %}
 <div class="d-flex flex-column align-items-center">
   <h1 class="mx-5"> Mi perfil </h1>
 
-    <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" 
+    <form class="row g-3 mx-5" action=" {{ url_for('perfil.modify_perfil', id=usuario.id)}}" method="post" 
     onsubmit="return confirm('¿Estas seguro que deseas modificar tus datos?');">
       {{ form.csrf_token }} 
       <div class="form-floating mb-3">
@@ -60,9 +55,11 @@
     </form>
 
     <!---contraseña-->
-    <a href="{{url_for('perfil.change_password_view')}}"><button>Cambiar mi contraseña</button></a>
+    <a href="{{url_for('perfil.change_password_view')}}"  id="borde_boton"><button>Cambiar mi contraseña</button></a>
 
-    <h6>Roles</h6>
+    <hr><br>
+    
+    <h4 id="borde_boton">Roles</h4>
     <table class="table table-striped">
       <thead>
         <tr class="table-dark">

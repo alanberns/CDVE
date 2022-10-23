@@ -37,6 +37,8 @@ def modify_perfil():
     #Modifica los datos del perfil
     """
     form = ModificarUsuarioForm(request.form)
+    usuario_email = session["user"]
+    usuario = board.find_user_by_email(usuario_email)
 
     if not form.validate:
         flash("No se pudo modificar los datos", "danger")
@@ -57,7 +59,7 @@ def modify_perfil():
             return redirect(url_for('perfil.show_perfil'))
     
     kwargs = {
-        "id": form.id.data,
+        "id": usuario.id,
         "email": form.email.data,
         "username": form.username.data,
         "updated_at": datetime.now(),
