@@ -22,7 +22,9 @@
         {{form.password_repetir(class="form-control")}}
         <label >{{form.password_repetir.label}}</label>
         </div>
-        {{form.cambiar}}
+        <div class="d-flex flex-row justify-content-center">
+            {{ form.cambiar(class="btn btn-primary")}}
+          </div>
     </form>
 
     <div id="borde_boton">
