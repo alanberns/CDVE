@@ -1,0 +1,43 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block content %}
+
+<div class="container">
+  <h2>Pago de cuotas</h2>
+  <p class="text-muted h5">A continuacion detallamos el monto a pagar</p>
+
+  <ul>
+    {%for cuota in cuotas%}
+    <li class="list-group-item border-0">
+      <div class="card">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <div class="card-body text-center align-middle">
+              <strong>Numero de cuota:</strong>
+              {{cuota.nro_cuota}}
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-body text-center align-middle">
+              <strong>Vencimiento:</strong>
+              {{cuota.fecha_vencimiento.strftime('%Y-%m-%d')}}
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-body text-center align-middle">
+              <strong>Valor de la cuota:</strong>
+              {{cuota.valor_cuota}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    {%endfor%}
+  </ul>
+  <a
+    class="btn btn-primary"
+    href="{{ url_for('pagos.cuotas_index',inscripcion_id = cuotas[0].inscripcion.id) }}"
+    >Atras
+  </a>
+</div>
+
+{% endblock %}

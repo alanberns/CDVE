@@ -405,6 +405,10 @@ def pay_cuotas_by_ids(cuota_ids):
     return cuotas
 
 
+def get_cuotas_by_ids(cuota_ids):
+    return Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
+
+
 def user_get_permisos(usuario_id):
     roles = Rol.query.join(Usuario_tiene_rol).filter_by(
         usuario_id=usuario_id).all()

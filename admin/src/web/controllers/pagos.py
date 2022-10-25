@@ -40,8 +40,10 @@ def cuotas_index(inscripcion_id):
 @login_required
 def pago():
     form = EditForm(request.form)
-    if form.validate_on_submit():
-        cuota_ids = [cuota["id"]for cuota in form.items.data if cuota["check"]]
-        board.pay_cuotas_by_ids(cuota_ids)
-        flash("Pago realizado correctamente", "success")
-    return redirect(url_for('pagos.pagos_index'))
+    if not form.validate_on_submit():
+        flash("Hubo un error al seleccionar las cuotas", "danger")
+        return redirect(url_for('pagos.pagos_index'))
+    cuota_ids = [cuota["id"]for cuota in form.items.data if cuota["check"]]
+    cuotas = board.get_cuotas_by_ids(cuota_ids)
+    config = board.list_configuracion()
+    return render_template("pagos/pago.html", cuotas=cuotas)
