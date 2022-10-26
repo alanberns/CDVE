@@ -1,21 +1,24 @@
-from flask import Blueprint, flash
+from flask import Blueprint
 from flask import render_template
 from src.core.board import disciplina
-from src.core.board.disciplina import Disciplina
 from flask import request
 from src.core import board
+from src.core.board.disciplina import Disciplina
 from src.core.board.database import db
+#from src.web.helpers.auth import login_required
 
 
 disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplinas")
 
-
 @disciplina_blueprint.get("/")
+@disciplina_blueprint.get("/disciplinas")
+#@login_required
 def disciplina_index():
-    
-    disciplinas = board.list_disciplinas()
-    return render_template("issues/disciplinas.html",disciplinas= disciplinas)
-    
+    page = request.args.get('page', 1, type=int)
+    disciplinas = Disciplina.query.paginate(page=page, per_page= 5)
+    return render_template('disciplinas.html',disciplinas= disciplinas)
+    #disciplinas = board.list_disciplinas()
+
 
 @disciplina_blueprint.post("/")
 def newdcp():
@@ -26,26 +29,10 @@ def newdcp():
              "dia":request.form.get("dia"),
              "hora":request.form.get("hora"),
              "costo_mensual":request.form.get("costo_mensual"),
-             "estado":"Activo",
+             "estado":"Activa"
             } 
     board.create_disciplina(**kwargs)
     disciplinas = board.list_disciplinas()
-    return render_template("issues/disciplinas.html", disciplina=disciplinas)
+    return render_template('disciplinas.html', disciplina=disciplinas)
    
-
-#parte nueva 
-
-@disciplina_blueprint.post('/deleteds/<id>')
-def deletedis(id):
-        disciplina = Disciplina.query.get(id)
-        disciplina.estado = "Inactivo"
-        db.session.commit()
-        flash("Disciplina dada de Baja")
-        return render_template("issues/disciplinas.html")
-   
-   
-
-
-
-
 

@@ -15,33 +15,34 @@
          <h2> Registrar nueva disciplina </h2> 
          <form action = "{{url_for('disciplinas.newdcp')}}" method="post">
              <div class="ms-3">
-               <label for="Nombre" class="form-label">* Nombre Disciplina</label>
-               <input type="text" class="form-control" id="nombre" name = "nombre" placeholder="nombre">
+               <label for="Nombre" class="form-label">* Nombre</label>
+               <input type="text" class="form-control" id="nombre" name = "nombre" placeholder="nombre" required="1">
              </div>
              <div class="ms-3">
-               <label for="Categoria Disciplina" class="form-label">* Categoria</label>
-               <input type="text" class="form-control" id="categoria" name = "categoria" placeholder="categoria">
+               <label for="Categoria" class="form-label">* Categoria</label>
+               <input type="text" class="form-control" id="categoria" name = "categoria" placeholder="categoria" required="1">
              </div>
              <div class="ms-3">
                <label for="Instructor" class="form-label">* Instructor</label>
-               <input type="text" class="form-control" id="entrenador" name = "entrenador" placeholder="entrenador">
+               <input type="text" class="form-control" id="entrenador" name = "entrenador" placeholder="entrenador" required="1">
              </div>
              <div class="ms-3">
-               <label for="Dia" class="form-label">Dia</label>
-               <input type="text" class="form-control" id="dia" name="dia" placeholder="dia">
+               <label for="Dia" class="form-label">* Dia</label>
+               <input type="text" class="form-control" id="dia" name="dia" placeholder="dia" required = "1">
              </div>
              <div class="ms-3">
-               <label for="Hora" class="form-label">Hora</label>
-               <input type="text" class="form-control" id="hora" name="hora" placeholder="hora">
+               <label for="Hora" class="form-label">* Hora</label>
+               <input type="text" class="form-control" id="hora" name="hora" placeholder="hora" required="1">
              </div>
              <div class="ms-3">
-               <label for="Costo/precio" class="form-label">Costo / Precio</label>
-               <input type="number" class="form-control" id="costo" name = "costo" placeholder="costo">
+               <label for="Costo Precio" class="form-label">* Costo / Precio</label>
+               <input type="number" class="form-control" id="costo" name = "costo" placeholder="costo" required="1">
              </div>
              <div class="d-grid gap-2">
-               <label for="Activo" class="form-label">(* )Campos obligatorios</label>
+               <label for="Activo" class="form-label">(* ) Campos obligatorios</label>
+               <button class="btn btn-success">Nuevo</button>
                <button class="btn btn-primary">Guardar</button>
-              </div>
+             </div>
          </form>
        </div>
        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
@@ -49,18 +50,19 @@
          <table class="table table-striped">
             <thead>
                <tr>
-                  <th>Nombre Disciplina</th>
+                  <th>Nombre</th>
                   <th>Categoria</th>
                   <th>Instructor</th>
                   <th>Dia</th>
                   <th>Hora</th>
-                  <th>Costo Mensual</th>
+                  <th>Precio </th>
                   <th>Estado</th>
+                  <th>Editar</th>
                   <th>Eliminar</th>
                 </tr>
                </thead>
                <tbody>
-                    {% for disciplina in disciplinas %}
+                    {% for disciplina in disciplinas.items %}
                      <tr>
                         <th>{{disciplina.nombre}}</th>
                         <th>{{disciplina.categoria}}</th>
@@ -70,20 +72,30 @@
                         <th>{{disciplina.costo_mensual}}</th>
                         <th>{{disciplina.estado}}</th>
                         <td width="130">
-                            <a href="/deleteds/{{disciplina.id}})" class="btn btn-danger btn-sm" onclick="return confirm('¿Esta seguro que desea eliminar la Disciplina?')">Eliminar</a>
+                          <button class="btn btn-primary">Editar</button>
                         </td>
-                       </tr>
-                     {% endfor %} 
-                    </tbody>          
-                  </thead>
+                        <td width="130">
+                           <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#update_disciplina{{disciplina['id']}}">Eliminar</button>
+                         </td>  
+                      </tr>
+                    {% endfor %} 
+                    {% for page_num in disciplinas.iter_pages() %}
+                       {% if page_num %} 
+                          <a class = "btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a> 
+                       {% endif %}
+                    {% endfor %}
+                 </tbody>          
+                </thead>
                </table>
                <button class="btn btn-primary">Exportar PDF </button>
                <button class="btn btn-primary">Exportar.CV</button>
          </div>
       </div>
-    </div>
+     </div>  
 </body>
 </html>
 {% endblock %}
+
 
          
