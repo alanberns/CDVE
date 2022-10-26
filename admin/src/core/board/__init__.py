@@ -362,11 +362,12 @@ def get_elementos_pagina():
     return configuracion.elementos_pagina
 
 
-def get_inscripciones():
+def get_inscripciones(page):
     """
     Retorna las Inscripciones
     """
-    return Inscripcion.query.all()
+    per_page = get_elements_per_page()
+    return Inscripcion.query.paginate(page=page, per_page=per_page)
 
 
 def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
@@ -451,3 +452,8 @@ def set_nro_cuota_by_inscripcion(inscripcion_id):
     for count, cuota in enumerate(cuotas, start=1):
         cuota.nro_cuota = count
         record_update(cuota)
+
+
+def get_elements_per_page():
+    config = list_configuracion()
+    return config[0].elementos_pagina
