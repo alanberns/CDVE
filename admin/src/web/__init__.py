@@ -46,7 +46,7 @@ def create_app(env="development", static_folder="static"):
     app.register_error_handler(403, handlers.forbbiden)
 
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
-    # app.jinja_env.globals.update(has_permission=auth.has_permission)
+    app.jinja_env.globals.update(has_permission=auth.has_permission)
 
     @app.cli.command(name="seeds")
     def seeds_configuracion():

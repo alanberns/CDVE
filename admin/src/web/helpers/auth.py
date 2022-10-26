@@ -7,12 +7,12 @@ def is_authenticated(session):
     return session.get("user") != None
 
 
-# def has_permission(permission, session):
-#     """
-#     Funcion que retorna si un dado permiso se encuentra en el listado
-#     de permisos de la sesión actual
-#     """
-#     return permission in session.get("permissions")
+def has_permission(permission, session):
+    """
+    Funcion que retorna si un dado permiso se encuentra en el listado
+    de permisos de la sesión actual
+    """
+    return permission in session.get("permissions")
 
 
 def login_required(f):

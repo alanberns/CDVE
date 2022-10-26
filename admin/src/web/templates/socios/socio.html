@@ -1,25 +1,73 @@
 {% extends "layout.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Socios{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="media-body">
-    <h2 class="article-content">{{ socio.tipo_documento }}</h2>
-    <h2 class="article-content">{{ socio.numero_documento }}</h2>
-    <h2 class="article-content">{{ socio.genero }}</h2>
-    <h2 class="article-content">{{ socio.email }}</h2>
+
+<div class="form-group" style="width: 40rem;">
+    
+    <fieldset>
+
+        <label class="form-label mt-4" for="readOnlyInput">Apellido</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ usuario.last_name }}" readonly="">
+
+        <label class="form-label mt-4" for="readOnlyInput">Nombre</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ usuario.first_name }}" readonly="">
+        
+        <label class="form-label mt-4" for="readOnlyInput">Documento</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ socio.tipo_documento }} {{ socio.numero_documento }}" readonly="">
+    
+        <label class="form-label mt-4" for="readOnlyInput">Género</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ socio.genero }}" readonly="">
+    
+        <label class="form-label mt-4" for="readOnlyInput">Dirección</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ socio.direccion }}" readonly="">
+    
+        <label class="form-label mt-4" for="readOnlyInput">Teléfono</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ socio.telefono }}" readonly="">
+
+        <label class="form-label mt-4" for="readOnlyInput">Email</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ usuario.email }}" readonly="">
+
+        <label class="form-label mt-4" for="readOnlyInput">numero_socio</label>
+        <input class="form-control" id="readOnlyInput" type="text" placeholder="{{ socio.id }}" readonly="">
+            
+    </fieldset>
+    <br>
+    <div class="row">
+        <div class="col-md-2">
+            <form action="{{ url_for('socios.soft_delete_socio', socio_id=socio.id)}}" method="post" onsubmit="return confirm('¿Estás seguro que deseas eliminar el socio?');">
+                {{ form.csrf_token }}
+                <button class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <form action="{{ url_for('socios.update_socio', socio_id=socio.id)}}" method="post">
+                {{ form.csrf_token }}
+                <button class="btn btn-primary">Editar</button>
+            </form>
+        </div>
+
+        {% if socio.habilitado %}
+        <div class="col-md-2">
+            <form action="{{ url_for('socios.switch_state_socio', socio_id=socio.id)}}" method="post">
+                {{ form.csrf_token }}
+                <button class="btn btn-warning">Deshabilitar</button>
+            </form>
+        </div>
+        {% endif %}
+        {% if not socio.habilitado %}
+        <div class="col-md-2">
+            <form action="{{ url_for('socios.switch_state_socio', socio_id=socio.id)}}" method="post">
+                {{ form.csrf_token }}
+                <button class="btn btn-outline-success">Habilitar</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <a href="{{url_for('socios.socios_index')}}"> Volver</a>
+    </div>
 </div>
-<fieldset class="form-group">
-    <form action="{{ url_for('socios.soft_delete_socio', socio_id=socio.id)}}" method="post">
-        <button>Eliminar</button>
-    </form>
-    <form action="{{ url_for('socios.update_socio', socio_id=socio.id)}}" method="post">
-        <button>Editar</button>
-    </form>
-    <form action="{{ url_for('socios.switch_state_socio', socio_id=socio.id)}}" method="post">
-        <button>Deshabilitar</button>
-    </form>
-    <a href="{{url_for('socios.socios_index')}}"> Volver</a>
-</fieldset>
+
 {% endblock content %}

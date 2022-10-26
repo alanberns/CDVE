@@ -39,13 +39,22 @@ def run():
 
     # Roles
     rol_administrador = board.create_rol(nombre="Administrador")
-    rol_opeador = board.create_rol(nombre="Operador")
+    rol_operador = board.create_rol(nombre="Operador")
     rol_usuario = board.create_rol(nombre="Socio")
 
-    # Permisos
-    permiso_index = board.create_permiso(nombre="index")
-    permiso_show = board.create_permiso(nombre="show")
-    board.rol_assign_permiso(rol_administrador, [permiso_index, permiso_show])
+    # Permiso Configuracion
+    configuracion_all = board.create_permiso(nombre="configuracion_all")
+
+    # Permisos Pagos
+    pago_index = board.create_permiso(nombre="pago_index")
+    pago_show = board.create_permiso(nombre="pago_show")
+    pago_update = board.create_permiso(nombre="pago_update")
+    pago_delete = board.create_permiso(nombre="pago_delete")
+    board.rol_assign_permiso(rol_administrador, [
+                             configuracion_all, pago_index, pago_show, pago_update, pago_delete])
+
+    board.rol_assign_permiso(rol_operador, [
+                             pago_index, pago_show, pago_update])
 
     # Permisos modulo usuarios
     user_index = board.create_permiso(nombre="user_index")
@@ -63,23 +72,19 @@ def run():
         tipo_documento="DNI",
         numero_documento=44556677,
         genero="femenino",
-        numero_socio="AAA111",
         direccion="calle falsa 123",
         telefono=14141414,
-        email="socio1@mail.com"
         # el usuario tiene mail también, arreglar.
     )
 
-    juan = board.create_socio(
+    socio2 = board.create_socio(
         id_usuario=2,
         # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=43123123,
-        genero="caballo",
-        numero_socio="AAA12",
+        genero="Masculino",
         direccion="7 y 32",
         telefono=221420,
-        email="juan@juan.juan"
         # el usuario tiene mail también, arreglar.
     )
 
@@ -164,8 +169,8 @@ def run():
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
-    board.socio_assign_disciplina(juan, t_disciplina2)
-    board.socio_assign_disciplina(juan, t_disciplina3)
+    board.socio_assign_disciplina(socio2, t_disciplina2)
+    board.socio_assign_disciplina(socio2, t_disciplina3)
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina, [cuota_enero, cuota_febrero, cuota_marzo])
