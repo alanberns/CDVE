@@ -62,7 +62,7 @@
                 </tr>
                </thead>
                <tbody>
-                    {% for disciplina in disciplinas.items %}
+                    {% for disciplina in disciplinas %}
                      <tr>
                         <th>{{disciplina.nombre}}</th>
                         <th>{{disciplina.categoria}}</th>
@@ -80,11 +80,6 @@
                          </td>  
                       </tr>
                     {% endfor %} 
-                    {% for page_num in disciplinas.iter_pages() %}
-                       {% if page_num %} 
-                          <a class = "btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a> 
-                       {% endif %}
-                    {% endfor %}
                  </tbody>          
                 </thead>
                </table>

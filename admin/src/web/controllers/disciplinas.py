@@ -18,7 +18,7 @@ def disciplina_index():
     # disciplinas = Disciplina.query.paginate(page=page, per_page=5)
     disciplinas = board.list_disciplinas()
     return render_template('disciplinas.html', disciplinas=disciplinas)
-    disciplinas = board.list_disciplinas()
+
 
 
 @disciplina_blueprint.post("/")

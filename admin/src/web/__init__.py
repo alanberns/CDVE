@@ -14,7 +14,7 @@ from src.web.controllers.auth import auth_blueprint
 from src.web.controllers.socios import socio_blueprint
 from src.web.controllers.pagos import pago_blueprint
 from src.web.controllers.perfil import perfil_blueprint
-from web.controllers.disciplinas import disciplina_blueprint
+from src.web.controllers.disciplinas import disciplina_blueprint
 from flask_wtf.csrf import CSRFProtect
 from src.web.helpers.auth import login_required
 

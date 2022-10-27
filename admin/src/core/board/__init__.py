@@ -1,4 +1,4 @@
-from core.database import db
+from src.core.database import db
 from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
@@ -144,9 +144,13 @@ def find_user_by_email(email):
 
 
 def list_configuracion():
+    return Configuracion.query.all()
     """
     Lista los datos de la configuracion, devuelve una sola tupla
     """
+
+def list_disciplinas():
+    return Disciplina.query.all()
 
 
 def delete_disciplina(id):
