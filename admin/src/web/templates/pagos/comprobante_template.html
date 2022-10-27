@@ -1,0 +1,7 @@
+<div class="container">
+  <p>{{config.texto_recibo}}</p>
+  {% for cuota in cuotas %}
+  <p>{{cuota.nro_cuota}}</p>
+  <p>{{cuota.valor_cuota}}</p>
+  {% endfor%}
+</div>

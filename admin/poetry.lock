@@ -122,6 +122,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "pdfkit"
+version = "1.0.0"
+description = "Wkhtmltopdf python wrapper to convert html to pdf using the webkit rendering engine and qt"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "psycopg2-binary"
 version = "2.9.3"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
@@ -223,7 +231,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fcc2ada1db841794399468b71cda2340f0456901cf146cc83e9e21dfa9f77d05"
+content-hash = "992cd5cf27d430e6fa3872ab8f8eb3023b357db1709531f7d7938b001b994d8e"
 
 [metadata.files]
 click = [
@@ -355,6 +363,11 @@ MarkupSafe = [
     {file = "MarkupSafe-2.1.1-cp39-cp39-win32.whl", hash = "sha256:d4306c36ca495956b6d568d276ac11fdd9c30a36f1b6eb928070dc5360b22e1c"},
     {file = "MarkupSafe-2.1.1-cp39-cp39-win_amd64.whl", hash = "sha256:46d00d6cfecdde84d40e572d63735ef81423ad31184100411e6e3388d405e247"},
     {file = "MarkupSafe-2.1.1.tar.gz", hash = "sha256:7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"},
+]
+pdfkit = [
+    {file = "pdfkit-1.0.0-py2-none-any.whl", hash = "sha256:cc122e5aed594198ff7aaa566f2950d2163763576ab891c161bb1f6c630f5a8e"},
+    {file = "pdfkit-1.0.0-py3-none-any.whl", hash = "sha256:a7a4ca0d978e44fa8310c4909f087052430a6e8e0b1dd7ceef657f139789f96f"},
+    {file = "pdfkit-1.0.0.tar.gz", hash = "sha256:992f821e1e18fc8a0e701ecae24b51a2d598296a180caee0a24c0af181da02a9"},
 ]
 psycopg2-binary = [
     {file = "psycopg2-binary-2.9.3.tar.gz", hash = "sha256:761df5313dc15da1502b21453642d7599d26be88bff659382f8f9747c7ebea4e"},

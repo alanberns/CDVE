@@ -4,11 +4,13 @@ from flask import request
 from flask import redirect
 from flask import url_for
 from flask import flash
+from flask import make_response
 from src.core.forms.pagos_form import EditForm
 from src.core import board
 from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import pago_index_req, pago_show_req
 from datetime import datetime
+import pdfkit
 
 pago_blueprint = Blueprint(
     "pagos", __name__, url_prefix="/pagos")
@@ -42,5 +44,20 @@ def pago():
         return redirect(url_for('pagos.pagos_index'))
     cuota_ids = [cuota["id"]for cuota in form.items.data if cuota["check"]]
     cuotas = board.get_cuotas_by_ids(cuota_ids)
-    config = board.list_configuracion()
+    config = board.list_configuracion()  # para calcular el porcentaje por mora
     return render_template("pagos/pago.html", cuotas=cuotas)
+
+
+@pago_blueprint.get("/recibos")
+@login_required
+@pago_index_req
+def recibo():
+    cuotas = request.args.get("cuotas")
+    config = board.list_configuracion()
+    rendered = render_template(
+        "pagos/comprobante_template.html", cuotas=cuotas, config=config)
+    pdf = pdfkit.from_string(rendered, False)
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=comprobante.pdf'
+    return response

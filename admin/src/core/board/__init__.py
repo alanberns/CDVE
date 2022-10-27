@@ -144,8 +144,7 @@ def list_configuracion():
     """
     Lista los datos de la configuracion, devuelve una sola tupla
     """
-
-    return Configuracion.query.all()
+    return Configuracion.query.first()
 
 
 def init_configuracion(**kwargs):
@@ -456,4 +455,4 @@ def set_nro_cuota_by_inscripcion(inscripcion_id):
 
 def get_elements_per_page():
     config = list_configuracion()
-    return config[0].elementos_pagina
+    return config.elementos_pagina

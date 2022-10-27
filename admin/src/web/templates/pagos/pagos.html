@@ -38,7 +38,7 @@
       {% for page_num in inscripciones.iter_pages(left_edge=1, right_edge=1,
       left_current = 1, right_current=2 ) %} {% if page_num %} {% if page_num ==
       inscripciones.page %}
-      <li class="page-item">
+      <li class="page-item active">
         <a
           class="page-link"
           href="{{url_for('pagos.pagos_index', page=page_num)}}"

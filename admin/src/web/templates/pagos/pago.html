@@ -34,6 +34,12 @@
           </div>
         </li>
         {%endfor%}
+        <div class="col">
+          <div class="card-body text-center align-middle h5">
+            <strong>Valor Total a Pagar:</strong>
+            {{ cuotas | sum(attribute='valor_cuota') }}
+          </div>
+        </div>
       </ul>
     </div>
     <div class="row">
@@ -43,7 +49,11 @@
           href="{{ url_for('pagos.cuotas_index',inscripcion_id = cuotas[0].inscripcion.id) }}"
           >Volver a Cuotas
         </a>
-        <a class="btn btn-danger" href="#">Pagar </a>
+        <a
+          class="btn btn-danger"
+          href="{{ url_for('pagos.recibo',cuotas=cuotas) }}"
+          >Pagar
+        </a>
       </div>
     </div>
   </div>
