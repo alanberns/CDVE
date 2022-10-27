@@ -27,8 +27,7 @@ def usuario_index():
     Menu inicial de usuarios: lista de usuarios
     """
     # Paginación
-    configuracion = board.list_configuracion()
-    elementos_pagina = configuracion[0].elementos_pagina
+    elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get('page', 1))
 
     usuarios_pag = board.list_usuarios(page,elementos_pagina)
@@ -54,8 +53,7 @@ def busqueda_filtrada():
             activo = ""
 
     # Paginación
-    configuracion = board.list_configuracion()
-    elementos_pagina = configuracion[0].elementos_pagina
+    elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get('page', 1))
     usuarios_pag = board.filter_usuarios(email, activo, page, elementos_pagina)
 

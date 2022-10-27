@@ -177,5 +177,6 @@ def run():
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina2, [cuota1_disciplina2, cuota2_disciplina2, cuota3_disciplina2])
-    board.asignar_rol(1, 1)
-    board.asignar_rol(2, 2)
+
+    board.asignar_rol(test_user.id, rol_administrador.id)
+    board.asignar_rol(test_user2.id, rol_operador.id)
