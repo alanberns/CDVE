@@ -35,7 +35,9 @@ def pagos_busqueda_index():
     if not form.validate:
         abort(500)
     page = request.args.get('page', default=1, type=int)
-    pagos = board.list_pagos(page)
+    filter = form.select_busqueda.data
+    texto_busqueda = form.texto_busqueda.data
+    pagos = board.get_pagos_search_paginated(page, filter, texto_busqueda)
     return render_template("pagos/pagos.html", pagos=pagos, form=form)
 
 
@@ -76,7 +78,7 @@ def pago():
 @pago_index_req
 def recibo():
     cuota_ids = request.args.to_dict(flat=False)["cuotas"]
-    # board.generate_payment(cuota_ids)
+    board.generate_payment(cuota_ids)
     cuotas = board.get_cuotas_by_ids(cuota_ids)
     config = board.list_configuracion()
     rendered = render_template(

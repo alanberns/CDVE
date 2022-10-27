@@ -397,10 +397,9 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
 
 
 def pay_cuotas_by_ids(cuota_ids):
-    time_stamp = datetime.now()
     cuotas = Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
     for cuota in cuotas:
-        cuota.pagar(time_stamp)
+        cuota.pagar()
         record_update(cuota)
     return cuotas
 
@@ -479,3 +478,14 @@ def generate_payment(cuota_ids):
     )
     pago_assign_cuotas(pago, cuotas)
     return pago
+
+
+def get_pagos_search_paginated(page, filter, search_text):
+    """
+    Retorna los pagos
+    """
+    per_page = get_elements_per_page()
+    if filter == 1:
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).join(Usuario).filter(Usuario.last_name == search_text).paginate(page=page, per_page=per_page)
+    elif filter == 0:
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == search_text).paginate(page=page, per_page=per_page)

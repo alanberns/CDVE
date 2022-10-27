@@ -15,6 +15,6 @@ cuotas_pagos = db.Table(
     "cuotas_pagos",
     db.Column("pago_id", db.Integer, db.ForeignKey(
         "pagos.id"), primary_key=True),
-    db.Column("permiso_id", db.Integer, db.ForeignKey(
+    db.Column("cuota_id", db.Integer, db.ForeignKey(
         "cuotas.id"), primary_key=True),
 )

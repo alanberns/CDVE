@@ -18,11 +18,10 @@ class Cuota(db.Model):
     pago = db.relationship(
         "Pago", secondary="cuotas_pagos", back_populates="cuotas")
 
-    def pagar(self, ammount):
-        self.valor_pago = ammount
-        if self.payed():
-            self.estado_pago = True
-        return True
+    def pagar(self):
+        self.valor_pago = self.valor_cuota
+        self.estado_pago = True
+        return self.estado_pago
 
     def payed(self):
         return self.valor_cuota == self.valor_pago
