@@ -50,7 +50,8 @@
         </a>
         <a
           class="btn btn-danger"
-          href="{{ url_for('pagos.recibo',cuotas = cuota_ids) }}"
+          href="{{ url_for('pagos.confirm_pago',cuotas = cuota_ids) }}"
+          onclick="return confirm('¿Seguro que desea realizar el pago?')"
           >Pagar
         </a>
       </div>

@@ -423,6 +423,13 @@ def get_pagos():
     return Pago.query.all()
 
 
+def get_pago_by_id(pago_id):
+    """
+    Retorna los pagos
+    """
+    return Pago.query.filter_by(id=pago_id).first()
+
+
 def list_pagos(page):
     """
     Retorna los pagos

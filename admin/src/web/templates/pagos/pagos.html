@@ -35,6 +35,7 @@
         <th>Monto</th>
         <th>Nro_socio</th>
         <th>Apellido</th>
+        <th>Recibo</th>
       </tr>
     </thead>
     <tbody>
@@ -52,6 +53,14 @@
         </th>
         <th class="text-center align-middle">
           {{pago.cuotas[0].inscripcion.socio.usuario.last_name}}
+        </th>
+        <th class="text-center align-middle">
+          <a
+            class="btn btn-link"
+            href="{{ url_for('pagos.recibo',pago_id = pago.id) }}"
+            target="_blank"
+            >Ver Recibo
+          </a>
         </th>
       </tr>
       {%endfor%}

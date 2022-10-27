@@ -77,14 +77,26 @@ def pago():
 @login_required
 @pago_index_req
 def recibo():
-    cuota_ids = request.args.to_dict(flat=False)["cuotas"]
-    board.generate_payment(cuota_ids)
-    cuotas = board.get_cuotas_by_ids(cuota_ids)
+    pago_id = request.args.get('pago_id', type=int)
+    pago = board.get_pago_by_id(pago_id)
     config = board.list_configuracion()
     rendered = render_template(
-        "pagos/comprobante_template.html", cuotas=cuotas, config=config)
+        "pagos/comprobante_template.html", pago=pago, config=config)
     pdf = pdfkit.from_string(rendered, False)
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=comprobante.pdf'
     return response
+
+
+@pago_blueprint.get("/confirm")
+@login_required
+@pago_index_req
+def confirm_pago():
+    cuota_ids = request.args.to_dict(flat=False)["cuotas"]
+    if not cuota_ids:
+        flash("Hubo un error al registrar el pago", "danger")
+        return redirect(url_for('pagos.pagos_index'))
+    board.generate_payment(cuota_ids)
+    flash("El pago se realizo de manera satisfactoria", "success")
+    return redirect(url_for('pagos.pagos_index'))
