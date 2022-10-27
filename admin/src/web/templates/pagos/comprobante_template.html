@@ -1,7 +1,37 @@
 <div class="container">
   <p>{{config.texto_recibo}}</p>
-  {% for cuota in cuotas %}
-  <p>{{cuota.nro_cuota}}</p>
-  <p>{{cuota.valor_cuota}}</p>
-  {% endfor%}
+  <ul>
+    {%for cuota in cuotas%}
+    <li class="list-group-item border-0">
+      <div class="card">
+        <div class="row align-items-center justify-content-center">
+          <div class="col">
+            <div class="card-body text-center align-middle">
+              <strong>Numero de cuota:</strong>
+              {{cuota.nro_cuota}}
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-body text-center align-middle">
+              <strong>Vencimiento:</strong>
+              {{cuota.fecha_vencimiento.strftime('%Y-%m-%d')}}
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-body text-center align-middle">
+              <strong>Valor de la cuota:</strong>
+              {{cuota.valor_cuota}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    {%endfor%}
+    <div class="col">
+      <div class="card-body text-center align-middle h5">
+        <strong>Valor Total a Pagar:</strong>
+        {{ cuotas | sum(attribute='valor_cuota') }}
+      </div>
+    </div>
+  </ul>
 </div>

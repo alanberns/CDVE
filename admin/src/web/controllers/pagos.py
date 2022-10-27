@@ -45,14 +45,15 @@ def pago():
     cuota_ids = [cuota["id"]for cuota in form.items.data if cuota["check"]]
     cuotas = board.get_cuotas_by_ids(cuota_ids)
     config = board.list_configuracion()  # para calcular el porcentaje por mora
-    return render_template("pagos/pago.html", cuotas=cuotas)
+    return render_template("pagos/pago.html", cuotas=cuotas, cuota_ids=cuota_ids)
 
 
 @pago_blueprint.get("/recibos")
 @login_required
 @pago_index_req
 def recibo():
-    cuotas = request.args.get("cuotas")
+    cuota_ids = request.args.to_dict(flat=False)["cuotas"]
+    cuotas = board.get_cuotas_by_ids(cuota_ids)
     config = board.list_configuracion()
     rendered = render_template(
         "pagos/comprobante_template.html", cuotas=cuotas, config=config)

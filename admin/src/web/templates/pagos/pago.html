@@ -4,7 +4,6 @@
 <div class="container">
   <h2>Pago de cuotas</h2>
   <p class="text-muted h5">A continuacion detallamos el monto a pagar</p>
-
   <div class="col">
     <div class="row mx-1">
       <ul>
@@ -51,7 +50,7 @@
         </a>
         <a
           class="btn btn-danger"
-          href="{{ url_for('pagos.recibo',cuotas=cuotas) }}"
+          href="{{ url_for('pagos.recibo',cuotas = cuota_ids) }}"
           >Pagar
         </a>
       </div>
