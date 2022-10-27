@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block title %}Usuario{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5"> Usuario </h1>
+
+    <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" 
+    onsubmit="return confirm('¿Estas seguro que deseas editar el usuario?');">
+      {{ form.csrf_token }} 
+      <div class="form-floating mb-3">
+        <input type="text" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
+        <label for="floatingInput">ID</label>
+      </div>
+      {% if usuario.activo %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="Si" class="form-control" readonly>
+        <label for="floatingInput">Activo</label>
+      </div>
+      {% endif %}
+      {% if not usuario.activo %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="No" class="form-control" readonly>
+        <label for="floatingInput">Activo</label>
+      </div>
+      {% endif %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="{{ usuario.created_at }}" class="form-control" readonly>
+        <label for="floatingInput">Fecha de alta</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="{{usuario.updated_at}}" class="form-control" readonly>
+        <label for="floatingInput">Última modificación</label>
+      </div>
+  
+      <div class="form-floating mb-3">
+        {{form.email(class="form-control")}}
+        <label for="email">{{form.email.label}}</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.username(class="form-control")}}
+        <label for="username">{{form.username.label}}</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.first_name(class="form-control")}}
+        <label for="first_name">{{form.first_name.label}}</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.last_name(class="form-control")}}
+        <label for="last_name">{{form.last_name.label}}</label>
+      </div>
+      <div class="d-flex flex-row justify-content-center">
+        {{form.modificar(class="btn btn-primary")}}
+      </div>
+    </form>
+
+    <hr><br>
+
+    <h4 id="borde_boton">Roles</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr class="table-dark">
+          <th>Nombre del rol</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rol in roles %}
+        <tr>
+          {% if rol in usuario.roles %}
+            <th>{{rol.nombre}}</th>
+            <th><a href="{{ url_for('usuarios.quitar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
+              <button>Quitar rol</button></a>
+            </th>
+          {% else %}
+            <th>{{rol.nombre}}</th>
+            <th><a href="{{url_for('usuarios.asignar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
+            <button>Asignar rol</button></a>
+            </th>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div>
+      <a href="{{url_for('home')}}" id="borde_boton"><button>Volver al inicio</button></a>
+      <a href="{{url_for('usuarios.usuario_index')}}" id="borde_boton"><button>Menú  usuarios</button></a>
+    </div>
+
+</div>
+{% endblock %}

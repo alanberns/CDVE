@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Cambiar clave{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+    <h1 class="mx-5"> Cambiar clave </h1>
+
+    <form class="row g-3 mx-5" action="{{ url_for('perfil.change_password') }}" method="post" 
+    onsubmit="return confirm('¿Estas seguro que deseas modificar tu contraseña?');">
+        {{ form.csrf_token }}
+        <div class="form-floating mb-3">
+        {{form.password_ant(class="form-control")}}
+        <label for="Ingrese su clave actual">{{form.password_ant.label}}</label>
+        </div>
+        <div class="form-floating mb-3">
+        {{form.password_nueva(class="form-control")}}
+        <label >{{form.password_nueva.label}}</label>
+        </div>
+        <div class="form-floating mb-3">
+        {{form.password_repetir(class="form-control")}}
+        <label >{{form.password_repetir.label}}</label>
+        </div>
+        <div class="d-flex flex-row justify-content-center">
+            {{ form.cambiar(class="btn btn-primary")}}
+          </div>
+    </form>
+
+    <div id="borde_boton">
+        <a href="{{url_for('home')}}" id="borde_boton"><button>Volver al inicio</button></a>
+        <a href="{{url_for('perfil.show_perfil')}}" id="borde_boton"><button>Ver mi perfil</button></a>
+    </div>
+  
+</div>
+{% endblock %}

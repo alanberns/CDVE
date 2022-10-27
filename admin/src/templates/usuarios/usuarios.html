@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5"> Usuarios </h1>
+
+  <a href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
+
+  <section id="borde_contenedor"><h6>Buscar por:</h6>
+    <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="get">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" name="email" id="email" >
+
+        <label for="estado" class="form-label">Estado de usuario:</label>
+        <select name="estado" id="estado">
+          <option >todos</option>
+          <option >inactivo</option>
+          <option >activo</option>
+        </select>
+        <div class="d-flex flex-row justify-content-center">
+          <button class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+  </section>
+
+  <table class="table table-striped">
+    <thead>
+      <tr class="table-dark">
+        <th>#</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Activo</th>
+        <th>Cambiar estado</th>
+        <th>Ver detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios_pag.items %}
+      <tr>
+        <th>{{ usuario.id }}</th>
+        <th>{{ usuario.username }}</th>
+        <th>{{ usuario.email }}</th>
+        <th>{{ usuario.first_name }}</th>
+        <th>{{ usuario.last_name }}</th>
+        {% if usuario.activo %}
+        <th>Si</th>
+        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de baja</button></a></th>
+        {% endif %}
+        {% if not usuario.activo %}
+        <th>No</th>
+        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
+        {% endif %}
+        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button><i class="bi bi-plus-lg"></i></button></a></th>
+      </tr>
+      {% else %}
+      <th>No hay resultados</th>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class=pagination>
+    {%- for page in usuarios_pag.iter_pages() %}
+        {% if page %}
+            {% if page != usuarios_pag.page %}
+                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button class="btn btn-secondary">{{ page }}</button></a>
+            {% else %}
+                <strong class="btn btn-light">{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {%- endfor %}
+  </div>
+</div>
+{% endblock %}

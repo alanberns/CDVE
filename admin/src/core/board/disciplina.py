@@ -13,10 +13,5 @@ class Disciplina(db.Model):
      hora = db.Column(db.String(50))
      costo_mensual = db.Column(db.Integer)
      estado = db.Column(db.String(50))
-
-
-
-
-
-
-
+     socio = db.relationship(
+        'Inscripcion', back_populates='disciplina')
