@@ -15,7 +15,7 @@ disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplin
 #@login_required
 def disciplina_index():
     page = request.args.get('page', 1, type=int)
-    disciplinas = Disciplina.query.paginate(page=page, per_page= 5)
+    disciplinas = Disciplina.query.paginate(page=page, per_page= 6)
     return render_template('disciplinas.html',disciplinas= disciplinas)
     #disciplinas = board.list_disciplinas()
 
