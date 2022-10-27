@@ -1,4 +1,4 @@
-from src.core.database import db
+from core.database import db
 from src.core.board.usuario import Usuario
 from src.core.board.configuracion import Configuracion
 from src.core.board.rol import Rol
@@ -45,6 +45,7 @@ def update_usuario(**kwargs):
     db.session.commit()
 
     return usuario
+
 
 def update_password(**kwargs):
     """
@@ -147,10 +148,11 @@ def list_configuracion():
     Lista los datos de la configuracion, devuelve una sola tupla
     """
 
+
 def delete_disciplina(id):
-   disciplina = Disciplina.query.get(id)
-   disciplina.estado = "Inactivo",
-   db.session.commit()
+    disciplina = Disciplina.query.get(id)
+    disciplina.estado = "Inactivo",
+    db.session.commit()
 
 
 def init_configuracion(**kwargs):
@@ -233,8 +235,10 @@ def list_socios():
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).all()
+    socios = db.session.query(Socio, Usuario).filter_by(
+        activo=True).outerjoin(Usuario, full=True).all()
     return socios
+
 
 def list_usuarios(page=1, per_page=10):
     """
@@ -247,7 +251,8 @@ def list_socios_join_users(page=1, per_page=10):
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(
+        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
@@ -255,21 +260,26 @@ def list_socios_habilitado(habilitado, page=1, per_page=10):
     """
     Devuelve la lista de socios activos habilitados o deshabilitados
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
+        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
+
 
 def find_socio_by_apellido(last_name, page=1, per_page=10):
     """
     Devuelve los socios activos dado un apellido
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(
+        last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
+
 
 def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
     """
     Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
+        Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
@@ -280,12 +290,15 @@ def find_socio_by_id(socio_id):
     socio = Socio.query.filter_by(id=socio_id).first()
     return socio
 
+
 def find_socio_join_usuario_by_id(socio_id):
     """
     Devuelve la información de un socio junto con su información de usuario.
     """
-    socio = db.session.query(Socio, Usuario).filter_by(activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
+    socio = db.session.query(Socio, Usuario).filter_by(
+        activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
     return socio
+
 
 def exist_socio_documento(documento):
     """
@@ -299,7 +312,6 @@ def exist_socio_documento_id(documento, id):
     Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
     """
     return Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first() == None
-
 
 
 def update_socio(socio_id, **kwargs):
