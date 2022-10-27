@@ -5,7 +5,8 @@ from flask import redirect
 from flask import url_for
 from flask import flash
 from flask import make_response
-from src.core.forms.pagos_form import EditForm
+from flask import abort
+from src.core.forms.pagos_form import EditForm, PagoSearchForm
 from src.core import board
 from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import pago_index_req, pago_show_req
@@ -14,6 +15,28 @@ import pdfkit
 
 pago_blueprint = Blueprint(
     "pagos", __name__, url_prefix="/pagos")
+
+
+@pago_blueprint.get("/")
+@login_required
+@pago_index_req
+def pagos_index():
+    form = PagoSearchForm()
+    page = request.args.get('page', default=1, type=int)
+    pagos = board.list_pagos(page)
+    return render_template("pagos/pagos.html", pagos=pagos, form=form)
+
+
+@pago_blueprint.post("/")
+@login_required
+@pago_index_req
+def pagos_busqueda_index():
+    form = PagoSearchForm()
+    if not form.validate:
+        abort(500)
+    page = request.args.get('page', default=1, type=int)
+    pagos = board.list_pagos(page)
+    return render_template("pagos/pagos.html", pagos=pagos, form=form)
 
 
 @pago_blueprint.get("/inscripciones")
@@ -63,12 +86,3 @@ def recibo():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=comprobante.pdf'
     return response
-
-
-@pago_blueprint.get("/")
-@login_required
-@pago_index_req
-def pagos_index():
-    page = request.args.get('page', default=1, type=int)
-    pagos = board.list_pagos(page)
-    return render_template("pagos/pagos.html", pagos=pagos)
