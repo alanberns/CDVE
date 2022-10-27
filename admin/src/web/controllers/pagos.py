@@ -33,7 +33,7 @@ def pagos_index():
 def pagos_busqueda_index():
     form = PagoSearchForm()
     if not form.validate:
-        abort(500)
+        abort(400)
     page = request.args.get('page', default=1, type=int)
     filter = form.select_busqueda.data
     texto_busqueda = form.texto_busqueda.data
@@ -78,6 +78,8 @@ def pago():
 @pago_index_req
 def recibo():
     pago_id = request.args.get('pago_id', type=int)
+    if not pago_id:
+        abort(400)
     pago = board.get_pago_by_id(pago_id)
     config = board.list_configuracion()
     rendered = render_template(
@@ -93,7 +95,10 @@ def recibo():
 @login_required
 @pago_index_req
 def confirm_pago():
-    cuota_ids = request.args.to_dict(flat=False)["cuotas"]
+    args_dict = request.args.to_dict(flat=False)
+    if not request.args.to_dict(flat=False):
+        abort(400)
+    cuota_ids = args_dict["cuotas"]
     if not cuota_ids:
         flash("Hubo un error al registrar el pago", "danger")
         return redirect(url_for('pagos.pagos_index'))
