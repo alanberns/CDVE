@@ -424,6 +424,14 @@ def get_pagos():
     return Pago.query.all()
 
 
+def list_pagos(page):
+    """
+    Retorna los pagos
+    """
+    per_page = get_elements_per_page()
+    return Pago.query.paginate(page=page, per_page=per_page)
+
+
 def pago_assign_cuotas(pago, cuotas):
     """
     Agrega una lista de cuotas a una inscripcion
@@ -456,3 +464,18 @@ def set_nro_cuota_by_inscripcion(inscripcion_id):
 def get_elements_per_page():
     config = list_configuracion()
     return config.elementos_pagina
+
+
+def generate_payment(cuota_ids):
+    """
+    Realiza un pago dado una lista de ids de cuotas
+    """
+    time_stamp = datetime.now()
+    cuotas = pay_cuotas_by_ids(cuota_ids)
+    monto = sum(cuota.valor_cuota for cuota in cuotas)
+    pago = create_pago(
+        fecha=time_stamp,
+        monto=monto
+    )
+    pago_assign_cuotas(pago, cuotas)
+    return pago

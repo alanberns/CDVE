@@ -16,13 +16,13 @@ pago_blueprint = Blueprint(
     "pagos", __name__, url_prefix="/pagos")
 
 
-@pago_blueprint.get("/")
+@pago_blueprint.get("/inscripciones")
 @login_required
 @pago_index_req
-def pagos_index():
+def inscripciones_index():
     page = request.args.get('page', default=1, type=int)
     inscripciones = board.get_inscripciones(page)
-    return render_template("pagos/pagos.html", inscripciones=inscripciones)
+    return render_template("pagos/inscripciones.html", inscripciones=inscripciones)
 
 
 @pago_blueprint.get("/cuotas/<int:inscripcion_id>")
@@ -53,6 +53,7 @@ def pago():
 @pago_index_req
 def recibo():
     cuota_ids = request.args.to_dict(flat=False)["cuotas"]
+    # board.generate_payment(cuota_ids)
     cuotas = board.get_cuotas_by_ids(cuota_ids)
     config = board.list_configuracion()
     rendered = render_template(
@@ -62,3 +63,12 @@ def recibo():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=comprobante.pdf'
     return response
+
+
+@pago_blueprint.get("/")
+@login_required
+@pago_index_req
+def pagos_index():
+    page = request.args.get('page', default=1, type=int)
+    pagos = board.list_pagos(page)
+    return render_template("pagos/pagos.html", pagos=pagos)
