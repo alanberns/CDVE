@@ -6,7 +6,8 @@
   <p style="font-size: 1.5rem; text-align: justify; text-justify: inter-word">
     {{config.texto_recibo |
     replace("USUARIO",pago.cuotas[0].inscripcion.socio.usuario.first_name,1) |
-    replace("MONTO", pago.monto)}}
+    replace("MONTO", pago.monto)| replace("DISCIPLINA",
+    pago.cuotas[0].inscripcion.disciplina.nombre)}}
   </p>
   <h2><strong>Detalle</strong></h2>
   <ul style="list-style-type: none; margin: 0; padding: 0">

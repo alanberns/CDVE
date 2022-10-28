@@ -32,7 +32,7 @@ def run():
         elementos_pagina=20,
         estado_pago=True,
         estado_info_contactos=True,
-        texto_recibo="Recibimos de USUARIO el importe en pesos de MONTO por el concepto de cuota societaria. A continuacion se detalla lo pagado.",
+        texto_recibo="Recibimos de USUARIO el importe en pesos de MONTO por el concepto de cuota societaria de la disciplina DISCIPLINA. A continuacion se detalla lo pagado.",
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
     )
@@ -135,6 +135,7 @@ def run():
     )
 
     cuota1_disciplina2 = board.create_cuota(
+        nro_cuota=1,
         estado_pago=0,
         fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
@@ -142,6 +143,7 @@ def run():
     )
 
     cuota2_disciplina2 = board.create_cuota(
+        nro_cuota=2,
         estado_pago=0,
         fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
@@ -149,6 +151,7 @@ def run():
     )
 
     cuota3_disciplina2 = board.create_cuota(
+        nro_cuota=3,
         estado_pago=0,
         fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
