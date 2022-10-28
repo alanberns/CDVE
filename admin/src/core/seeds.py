@@ -32,7 +32,7 @@ def run():
         elementos_pagina=20,
         estado_pago=True,
         estado_info_contactos=True,
-        texto_recibo="Recibimos de X el importe en pesos de XX por el concepto de cuota soscietaria del mes XXX",
+        texto_recibo="Recibimos de USUARIO el importe en pesos de MONTO por el concepto de cuota societaria. A continuacion se detalla lo pagado.",
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
     )
