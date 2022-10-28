@@ -20,4 +20,5 @@ class DocumentoForm(FlaskForm):
     habilitado = SelectField(
             "Mostrar",
             choices=((0, "Todos"), (1, "Activos"), (2, "Inactivos")), coerce=int)
-    submit = SubmitField("Buscar")
+    submit = SubmitField(label="Buscar")
+    export = SubmitField(label="Export")
