@@ -550,13 +550,23 @@ def create_cuotas_by_inscripcion(socio, disciplina):
     cuotas = []
     for numero in range(1, 12):
         fecha_cuota = datetime.today() + relativedelta(months=numero)
-        fecha_cuota.replace(day=10)
+        fecha = fecha_cuota.replace(day=10)
         cuota = create_cuota(
             nro_cuota=numero,
             estado_pago=0,
-            fecha_vencimiento=fecha_cuota,
+            fecha_vencimiento=fecha,
             valor_cuota=valor_base + disciplina.costo_mensual,
             activo=True
         )
         cuotas.append(cuota)
     inscripion_assign_cuotas(socio, disciplina, cuotas)
+
+
+def update_valor_cuotas(new_value_cuota):
+    fecha_actual = datetime.now()
+    cuotas = Cuota.query.filter(
+        Cuota.fecha_vencimiento > fecha_actual).all()
+    for cuota in cuotas:
+        cuota.valor_cuota = new_value_cuota + cuota.inscripcion.disciplina.costo_mensual
+        record_update(cuota)
+    return cuotas
