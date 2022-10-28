@@ -9,6 +9,7 @@ from datetime import datetime
 
 from src.core.forms.usuarios_form import UsuarioNuevoForm
 from src.core.forms.usuarios_form import ModificarUsuarioForm
+from src.core.forms.usuarios_form import BusquedaUsuarioForm
 from src.core import board
 from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import user_create_req, user_index_req, \
@@ -27,11 +28,12 @@ def usuario_index():
     Menu inicial de usuarios: lista de usuarios
     """
     # Paginación
+    form = BusquedaUsuarioForm()
     elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get('page', 1))
 
     usuarios_pag = board.list_usuarios(page,elementos_pagina)
-    return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag)
+    return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form)
 
 @usuario_blueprint.get("/res")
 @login_required
@@ -41,21 +43,14 @@ def busqueda_filtrada():
     Filtrar usuarios por email y estado.
     """
     # Obtener email y estado para la busqueda
-    email = ""
-    if (request.args.get("email") != ""):
-        email = request.args.get("email")
-    if (request.args.get("estado") == "activo"):
-        activo = True 
-    else:
-        if (request.args.get("estado") == "inactivo"):
-            activo = False
-        else:
-            activo = ""
+    form = BusquedaUsuarioForm(request.args)
+    estado = form.estado.data
+    email = form.email.data
 
     # Paginación
     elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get('page', 1))
-    usuarios_pag = board.filter_usuarios(email, activo, page, elementos_pagina)
+    usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
 
     return render_template("usuarios/usuariosFilter.html",
     usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
