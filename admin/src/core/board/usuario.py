@@ -37,5 +37,11 @@ class Usuario(db.Model):
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-    def verify_password(self, password):
-        return check_password_hash(self.password, password)
+    def update_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def verify_password(self,password):
+        return check_password_hash(self.password,password)
+    
+
+    

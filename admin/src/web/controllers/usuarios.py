@@ -130,7 +130,7 @@ def update_usuario(id):
     usuario = board.get_usuario(id)
     form = ModificarUsuarioForm(request.form)
     if not form.validate:
-        flash("No se pudo modificar al usuario")
+        flash("No se pudo modificar al usuario","danger")
         return redirect(url_for('usuarios.view_usuario', id=id))
     # Comprobar si se modificó el email
     if (form.email.data != usuario.email):
@@ -204,9 +204,18 @@ def quitar_rol():
 def asignar_rol():
     """
     Asignar un rol a un usuario
+    Si el rol es 'Socio' se lo debe enviar a crear perfil de socio
     """
+    # Asignar el rol
     rol_id = request.args.get("rol_id")
     usuario_id = request.args.get("usuario_id")
     board.asignar_rol(rol_id, usuario_id)
     flash("Se asignó el rol al usuario", "success")
-    return redirect(url_for('usuarios.view_usuario', id=usuario_id))
+
+    # Chequear si el rol es Socio
+    roles = board.get_roles()
+    for rol in roles:
+        if rol.id == int(rol_id):
+            if rol.nombre == "Socio":
+                return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
+    return redirect(url_for('usuarios.view_usuario',id=usuario_id))

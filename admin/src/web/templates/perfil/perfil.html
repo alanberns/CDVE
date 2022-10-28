@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
-{% block title %}Usuario{% endblock %}
+{% block title %}Mi perfil{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
 {% block content %}
 <div class="d-flex flex-column align-items-center">
-  <h1 class="mx-5"> Usuario </h1>
+  <h1 class="mx-5"> Mi perfil </h1>
 
-    <form class="row g-3 mx-5" action=" {{ url_for('usuarios.update_usuario', id=usuario.id)}}" method="post" 
-    onsubmit="return confirm('¿Estas seguro que deseas editar el usuario?');">
+    <form class="row g-3 mx-5" action=" {{ url_for('perfil.modify_perfil', id=usuario.id)}}" method="post" 
+    onsubmit="return confirm('¿Estas seguro que deseas modificar tus datos?');">
       {{ form.csrf_token }} 
       <div class="form-floating mb-3">
         <input type="text" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
@@ -52,43 +52,32 @@
         <label for="last_name">{{form.last_name.label}}</label>
       </div>
       <div class="d-flex flex-row justify-content-center">
-        {{form.modificar(class="btn btn-primary")}}
+        {{ form.modificar(class="btn btn-primary")}}
       </div>
     </form>
 
-    <hr><br>
+    <!---contraseña-->
+    <a href="{{url_for('perfil.change_password_view')}}"  id="borde_boton"><button>Cambiar mi contraseña</button></a>
 
+    <hr><br>
+    
     <h4 id="borde_boton">Roles</h4>
     <table class="table table-striped">
       <thead>
         <tr class="table-dark">
-          <th>Nombre del rol</th>
-          <th>Acción</th>
+          <th>Mis roles</th>
         </tr>
       </thead>
       <tbody>
-        {% for rol in roles %}
+        {% for rol in usuario.roles %}
         <tr>
-          {% if rol in usuario.roles %}
-            <th>{{rol.nombre}}</th>
-            <th><a href="{{ url_for('usuarios.quitar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
-              <button>Quitar rol</button></a>
-            </th>
-          {% else %}
-            <th>{{rol.nombre}}</th>
-            <th><a href="{{url_for('usuarios.asignar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
-            <button>Asignar rol</button></a>
-            </th>
-          {% endif %}
+          <th>{{rol.nombre}}</th>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <div>
-      <a href="{{url_for('home')}}" id="borde_boton"><button>Volver al inicio</button></a>
-      <a href="{{url_for('usuarios.usuario_index')}}" id="borde_boton"><button>Menú  usuarios</button></a>
-    </div>
-
+    <a href="{{url_for('home')}}"><button>Volver al inicio</button> </a>
+  
 </div>
 {% endblock %}

@@ -1,14 +1,7 @@
 {% extends "layout.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Usuarios{% endblock %}
 {% block head %}
   {{ super() }}
-  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
-    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-      <path
-        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-      />
-    </symbol>
-  </svg>
 {% endblock %}
 {% block content %}
 <div class="d-flex flex-column align-items-center">
@@ -45,7 +38,7 @@
         <th>No</th>
         <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
         {% endif %}
-        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button>Ver detalle</button></a></th>
+        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button><i class="bi bi-plus-lg"></i></button></a></th>
       </tr>
       {% else %}
       <th>No hay resultados</th>
@@ -60,16 +53,16 @@
                     <input type="hidden" value="{{page}}" name="page">
                     <input type="hidden" value="{{email}}" name="email">
                     <input type="hidden" value="{{activo}}" name="estado">
-                    <button>{{ page }}</button>
+                    <button class="btn btn-secondary">{{ page }}</button>
                 </form>
             {% else %}
-                <strong>{{ page }}</strong>
+                <strong class="btn btn-light">{{ page }}</strong>
             {% endif %}
         {% else %}
             <span class=ellipsis>…</span>
         {% endif %}
     {%- endfor %}
 </div>
-  </form><a href="{{ url_for('usuarios.usuario_index') }}"><button>Limpiar filtros de busqueda</button></a>
+  </form><a href="{{ url_for('usuarios.usuario_index') }}"><button id="borde_boton"><i class="bi bi-trash3-fill"></i> Limpiar filtros</button></a>
 </div>
 {% endblock %}

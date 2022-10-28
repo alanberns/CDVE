@@ -54,6 +54,16 @@ def update_usuario(**kwargs):
     return usuario
 
 
+def update_password(**kwargs):
+    """
+    Actualizar contraseña
+    """
+    usuario = get_usuario(kwargs['id'])
+    usuario.update_password(kwargs['password'])
+    db.session.commit()
+    return usuario
+
+
 def update_activo_usuario(id):
     """
     Actualiza el estado (Activo) del usuario.
@@ -145,6 +155,15 @@ def list_configuracion():
     Lista los datos de la configuracion, devuelve una sola tupla
     """
     return Configuracion.query.first()
+
+def list_disciplinas():
+    return Disciplina.query.all()
+
+
+def delete_disciplina(id):
+    disciplina = Disciplina.query.get(id)
+    disciplina.estado = "Inactivo",
+    db.session.commit()
 
 
 def init_configuracion(**kwargs):
@@ -267,6 +286,9 @@ def find_socio_by_apellido(last_name, page=1, per_page=10):
 
 
 def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
+    """
+    Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
+    """
     socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
         Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
@@ -281,6 +303,9 @@ def find_socio_by_id(socio_id):
 
 
 def find_socio_join_usuario_by_id(socio_id):
+    """
+    Devuelve la información de un socio junto con su información de usuario.
+    """
     socio = db.session.query(Socio, Usuario).filter_by(
         activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
     return socio
