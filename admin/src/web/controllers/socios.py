@@ -8,7 +8,7 @@ from src.core import board
 import pdfkit
 
 from src.web.helpers.permissions.user_permission import socio_create_req, socio_index_req, \
-socio_delete_req, socio_update_req, socio_show_req
+    socio_delete_req, socio_update_req, socio_show_req
 
 socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 
@@ -174,5 +174,5 @@ def inscribir_socio_disciplina(socio_id, disciplina_id):
     socio = board.find_socio_by_id(socio_id)
     disciplina = board.find_disciplina_by_id(disciplina_id)
     board.socio_assign_disciplina(socio, disciplina)
+    board.create_cuotas_by_inscripcion(socio, disciplina)
     return redirect(url_for('socios.ver_socio', socio_id=socio_id))
-
