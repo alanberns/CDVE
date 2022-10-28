@@ -156,9 +156,20 @@ def list_configuracion():
     """
     return Configuracion.query.first()
 
-
 def list_disciplinas():
     return Disciplina.query.all()
+
+
+def list_disciplinas_not_socio(socio_id):
+    disciplinas_inscripto = db.session.query(Inscripcion.disciplina_id).filter(Inscripcion.socio_id == socio_id )
+    return Disciplina.query.filter(~Disciplina.id.in_(disciplinas_inscripto), Disciplina.estado == "Activo").all()
+
+
+
+
+def find_disciplina_by_id(disciplina_id):
+    disciplina = Disciplina.query.filter_by(id=disciplina_id).first()
+    return disciplina
 
 
 def delete_disciplina(id):

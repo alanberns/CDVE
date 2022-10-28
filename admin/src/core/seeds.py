@@ -75,26 +75,34 @@ def run():
     board.rol_assign_permiso(rol_administrador, [user_index, user_create, user_show,
                                                  user_delete, user_rol_update, user_update])
 
+    # Permisos socios
+    socio_index = board.create_permiso(nombre="socio_index")
+    socio_create = board.create_permiso(nombre="socio_create")
+    socio_delete = board.create_permiso(nombre="socio_delete")
+    socio_update = board.create_permiso(nombre="socio_update")
+    socio_show = board.create_permiso(nombre="socio_show")
+    board.rol_assign_permiso(rol_administrador, [socio_index, socio_create, socio_show,
+                                                 socio_delete, socio_update,])
+    
+    board.rol_assign_permiso(rol_operador, [socio_index, socio_create, socio_show,
+                                                 socio_delete, socio_update,])
+
     socio1 = board.create_socio(
         id_usuario=1,
-        # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=44556677,
-        genero="femenino",
+        genero="Femenino",
         direccion="calle falsa 123",
         telefono=14141414,
-        # el usuario tiene mail también, arreglar.
     )
 
     socio2 = board.create_socio(
         id_usuario=2,
-        # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=43123123,
         genero="Masculino",
         direccion="7 y 32",
         telefono=221420,
-        # el usuario tiene mail también, arreglar.
     )
 
     # Permisos

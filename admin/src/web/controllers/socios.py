@@ -1,19 +1,24 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request, redirect, url_for, flash
+from flask import make_response
 from src.core.forms.socio_form import SocioForm, DocumentoForm
 from src.web.helpers.auth import login_required
 from src.core import board
+import pdfkit
 
+from src.web.helpers.permissions.user_permission import socio_create_req, socio_index_req, \
+socio_delete_req, socio_update_req, socio_show_req
 
 socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 
 
 @socio_blueprint.route("/", methods=["get", "post"])
 @login_required
+@socio_index_req
 def socios_index():
     """
-    Página principal de socios. Lista y filtrado de socios.
+    Página principal de socios. Lista, filtrado y exportado de socios.
     """
     form = DocumentoForm()
     configuracion = board.list_configuracion()
@@ -40,6 +45,14 @@ def socios_index():
             else:
                 socios_pag = board.list_socios_habilitado(
                     activo, page, elementos_pagina)
+        if (form.export.data):
+            rendered = render_template(
+                "socios/socios_export.html", socios_pag=socios_pag)
+            pdf = pdfkit.from_string(rendered, False)
+            response = make_response(pdf)
+            response.headers['Content-Type'] = 'application/pdf'
+            response.headers['Content-Disposition'] = 'attachment; filename=listado_socios.pdf'
+            return response
     else:
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
     return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
@@ -47,6 +60,7 @@ def socios_index():
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
 @login_required
+@socio_delete_req
 def soft_delete_socio(socio_id):
     """
     Eliminado lógico.
@@ -57,6 +71,7 @@ def soft_delete_socio(socio_id):
 
 @socio_blueprint.route("/<int:usuario_id>/add", methods=["get", "post"])
 @login_required
+@socio_create_req
 def add_socio(usuario_id):
     """
     Agregado de un socio dado un id de Usuario.
@@ -81,6 +96,7 @@ def add_socio(usuario_id):
 
 @socio_blueprint.route("/<int:socio_id>/update", methods=["get", "post"])
 @login_required
+@socio_update_req
 def update_socio(socio_id):
     """
     Edición de un socio cargando su información en un formulario.
@@ -90,7 +106,7 @@ def update_socio(socio_id):
     if form.validate_on_submit():
         if (board.exist_socio_documento_id(form.numero_documento.data, socio_id)):
             kwargs = {
-                "id_usuario": 2,
+                "id_usuario": socio.id_usuario,
                 "tipo_documento": form.tipo_documento.data,
                 "numero_documento": form.numero_documento.data,
                 "genero": form.genero.data,
@@ -112,6 +128,7 @@ def update_socio(socio_id):
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])
 @login_required
+@socio_update_req
 def switch_state_socio(socio_id):
     """
     Cambio de estado de un socio, habilitado o deshabilitado.
@@ -122,6 +139,7 @@ def switch_state_socio(socio_id):
 
 @socio_blueprint.route("/<int:socio_id>/", methods=["get", "post"])
 @login_required
+@socio_show_req
 def ver_socio(socio_id):
     """
     Muestra la información de un socio y las posibles operaciones.
@@ -131,3 +149,30 @@ def ver_socio(socio_id):
     socio = query[0]
     usuario = query[1]
     return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form)
+
+
+@socio_blueprint.route("/<int:socio_id>/inscribir", methods=["get", "post"])
+@login_required
+@socio_update_req
+def inscribir_socio(socio_id):
+    """
+    Muestra las disciplinas disponibles para inscribir a un socio.
+    """
+
+    disciplinas = board.list_disciplinas_not_socio(socio_id)
+    return render_template("socios/inscribir.html", socio_id=socio_id, disciplinas=disciplinas)
+
+
+@socio_blueprint.route("/<int:socio_id>/inscribir/<int:disciplina_id>", methods=["get", "post"])
+@login_required
+@socio_update_req
+def inscribir_socio_disciplina(socio_id, disciplina_id):
+    """
+    Inscripción de un socio a una disciplina.
+    """
+
+    socio = board.find_socio_by_id(socio_id)
+    disciplina = board.find_disciplina_by_id(disciplina_id)
+    board.socio_assign_disciplina(socio, disciplina)
+    return redirect(url_for('socios.ver_socio', socio_id=socio_id))
+

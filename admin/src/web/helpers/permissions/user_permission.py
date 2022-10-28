@@ -76,3 +76,48 @@ def pago_show_req(f):
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
+
+
+def socio_index_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("socio_index", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def socio_update_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("socio_update", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def socio_show_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("socio_show", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def socio_create_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("socio_create", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def socio_delete_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("socio_delete", session):
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function

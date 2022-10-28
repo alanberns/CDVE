@@ -2,24 +2,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length
 
-
-class RegistrationForm(FlaskForm):
-    username = StringField(
-        "Username", validators=[DataRequired(), Length(min=2, max=20)]
-    )
-    email = StringField("Email", validators=[DataRequired()])
-
-    submit = SubmitField("Sign Up")
-
-
-class LoginForm(FlaskForm):
-    username = StringField(
-        "Username", validators=[DataRequired(), Length(min=2, max=20)]
-    )
-
-    submit = SubmitField("Login")
-
-
 class SocioForm(FlaskForm):
     tipo_documento = SelectField(
         "Tipo de Documento",
@@ -38,4 +20,5 @@ class DocumentoForm(FlaskForm):
     habilitado = SelectField(
             "Mostrar",
             choices=((0, "Todos"), (1, "Activos"), (2, "Inactivos")), coerce=int)
-    submit = SubmitField("Buscar")
+    submit = SubmitField(label="Buscar")
+    export = SubmitField(label="Export")
