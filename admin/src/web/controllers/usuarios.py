@@ -176,11 +176,25 @@ def modify_activo(id):
 @user_rol_update_req
 def quitar_rol():
     """
-    Quitar un rol a un usuario
+    Quitar un rol a un usuario. 
+    Si se quita el rol de socio se debe eliminar al socio
     """
     rol_id = request.args.get("rol_id")
     usuario_id = request.args.get("usuario_id")
     board.quitar_rol(rol_id, usuario_id)
+
+    # Chequear si el rol es Socio
+    roles = board.get_roles()
+    for rol in roles:
+        if rol.id == int(rol_id):
+            if rol.nombre == "Socio":
+                # Si el usuario tiene perfil de socio
+                query = board.find_socio_by_id_usuario(usuario_id)
+                if query:
+                    board.soft_delete_socio(query[0].id)
+                    flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
+                    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+
     flash("Se quitó el rol exitosamente", "success")
     return redirect(url_for('usuarios.view_usuario',id=usuario_id))
 

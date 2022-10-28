@@ -239,6 +239,13 @@ def list_usuarios(page=1, per_page=10):
     """
     return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
 
+def find_socio_by_id_usuario(usuario_id):
+    """
+    Devuelve un socio por el id de usuario
+    """
+    socio = db.session.query(Socio,Usuario).filter_by(habilitado=True).outerjoin(Usuario, full=True).filter_by(id=usuario_id).first()
+    return socio
+
 
 def list_socios_join_users(page=1, per_page=10):
     """
