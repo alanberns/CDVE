@@ -27,6 +27,15 @@ def run():
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
+    test_user3 = board.create_usuario(
+        username="test3",
+        email="test3@test3.com",
+        password="12345",
+        first_name="socio2",
+        last_name="Apsocio2",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
     # Configuracion
     default_config = board.init_configuracion(
         elementos_pagina=20,
@@ -255,7 +264,7 @@ def run():
     board.inscripion_assign_cuotas(
         socio1, t_disciplina2, [cuota1_disciplina2, cuota2_disciplina2, cuota3_disciplina2])
 
-    board.inscripion_assign_cuotas(
-        socio2, t_disciplina2, [cuota1_socio2, cuota2_socio2, cuota3_socio2])
-    board.asignar_rol(1, 1)
-    board.asignar_rol(2, 2)
+    board.asignar_rol(rol_administrador. id,test_user.id)
+    board.asignar_rol(rol_usuario.id, test_user2.id)
+    board.asignar_rol(rol_operador.id, test_user2.id)
+    board.asignar_rol(rol_operador.id, test_user3.id)
