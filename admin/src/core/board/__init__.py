@@ -243,7 +243,7 @@ def find_socio_by_id_usuario(usuario_id):
     """
     Devuelve un socio por el id de usuario
     """
-    socio = db.session.query(Socio,Usuario).filter_by(habilitado=True).outerjoin(Usuario, full=True).filter_by(id=usuario_id).first()
+    socio = db.session.query(Socio,Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(id=usuario_id).first()
     return socio
 
 

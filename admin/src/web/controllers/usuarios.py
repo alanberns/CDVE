@@ -154,6 +154,7 @@ def modify_activo(id):
     """
     Cambia el estado "activo" a su inverso.
     No se puede dar de baja a un administrador
+    Si se inactiva a un usuario socio, eliminar socio
     """
     # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
@@ -164,8 +165,18 @@ def modify_activo(id):
     if (rol_administrador in usuario.roles):
         flash("No se puede inactivar a un administrador", "danger")
         return redirect(url_for('usuarios.usuario_index', id=id))
+
+    # Chequear si: se inactiva, a un usuario socio, activo
+    if usuario.activo:
+        query = board.find_socio_by_id_usuario(id)
+        if query:
+            if query[0].activo:
+                board.update_activo_usuario(id)
+                board.soft_delete_socio(query[0].id)
+                flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
+                return redirect(url_for('usuarios.usuario_index', id=id))
     
-    # Inactivar usuario
+    # Cambiar estado usuario
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
     return redirect(url_for('usuarios.usuario_index', id=id))
@@ -188,12 +199,13 @@ def quitar_rol():
     for rol in roles:
         if rol.id == int(rol_id):
             if rol.nombre == "Socio":
-                # Si el usuario tiene perfil de socio
+                # Si el usuario tiene perfil de socio y es un socio activo
                 query = board.find_socio_by_id_usuario(usuario_id)
                 if query:
-                    board.soft_delete_socio(query[0].id)
-                    flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
-                    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+                    if query[0].activo:
+                        board.soft_delete_socio(query[0].id)
+                        flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
+                        return redirect(url_for('usuarios.view_usuario',id=usuario_id))
 
     flash("Se quitó el rol exitosamente", "success")
     return redirect(url_for('usuarios.view_usuario',id=usuario_id))
