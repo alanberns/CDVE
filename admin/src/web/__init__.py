@@ -25,9 +25,12 @@ def create_app(env="development", static_folder="static"):
     csrf = CSRFProtect()
     csrf.init_app(app)
     database.init_app(app)
+    
 
     @app.get("/")
     def entry():
+        database.reset_db()
+        seeds.run()
         return redirect(url_for('auth.login'))
 
     @app.get("/home")
