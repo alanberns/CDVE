@@ -6,8 +6,15 @@ from src.core.board.permiso import Permiso
 from src.core.board.disciplina import Disciplina
 from src.core.board.socio import Socio
 from src.core.board.cuota import Cuota
+from src.core.board.pago import Pago
 from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
+from datetime import datetime
+
+
+def record_update(record):
+    db.session.add(record)
+    db.session.commit()
 
 
 def list_usuarios(page=1, per_page=10):
@@ -44,6 +51,16 @@ def update_usuario(**kwargs):
     usuario.update(**kwargs)
     db.session.commit()
 
+    return usuario
+
+
+def update_password(**kwargs):
+    """
+    Actualizar contraseña
+    """
+    usuario = get_usuario(kwargs['id'])
+    usuario.update_password(kwargs['password'])
+    db.session.commit()
     return usuario
 
 
@@ -137,8 +154,28 @@ def list_configuracion():
     """
     Lista los datos de la configuracion, devuelve una sola tupla
     """
+    return Configuracion.query.first()
 
-    return Configuracion.query.all()
+def list_disciplinas():
+    return Disciplina.query.all()
+
+
+def list_disciplinas_not_socio(socio_id):
+    disciplinas_inscripto = db.session.query(Inscripcion.disciplina_id).filter(Inscripcion.socio_id == socio_id )
+    return Disciplina.query.filter(~Disciplina.id.in_(disciplinas_inscripto), Disciplina.estado == "Activo").all()
+
+
+
+
+def find_disciplina_by_id(disciplina_id):
+    disciplina = Disciplina.query.filter_by(id=disciplina_id).first()
+    return disciplina
+
+
+def delete_disciplina(id):
+    disciplina = Disciplina.query.get(id)
+    disciplina.estado = "Inactivo",
+    db.session.commit()
 
 
 def init_configuracion(**kwargs):
@@ -221,8 +258,10 @@ def list_socios():
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).all()
+    socios = db.session.query(Socio, Usuario).filter_by(
+        activo=True).outerjoin(Usuario, full=True).all()
     return socios
+
 
 def list_usuarios(page=1, per_page=10):
     """
@@ -230,12 +269,20 @@ def list_usuarios(page=1, per_page=10):
     """
     return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
 
+def find_socio_by_id_usuario(usuario_id):
+    """
+    Devuelve un socio por el id de usuario
+    """
+    socio = db.session.query(Socio,Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(id=usuario_id).first()
+    return socio
+
 
 def list_socios_join_users(page=1, per_page=10):
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(
+        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
@@ -243,21 +290,26 @@ def list_socios_habilitado(habilitado, page=1, per_page=10):
     """
     Devuelve la lista de socios activos habilitados o deshabilitados
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
+        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
     return socios
+
 
 def find_socio_by_apellido(last_name, page=1, per_page=10):
     """
     Devuelve los socios activos dado un apellido
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(
+        last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
+
 
 def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
     """
     Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
+        Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
     return socios
 
 
@@ -268,12 +320,15 @@ def find_socio_by_id(socio_id):
     socio = Socio.query.filter_by(id=socio_id).first()
     return socio
 
+
 def find_socio_join_usuario_by_id(socio_id):
     """
     Devuelve la información de un socio junto con su información de usuario.
     """
-    socio = db.session.query(Socio, Usuario).filter_by(activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
+    socio = db.session.query(Socio, Usuario).filter_by(
+        activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
     return socio
+
 
 def exist_socio_documento(documento):
     """
@@ -287,7 +342,6 @@ def exist_socio_documento_id(documento, id):
     Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
     """
     return Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first() == None
-
 
 
 def update_socio(socio_id, **kwargs):
@@ -351,11 +405,12 @@ def get_elementos_pagina():
     return configuracion.elementos_pagina
 
 
-def get_inscripciones():
+def get_inscripciones(page):
     """
     Retorna las Inscripciones
     """
-    return Inscripcion.query.all()
+    per_page = get_elements_per_page()
+    return Inscripcion.query.paginate(page=page, per_page=per_page)
 
 
 def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
@@ -385,12 +440,16 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
     return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
 
 
-def pagar_cuota_by_id(id_cuota):
-    cuota = Cuota.query.filter_by(id=id_cuota).first()
-    cuota.estado_pago = True
-    db.session.add(cuota)
-    db.session.commit()
-    return cuota
+def pay_cuotas_by_ids(cuota_ids):
+    cuotas = Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
+    for cuota in cuotas:
+        cuota.pagar()
+        record_update(cuota)
+    return cuotas
+
+
+def get_cuotas_by_ids(cuota_ids):
+    return Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
 
 
 def user_get_permisos(usuario_id):
@@ -399,3 +458,85 @@ def user_get_permisos(usuario_id):
     permisos = list(
         {permiso.nombre for rol in roles for permiso in rol.permisos})
     return permisos
+
+
+def get_pagos():
+    """
+    Retorna los pagos
+    """
+    return Pago.query.all()
+
+
+def get_pago_by_id(pago_id):
+    """
+    Retorna los pagos
+    """
+    return Pago.query.filter_by(id=pago_id).first()
+
+
+def list_pagos(page):
+    """
+    Retorna los pagos
+    """
+    per_page = get_elements_per_page()
+    return Pago.query.paginate(page=page, per_page=per_page)
+
+
+def pago_assign_cuotas(pago, cuotas):
+    """
+    Agrega una lista de cuotas a una inscripcion
+    """
+    pago.cuotas.extend(cuotas)
+    record_update(pago)
+    return pago
+
+
+def create_pago(**kwargs):
+    """
+    Crea un rol y lo agrega a la bd
+    """
+    pago = Pago(**kwargs)
+    record_update(pago)
+    return pago
+
+
+def set_nro_cuota_by_inscripcion(inscripcion_id):
+    """
+    Crea un rol y lo agrega a la bd
+    """
+    cuotas = Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=None).order_by(
+        Cuota.fecha_vencimiento.asc()).all()
+    for count, cuota in enumerate(cuotas, start=1):
+        cuota.nro_cuota = count
+        record_update(cuota)
+
+
+def get_elements_per_page():
+    config = list_configuracion()
+    return config.elementos_pagina
+
+
+def generate_payment(cuota_ids):
+    """
+    Realiza un pago dado una lista de ids de cuotas
+    """
+    time_stamp = datetime.now()
+    cuotas = pay_cuotas_by_ids(cuota_ids)
+    monto = sum(cuota.valor_cuota for cuota in cuotas)
+    pago = create_pago(
+        fecha=time_stamp,
+        monto=monto
+    )
+    pago_assign_cuotas(pago, cuotas)
+    return pago
+
+
+def get_pagos_search_paginated(page, filter, search_text):
+    """
+    Retorna los pagos
+    """
+    per_page = get_elements_per_page()
+    if filter == 1:
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).join(Usuario).filter(Usuario.last_name == search_text).distinct().paginate(page=page, per_page=per_page)
+    elif filter == 0:
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == search_text).distinct().paginate(page=page, per_page=per_page)

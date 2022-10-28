@@ -27,12 +27,21 @@ def run():
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
+    test_user3 = board.create_usuario(
+        username="test3",
+        email="test3@test3.com",
+        password="12345",
+        first_name="socio2",
+        last_name="Apsocio2",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
     # Configuracion
     default_config = board.init_configuracion(
         elementos_pagina=20,
         estado_pago=True,
         estado_info_contactos=True,
-        texto_recibo="La cuota XXX ha sido pagada",
+        texto_recibo="Recibimos de USUARIO el importe en pesos de MONTO por el concepto de cuota societaria de la disciplina DISCIPLINA. A continuacion se detalla lo pagado.",
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
     )
@@ -66,26 +75,34 @@ def run():
     board.rol_assign_permiso(rol_administrador, [user_index, user_create, user_show,
                                                  user_delete, user_rol_update, user_update])
 
+    # Permisos socios
+    socio_index = board.create_permiso(nombre="socio_index")
+    socio_create = board.create_permiso(nombre="socio_create")
+    socio_delete = board.create_permiso(nombre="socio_delete")
+    socio_update = board.create_permiso(nombre="socio_update")
+    socio_show = board.create_permiso(nombre="socio_show")
+    board.rol_assign_permiso(rol_administrador, [socio_index, socio_create, socio_show,
+                                                 socio_delete, socio_update,])
+    
+    board.rol_assign_permiso(rol_operador, [socio_index, socio_create, socio_show,
+                                                 socio_delete, socio_update,])
+
     socio1 = board.create_socio(
         id_usuario=1,
-        # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=44556677,
-        genero="femenino",
+        genero="Femenino",
         direccion="calle falsa 123",
         telefono=14141414,
-        # el usuario tiene mail también, arreglar.
     )
 
     socio2 = board.create_socio(
         id_usuario=2,
-        # el id de usuario debería obtenerse desde el usuario
         tipo_documento="DNI",
         numero_documento=43123123,
         genero="Masculino",
         direccion="7 y 32",
         telefono=221420,
-        # el usuario tiene mail también, arreglar.
     )
 
     # Permisos
@@ -99,73 +116,142 @@ def run():
 
     # Disciplinas
     t_disciplina = board.create_disciplina(
-        id="1",
         nombre="Futbol",
+        categoria="2010",
+        entrenador="Carlos Bianchi",
+        dia="Martes",
+        hora="17 Hs",
+        costo_mensual="5000",
+        estado="Activo",
     )
-
     t_disciplina2 = board.create_disciplina(
-        id="3",
-        nombre="Basket",
+        nombre="Tenis",
+        categoria="Mini",
+        entrenador="Sebastian Coria",
+        dia="Miercoles",
+        hora="16 Hs",
+        costo_mensual="3000",
+        estado="Activo",
     )
-
     t_disciplina3 = board.create_disciplina(
-        id="7",
-        nombre="Natacion",
+        nombre="Basquet",
+        categoria="Sub 19 ",
+        entrenador="Facundo Campazzo",
+        dia="Viernes",
+        hora="17 Hs",
+        costo_mensual="4000",
+        estado="Activo",
+    )
+    t_disciplina4 = board.create_disciplina(
+        nombre="Tenis",
+        categoria="2017 ",
+        entrenador="Rafael Nadal",
+        dia="Jueves",
+        hora="13 Hs",
+        costo_mensual="3400",
+        estado="Activo",
+    )
+    t_disciplina5 = board.create_disciplina(
+        nombre="Handball",
+        categoria="2017 ",
+        entrenador="Gonzalo Carou",
+        dia="Viernes",
+        hora="17 Hs",
+        costo_mensual="3400",
+        estado="Activo",
+    )
+    t_disciplina5 = board.create_disciplina(
+        nombre="Hockey",
+        categoria="Mini",
+        entrenador="Maria Forcherio",
+        dia="Viernes",
+        hora="18 Hs",
+        costo_mensual="4600",
+        estado="Activo",
+    )
+    t_disciplina5 = board.create_disciplina(
+        nombre="Futbol",
+        categoria="2014 ",
+        entrenador="Marcelo Gallardo",
+        dia="Lunes",
+        hora="14 Hs",
+        costo_mensual="7600",
+        estado="Activo",
     )
 
     cuota_enero = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-01-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
-        valor_pago=500,
         activo=True
     )
 
     cuota_febrero = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-02-28 22:00:00'),
-        fecha_pago=parse('2022-03-15 20:00:00'),
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
-        valor_pago=520,
         activo=True
     )
 
     cuota_marzo = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-03-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
-        valor_pago=550,
         activo=True
     )
 
     cuota1_disciplina2 = board.create_cuota(
+        nro_cuota=1,
         estado_pago=0,
-        fecha_vencimiento=parse('2022-01-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
-        valor_pago=500,
         activo=True
     )
 
     cuota2_disciplina2 = board.create_cuota(
+        nro_cuota=2,
         estado_pago=0,
-        fecha_vencimiento=parse('2022-02-28 22:00:00'),
-        fecha_pago=parse('2022-03-15 20:00:00'),
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
-        valor_pago=520,
         activo=True
     )
 
     cuota3_disciplina2 = board.create_cuota(
+        nro_cuota=3,
         estado_pago=0,
-        fecha_vencimiento=parse('2022-03-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
-        valor_pago=550,
         activo=True
     )
+
+    cuota1_socio2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
+        valor_cuota=500,
+        activo=True
+    )
+
+    cuota2_socio2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
+        valor_cuota=520,
+        activo=True
+    )
+
+    cuota3_socio2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
+        valor_cuota=520,
+        activo=True
+    )
+
+    pago1 = board.create_pago(
+        fecha=parse('2022-10-05 22:00:00'),
+        monto=1020,
+    )
+
+    board.pago_assign_cuotas(pago1, [cuota1_disciplina2, cuota2_disciplina2])
+
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
@@ -177,5 +263,8 @@ def run():
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina2, [cuota1_disciplina2, cuota2_disciplina2, cuota3_disciplina2])
-    board.asignar_rol(1, 1)
-    board.asignar_rol(2, 2)
+
+    board.asignar_rol(rol_administrador. id,test_user.id)
+    board.asignar_rol(rol_usuario.id, test_user2.id)
+    board.asignar_rol(rol_operador.id, test_user2.id)
+    board.asignar_rol(rol_operador.id, test_user3.id)

@@ -24,7 +24,7 @@ class ConfigurationForm(FlaskForm):
     editar = SubmitField(label=('Editar'))
 
     def set_from_config(self, configuracion):
-        config = configuracion[0]
+        config = configuracion
         self.elementos_pagina.data = config.elementos_pagina
         self.estado_pago.data = config.estado_pago
         self.estado_info_contactos.data = config.estado_info_contactos

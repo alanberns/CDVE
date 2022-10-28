@@ -7,12 +7,21 @@ class Cuota(db.Model):
 
     __tablename__ = "cuotas"
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    # id_inscripcion = db.Column(db.Integer) FK
+    nro_cuota = db.Column(db.Integer)
     estado_pago = db.Column(db.Boolean)
     fecha_vencimiento = db.Column(db.DateTime)
-    fecha_pago = db.Column(db.DateTime)
     valor_cuota = db.Column(db.Float)
     valor_pago = db.Column(db.Float)
     activo = db.Column(db.Boolean, default=True)
     inscripcion_id = db.Column(db.Integer, db.ForeignKey("inscripciones.id"))
     inscripcion = db.relationship('Inscripcion', back_populates="cuota")
+    pago = db.relationship(
+        "Pago", secondary="cuotas_pagos", back_populates="cuotas")
+
+    def pagar(self):
+        self.valor_pago = self.valor_cuota
+        self.estado_pago = True
+        return self.estado_pago
+
+    def payed(self):
+        return self.valor_cuota == self.valor_pago

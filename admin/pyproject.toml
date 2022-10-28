@@ -2,8 +2,9 @@
 name = "web"
 version = "0.1.0"
 description = ""
-authors = ["Alan Berns <alan_berns@yahoo.com.ar>"]
+authors = ["Pablo Ormeno <pablo.d.ormeno@gmail.com>"]
 readme = "README.md"
+packages = [{include = "web", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -12,8 +13,14 @@ psycopg2-binary = "^2.9.3"
 Flask-SQLAlchemy = "^2.5.1"
 Flask-WTF = "^1.0.1"
 python-dateutil = "^2.8.2"
+pdfkit = "^1.0.0"
 
+
+[tool.poetry.group.dev.dependencies]
+flask-shell-ipython = "^0.4.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+

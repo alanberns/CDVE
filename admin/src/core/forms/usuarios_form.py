@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField, SelectField
 from wtforms.validators import ValidationError, DataRequired, \
-    Email, Length, NumberRange
+    Email, Length, NumberRange, EqualTo
 
 
 class UsuarioNuevoForm(FlaskForm):
@@ -57,3 +57,29 @@ class ModificarUsuarioForm(FlaskForm):
         self.username.data = usuario.username
         self.first_name.data = usuario.first_name
         self.last_name.data = usuario.last_name
+
+
+class CambiarClaveForm(FlaskForm):
+    password_ant = PasswordField(
+        label=('Ingrese su clave actual'),
+        validators=[DataRequired(),
+                    Length(min=5, max=50)])
+    password_nueva = PasswordField(
+        label=('Ingrese la clave nueva'),
+        validators=[DataRequired(),
+                    EqualTo('password_repetir'),
+                    Length(min=5, max=50)])
+    password_repetir = PasswordField(
+        label=('Repita la clave nueva'),
+        validators=[DataRequired(),
+                    Length(min=5, max=50),
+                    EqualTo('password_nueva')])
+    cambiar = SubmitField(label=("Cambiar"))
+
+
+class BusquedaUsuarioForm(FlaskForm):
+    email = EmailField(label=('Email'), validators=[])
+    estado = SelectField(label=("Estado"),
+        choices=(("", "Todos"), ("true", "Activo"), ("false", "Inactivo")), coerce=str, validators=[])
+    buscar = SubmitField(label=("Buscar"))
+    

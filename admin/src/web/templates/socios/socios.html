@@ -20,6 +20,7 @@
           {{ form.habilitado.label(class="form=control-label") }}
           {{ form.habilitado }}
         </div>
+        {{ form.export(class="btn btn-primary") }}
       </fieldset>
     </form>
     <br>
@@ -32,6 +33,7 @@
           <th>Genero</th>
           <th>Email</th>
           <th>Estado</th>
+          <th></th>
           <th></th>
         </tr>
       </thead>
@@ -56,6 +58,11 @@
           <th>
             <a href="{{ url_for('socios.ver_socio', socio_id=socio[0].id) }}"> Ver </a>
           </th>
+          {% if socio[0].habilitado %}
+          <th>
+            <a href="{{ url_for('socios.inscribir_socio', socio_id=socio[0].id) }}"> Inscribir </a>
+          </th>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
