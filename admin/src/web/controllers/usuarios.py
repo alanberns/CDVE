@@ -13,7 +13,7 @@ from src.core.forms.usuarios_form import BusquedaUsuarioForm
 from src.core import board
 from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import user_create_req, user_index_req, \
-user_rol_update_req, user_update_req, user_show_req
+    user_rol_update_req, user_update_req, user_show_req
 
 
 usuario_blueprint = Blueprint(
@@ -35,6 +35,7 @@ def usuario_index():
     usuarios_pag = board.list_usuarios(page,elementos_pagina)
     return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form)
 
+
 @usuario_blueprint.get("/res")
 @login_required
 @user_index_req
@@ -53,7 +54,8 @@ def busqueda_filtrada():
     usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
 
     return render_template("usuarios/usuariosFilter.html",
-    usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
+                           usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
+
 
 @usuario_blueprint.get("/add")
 @login_required
@@ -64,6 +66,7 @@ def add_usuario_view():
     """
     form = UsuarioNuevoForm()
     return render_template("usuarios/nuevoUsuario.html", form=form)
+
 
 @usuario_blueprint.post("/add")
 @login_required
@@ -82,18 +85,19 @@ def add_usuario():
             return redirect(url_for('usuarios.add_usuario_view'))
 
         usuario = board.create_usuario(
-            username = form.username.data,
-            email = form.email.data,
-            password = form.password.data,
-            created_at = datetime.now(),
-            updated_at = datetime.now(),
-            first_name = form.first_name.data,
-            last_name = form.last_name.data,
-            )
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+        )
         flash("Se creó el nuevo usuario", "success")
         return redirect(url_for('usuarios.view_usuario', id=usuario.id))
     flash("No se pudo añadir al nuevo usuario", "danger")
     return redirect(url_for('usuarios.add_usuario_view'))
+
 
 @usuario_blueprint.get("/<int:id>")
 @login_required
@@ -107,6 +111,7 @@ def view_usuario(id):
     form.set_from_usuarios(usuario)
     roles = board.get_roles()
     return render_template("usuarios/usuario.html", usuario=usuario, form=form, roles=roles)
+
 
 @usuario_blueprint.post("/<int:id>")
 @login_required
@@ -133,19 +138,20 @@ def update_usuario(id):
         if (board.exist_username(form.username.data)):
             flash("el username ingresado ya está registrado", "danger")
             return redirect(url_for('usuarios.view_usuario', id=id))
-    
+
     # Si no están en uso el email nuevo ni el username nuevo actualiza los datos en la BD
     kwargs = {
-            "id": id,
-            "email": form.email.data,
-            "username": form.username.data,
-            "updated_at": datetime.now(),
-            "first_name": form.first_name.data,
-            "last_name": form.last_name.data,
-        }
+        "id": id,
+        "email": form.email.data,
+        "username": form.username.data,
+        "updated_at": datetime.now(),
+        "first_name": form.first_name.data,
+        "last_name": form.last_name.data,
+    }
     board.update_usuario(**kwargs)
     flash("Se actualizaron los datos del usuario", "success")
     return redirect(url_for('usuarios.usuario_index'))
+
 
 @usuario_blueprint.get("/modifyActivo/<int:id>")
 @login_required
@@ -208,7 +214,7 @@ def quitar_rol():
                         return redirect(url_for('usuarios.view_usuario',id=usuario_id))
 
     flash("Se quitó el rol exitosamente", "success")
-    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+    return redirect(url_for('usuarios.view_usuario', id=usuario_id))
 
 
 @usuario_blueprint.get("/asignarRol")
