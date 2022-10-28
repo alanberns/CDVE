@@ -46,6 +46,7 @@ def create_app(env="development", static_folder="static"):
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(500, handlers.internal_server_error)
     app.register_error_handler(403, handlers.forbbiden)
+    app.register_error_handler(400, handlers.bad_request)
 
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(has_permission=auth.has_permission)

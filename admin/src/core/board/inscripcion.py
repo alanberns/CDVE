@@ -14,3 +14,4 @@ class Inscripcion(db.Model):
     disciplina = db.relationship(
         "Disciplina", back_populates="socio")
     cuota = db.relationship('Cuota', back_populates="inscripcion")
+    tiene_deuda = db.Column(db.Boolean, default=False)

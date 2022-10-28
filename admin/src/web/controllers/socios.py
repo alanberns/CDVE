@@ -20,25 +20,29 @@ def socios_index():
     """
     form = DocumentoForm()
     configuracion = board.list_configuracion()
-    elementos_pagina = configuracion[0].elementos_pagina
+    elementos_pagina = configuracion.elementos_pagina
     page = int(request.args.get('page', 1))
     if form.validate_on_submit():
         apellido = form.apellido.data
         habilitado = form.habilitado.data
         if habilitado == 0:
             if apellido:
-                socios_pag = board.find_socio_by_apellido(apellido, page, elementos_pagina)
+                socios_pag = board.find_socio_by_apellido(
+                    apellido, page, elementos_pagina)
             else:
-                socios_pag = board.list_socios_join_users(page, elementos_pagina)
+                socios_pag = board.list_socios_join_users(
+                    page, elementos_pagina)
         else:
-            if habilitado == 1: 
+            if habilitado == 1:
                 activo = True
-            else: 
+            else:
                 activo = False
             if apellido:
-                socios_pag = board.find_socio_habilitado_by_apellido(apellido, activo, page, elementos_pagina)
+                socios_pag = board.find_socio_habilitado_by_apellido(
+                    apellido, activo, page, elementos_pagina)
             else:
-                socios_pag = board.list_socios_habilitado(activo, page, elementos_pagina)
+                socios_pag = board.list_socios_habilitado(
+                    activo, page, elementos_pagina)
     else:
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
     return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
@@ -89,7 +93,7 @@ def update_socio(socio_id):
     """
     socio = board.find_socio_by_id(socio_id)
     form = SocioForm()
-    if form.validate_on_submit():       
+    if form.validate_on_submit():
         if (board.exist_socio_documento_id(form.numero_documento.data, socio_id)):
             kwargs = {
                 "id_usuario": socio.id_usuario,

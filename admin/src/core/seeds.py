@@ -32,7 +32,7 @@ def run():
         elementos_pagina=20,
         estado_pago=True,
         estado_info_contactos=True,
-        texto_recibo="La cuota XXX ha sido pagada",
+        texto_recibo="Recibimos de USUARIO el importe en pesos de MONTO por el concepto de cuota societaria de la disciplina DISCIPLINA. A continuacion se detalla lo pagado.",
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
     )
@@ -172,57 +172,77 @@ def run():
 
     cuota_enero = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-01-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
-        valor_pago=500,
         activo=True
     )
 
     cuota_febrero = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-02-28 22:00:00'),
-        fecha_pago=parse('2022-03-15 20:00:00'),
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
-        valor_pago=520,
         activo=True
     )
 
     cuota_marzo = board.create_cuota(
         estado_pago=0,
-        fecha_vencimiento=parse('2022-03-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
-        valor_pago=550,
         activo=True
     )
 
     cuota1_disciplina2 = board.create_cuota(
+        nro_cuota=1,
         estado_pago=0,
-        fecha_vencimiento=parse('2022-01-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
         valor_cuota=500,
-        valor_pago=500,
         activo=True
     )
 
     cuota2_disciplina2 = board.create_cuota(
+        nro_cuota=2,
         estado_pago=0,
-        fecha_vencimiento=parse('2022-02-28 22:00:00'),
-        fecha_pago=parse('2022-03-15 20:00:00'),
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
         valor_cuota=520,
-        valor_pago=520,
         activo=True
     )
 
     cuota3_disciplina2 = board.create_cuota(
+        nro_cuota=3,
         estado_pago=0,
-        fecha_vencimiento=parse('2022-03-30 22:00:00'),
-        fecha_pago=parse('2022-03-15 22:00:00'),
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
         valor_cuota=550,
-        valor_pago=550,
         activo=True
     )
+
+    cuota1_socio2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-01-10 22:00:00'),
+        valor_cuota=500,
+        activo=True
+    )
+
+    cuota2_socio2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-02-10 22:00:00'),
+        valor_cuota=520,
+        activo=True
+    )
+
+    cuota3_socio2 = board.create_cuota(
+        estado_pago=0,
+        fecha_vencimiento=parse('2022-03-10 22:00:00'),
+        valor_cuota=520,
+        activo=True
+    )
+
+    pago1 = board.create_pago(
+        fecha=parse('2022-10-05 22:00:00'),
+        monto=1020,
+    )
+
+    board.pago_assign_cuotas(pago1, [cuota1_disciplina2, cuota2_disciplina2])
+
     board.socio_assign_disciplina(socio1, t_disciplina)
     board.socio_assign_disciplina(socio1, t_disciplina2)
     board.socio_assign_disciplina(socio1, t_disciplina3)
@@ -234,5 +254,8 @@ def run():
 
     board.inscripion_assign_cuotas(
         socio1, t_disciplina2, [cuota1_disciplina2, cuota2_disciplina2, cuota3_disciplina2])
+
+    board.inscripion_assign_cuotas(
+        socio2, t_disciplina2, [cuota1_socio2, cuota2_socio2, cuota3_socio2])
     board.asignar_rol(1, 1)
     board.asignar_rol(2, 2)

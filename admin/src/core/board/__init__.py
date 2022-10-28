@@ -6,8 +6,15 @@ from src.core.board.permiso import Permiso
 from src.core.board.disciplina import Disciplina
 from src.core.board.socio import Socio
 from src.core.board.cuota import Cuota
+from src.core.board.pago import Pago
 from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
+from datetime import datetime
+
+
+def record_update(record):
+    db.session.add(record)
+    db.session.commit()
 
 
 def list_usuarios(page=1, per_page=10):
@@ -144,10 +151,11 @@ def find_user_by_email(email):
 
 
 def list_configuracion():
-    return Configuracion.query.all()
     """
     Lista los datos de la configuracion, devuelve una sola tupla
     """
+    return Configuracion.query.first()
+
 
 def list_disciplinas():
     return Disciplina.query.all()
@@ -379,11 +387,12 @@ def get_elementos_pagina():
     return configuracion.elementos_pagina
 
 
-def get_inscripciones():
+def get_inscripciones(page):
     """
     Retorna las Inscripciones
     """
-    return Inscripcion.query.all()
+    per_page = get_elements_per_page()
+    return Inscripcion.query.paginate(page=page, per_page=per_page)
 
 
 def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
@@ -413,12 +422,16 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
     return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
 
 
-def pagar_cuota_by_id(id_cuota):
-    cuota = Cuota.query.filter_by(id=id_cuota).first()
-    cuota.estado_pago = True
-    db.session.add(cuota)
-    db.session.commit()
-    return cuota
+def pay_cuotas_by_ids(cuota_ids):
+    cuotas = Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
+    for cuota in cuotas:
+        cuota.pagar()
+        record_update(cuota)
+    return cuotas
+
+
+def get_cuotas_by_ids(cuota_ids):
+    return Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
 
 
 def user_get_permisos(usuario_id):
@@ -427,3 +440,85 @@ def user_get_permisos(usuario_id):
     permisos = list(
         {permiso.nombre for rol in roles for permiso in rol.permisos})
     return permisos
+
+
+def get_pagos():
+    """
+    Retorna los pagos
+    """
+    return Pago.query.all()
+
+
+def get_pago_by_id(pago_id):
+    """
+    Retorna los pagos
+    """
+    return Pago.query.filter_by(id=pago_id).first()
+
+
+def list_pagos(page):
+    """
+    Retorna los pagos
+    """
+    per_page = get_elements_per_page()
+    return Pago.query.paginate(page=page, per_page=per_page)
+
+
+def pago_assign_cuotas(pago, cuotas):
+    """
+    Agrega una lista de cuotas a una inscripcion
+    """
+    pago.cuotas.extend(cuotas)
+    record_update(pago)
+    return pago
+
+
+def create_pago(**kwargs):
+    """
+    Crea un rol y lo agrega a la bd
+    """
+    pago = Pago(**kwargs)
+    record_update(pago)
+    return pago
+
+
+def set_nro_cuota_by_inscripcion(inscripcion_id):
+    """
+    Crea un rol y lo agrega a la bd
+    """
+    cuotas = Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=None).order_by(
+        Cuota.fecha_vencimiento.asc()).all()
+    for count, cuota in enumerate(cuotas, start=1):
+        cuota.nro_cuota = count
+        record_update(cuota)
+
+
+def get_elements_per_page():
+    config = list_configuracion()
+    return config.elementos_pagina
+
+
+def generate_payment(cuota_ids):
+    """
+    Realiza un pago dado una lista de ids de cuotas
+    """
+    time_stamp = datetime.now()
+    cuotas = pay_cuotas_by_ids(cuota_ids)
+    monto = sum(cuota.valor_cuota for cuota in cuotas)
+    pago = create_pago(
+        fecha=time_stamp,
+        monto=monto
+    )
+    pago_assign_cuotas(pago, cuotas)
+    return pago
+
+
+def get_pagos_search_paginated(page, filter, search_text):
+    """
+    Retorna los pagos
+    """
+    per_page = get_elements_per_page()
+    if filter == 1:
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).join(Usuario).filter(Usuario.last_name == search_text).distinct().paginate(page=page, per_page=per_page)
+    elif filter == 0:
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == search_text).distinct().paginate(page=page, per_page=per_page)
