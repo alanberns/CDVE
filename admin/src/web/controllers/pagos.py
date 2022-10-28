@@ -43,6 +43,11 @@ def pagos_searching():
     page = request.args.get('page', default=1, type=int)
     filtro = form.select_busqueda.data
     busqueda = form.texto_busqueda.data
+    if filtro == 0:  # Caso en que se ingreso alguna letra para buscar por nro_socio
+        try:
+            int(busqueda)
+        except ValueError:
+            abort(400)
     return redirect(url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda))
 
 
