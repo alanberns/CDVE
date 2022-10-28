@@ -1,3 +1,4 @@
+import string
 from flask import Blueprint
 from flask import render_template
 from flask import request
@@ -25,6 +26,35 @@ def pagos_index():
     page = request.args.get('page', default=1, type=int)
     pagos = board.list_pagos(page)
     return render_template("pagos/pagos.html", pagos=pagos, form=form)
+
+
+@pago_blueprint.post("/searching")
+@login_required
+@pago_index_req
+def pagos_searching():
+    """
+    Ruta intermedia, su unica funcion es validar los datos del formulario de busqueda,
+    y luego le pasa los parametros a la vista de busqueda para que maneje los datos
+    por GET.
+    """
+    form = PagoSearchForm(request.form)
+    if not form.validate:
+        abort(400)
+    page = request.args.get('page', default=1, type=int)
+    filtro = form.select_busqueda.data
+    busqueda = form.texto_busqueda.data
+    return redirect(url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda))
+
+
+@pago_blueprint.get("/search")
+@login_required
+@pago_index_req
+def pagos_search():
+    page = request.args.get('page', default=1, type=int)
+    filtro = request.args.get("filtro", type=int)
+    busqueda = request.args.get("busqueda", type=str)
+    pagos = board.get_pagos_search_paginated(page, filtro, busqueda)
+    return render_template("pagos/search.html", pagos=pagos, filtro=filtro, busqueda=busqueda)
 
 
 @pago_blueprint.post("/")
