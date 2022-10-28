@@ -5,12 +5,15 @@ from src.core.forms.socio_form import SocioForm, DocumentoForm
 from src.web.helpers.auth import login_required
 from src.core import board
 
+from src.web.helpers.permissions.user_permission import socio_create_req, socio_index_req, \
+socio_delete_req, socio_update_req, socio_show_req
 
 socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
 
 
 @socio_blueprint.route("/", methods=["get", "post"])
 @login_required
+@socio_index_req
 def socios_index():
     """
     Página principal de socios. Lista y filtrado de socios.
@@ -43,6 +46,7 @@ def socios_index():
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
 @login_required
+@socio_delete_req
 def soft_delete_socio(socio_id):
     """
     Eliminado lógico.
@@ -53,6 +57,7 @@ def soft_delete_socio(socio_id):
 
 @socio_blueprint.route("/<int:usuario_id>/add", methods=["get", "post"])
 @login_required
+@socio_create_req
 def add_socio(usuario_id):
     """
     Agregado de un socio dado un id de Usuario.
@@ -77,6 +82,7 @@ def add_socio(usuario_id):
 
 @socio_blueprint.route("/<int:socio_id>/update", methods=["get", "post"])
 @login_required
+@socio_update_req
 def update_socio(socio_id):
     """
     Edición de un socio cargando su información en un formulario.
@@ -86,7 +92,7 @@ def update_socio(socio_id):
     if form.validate_on_submit():       
         if (board.exist_socio_documento_id(form.numero_documento.data, socio_id)):
             kwargs = {
-                "id_usuario": 2,
+                "id_usuario": socio.id_usuario,
                 "tipo_documento": form.tipo_documento.data,
                 "numero_documento": form.numero_documento.data,
                 "genero": form.genero.data,
@@ -108,6 +114,7 @@ def update_socio(socio_id):
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])
 @login_required
+@socio_update_req
 def switch_state_socio(socio_id):
     """
     Cambio de estado de un socio, habilitado o deshabilitado.
@@ -118,6 +125,7 @@ def switch_state_socio(socio_id):
 
 @socio_blueprint.route("/<int:socio_id>/", methods=["get", "post"])
 @login_required
+@socio_show_req
 def ver_socio(socio_id):
     """
     Muestra la información de un socio y las posibles operaciones.
