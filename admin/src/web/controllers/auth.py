@@ -15,6 +15,11 @@ auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth_blueprint.get("/")
 def login():
+    try:
+        if session["user"]:
+            return redirect(url_for("home"))
+    except KeyError:
+        pass
     form = AuthForm(request.form)
     return render_template("auth/login.html", form=form)
 
@@ -41,10 +46,14 @@ def authenticate():
 
 @auth_blueprint.get("/logout")
 def logout():
-    del session["user"]
-    session.clear()
-    flash("La sesion se cerro correctamente", "success")
-    return redirect(url_for("auth.login"))
+    try:
+        del session["user"]
+        session.clear()
+        flash("La sesion se cerro correctamente", "success")
+    except KeyError:
+        pass
+    finally:
+        return redirect(url_for("auth.login"))
 
 
 @auth_blueprint.get("/register")

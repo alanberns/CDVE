@@ -565,6 +565,7 @@ def create_cuotas_by_inscripcion(socio, disciplina):
 def update_valor_cuotas(new_value_cuota):
     fecha_actual = datetime.now()
     cuotas = Cuota.query.filter(
+        Cuota.estado_pago == False,
         Cuota.fecha_vencimiento > fecha_actual).all()
     for cuota in cuotas:
         cuota.valor_cuota = new_value_cuota + cuota.inscripcion.disciplina.costo_mensual
