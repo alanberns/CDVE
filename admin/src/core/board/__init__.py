@@ -526,8 +526,13 @@ def get_cuotas_by_ids(cuota_ids):
 
 
 def user_get_permisos(usuario_id):
-    roles = Rol.query.join(Usuario_tiene_rol).filter_by(usuario_id=usuario_id).all()
-    permisos = list({permiso.nombre for rol in roles for permiso in rol.permisos})
+    """
+    Obtiene los permisos dada la id de un usuario
+    """
+    roles = Rol.query.join(Usuario_tiene_rol).filter_by(
+        usuario_id=usuario_id).all()
+    permisos = list(
+        {permiso.nombre for rol in roles for permiso in rol.permisos})
     return permisos
 
 
