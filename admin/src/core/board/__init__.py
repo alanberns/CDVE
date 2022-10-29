@@ -10,6 +10,7 @@ from src.core.board.pago import Pago
 from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def record_update(record):
@@ -156,15 +157,15 @@ def list_configuracion():
     """
     return Configuracion.query.first()
 
+
 def list_disciplinas():
     return Disciplina.query.all()
 
 
 def list_disciplinas_not_socio(socio_id):
-    disciplinas_inscripto = db.session.query(Inscripcion.disciplina_id).filter(Inscripcion.socio_id == socio_id )
+    disciplinas_inscripto = db.session.query(
+        Inscripcion.disciplina_id).filter(Inscripcion.socio_id == socio_id)
     return Disciplina.query.filter(~Disciplina.id.in_(disciplinas_inscripto), Disciplina.estado == "Activo").all()
-
-
 
 
 def find_disciplina_by_id(disciplina_id):
@@ -269,11 +270,13 @@ def list_usuarios(page=1, per_page=10):
     """
     return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
 
+
 def find_socio_by_id_usuario(usuario_id):
     """
     Devuelve un socio por el id de usuario
     """
-    socio = db.session.query(Socio,Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(id=usuario_id).first()
+    socio = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(
+        Usuario, full=True).filter_by(id=usuario_id).first()
     return socio
 
 
@@ -540,3 +543,31 @@ def get_pagos_search_paginated(page, filter, search_text):
         return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).join(Usuario).filter(Usuario.last_name == search_text).distinct().paginate(page=page, per_page=per_page)
     elif filter == 0:
         return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == search_text).distinct().paginate(page=page, per_page=per_page)
+
+
+def create_cuotas_by_inscripcion(socio, disciplina):
+    valor_base = list_configuracion().valor_base_cuota
+    cuotas = []
+    for numero in range(1, 12):
+        fecha_cuota = datetime.today() + relativedelta(months=numero)
+        fecha = fecha_cuota.replace(day=10)
+        cuota = create_cuota(
+            nro_cuota=numero,
+            estado_pago=0,
+            fecha_vencimiento=fecha,
+            valor_cuota=valor_base + disciplina.costo_mensual,
+            activo=True
+        )
+        cuotas.append(cuota)
+    inscripion_assign_cuotas(socio, disciplina, cuotas)
+
+
+def update_valor_cuotas(new_value_cuota):
+    fecha_actual = datetime.now()
+    cuotas = Cuota.query.filter(
+        Cuota.estado_pago == False,
+        Cuota.fecha_vencimiento > fecha_actual).all()
+    for cuota in cuotas:
+        cuota.valor_cuota = new_value_cuota + cuota.inscripcion.disciplina.costo_mensual
+        record_update(cuota)
+    return cuotas

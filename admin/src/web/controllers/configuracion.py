@@ -38,6 +38,9 @@ def configuracion_update():
         "valor_base_cuota": form.valor_base_cuota.data,
         "porcentaje_cuota": form.porcentaje_cuota.data,
     }
+    config = board.list_configuracion()
+    if config.valor_base_cuota != form.valor_base_cuota.data:
+        board.update_valor_cuotas(form.valor_base_cuota.data)
     board.update_configuracion(**kwargs)
     configuracion = board.list_configuracion()
     form.set_from_config(configuracion)
