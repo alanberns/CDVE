@@ -23,8 +23,6 @@
   <body>
       {% block navbar %}
       {% endblock %}
-      {% block subnav %}
-      {% endblock %}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
@@ -35,7 +33,9 @@
         </div>
         {% endfor %}
       {% endif %}
-    {% endwith %}   
+    {% endwith %}
+    {% block subnav %}
+    {% endblock %}   
     <div id="container bg-white">
       <div class="d-flex justify-content-center m-3 mx-5">
       <div class ="d-flex justify-content-center p-2"id="main">
