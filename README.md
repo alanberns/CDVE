@@ -23,3 +23,5 @@ Para poder acceder a las funcionalidades de la aplicacion existen dos usuarios p
 
 Por defecto, en el mensaje de configuracion se usa 3 palabras claves **USUARIO**, **DISCIPLINA** Y **MONTO**.
 Si estan presentes estas palabras, seran reemplazadas segun corresponda con los datos del pago.
+
+Al cambiar el valor base de la cuota, el valor de las cuotas no pagadas, que tengan fecha mayor al mes actual, cambiaran su valor.

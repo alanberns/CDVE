@@ -384,6 +384,9 @@ def switch_state_socio(socio_id):
 
 
 def create_cuota(**kwargs):
+    """
+    Crea una cuota dados los argumentos correspondientes
+    """
     cuota = Cuota(**kwargs)
     db.session.add(cuota)
     db.session.commit()
@@ -391,6 +394,9 @@ def create_cuota(**kwargs):
 
 
 def socio_assign_disciplina(socio, disciplina):
+    """
+    Asigna una disciplina a un socio
+    """
     inscripcion = Inscripcion()
     inscripcion.disciplina = disciplina
     socio.disciplina.append(inscripcion)
@@ -444,6 +450,9 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
 
 
 def pay_cuotas_by_ids(cuota_ids):
+    """
+    Paga multiples cuotas, pasadas como una lista de ids de cuotas
+    """
     cuotas = Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
     for cuota in cuotas:
         cuota.pagar()
@@ -452,10 +461,16 @@ def pay_cuotas_by_ids(cuota_ids):
 
 
 def get_cuotas_by_ids(cuota_ids):
+    """
+    Obtiene multiples cuotas, dada una lista de ids de cuotas
+    """
     return Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
 
 
 def user_get_permisos(usuario_id):
+    """
+    Obtiene los permisos dada la id de un usuario
+    """
     roles = Rol.query.join(Usuario_tiene_rol).filter_by(
         usuario_id=usuario_id).all()
     permisos = list(
@@ -472,7 +487,7 @@ def get_pagos():
 
 def get_pago_by_id(pago_id):
     """
-    Retorna los pagos
+    Retorna los pagos dada una id de pago
     """
     return Pago.query.filter_by(id=pago_id).first()
 
@@ -505,7 +520,7 @@ def create_pago(**kwargs):
 
 def set_nro_cuota_by_inscripcion(inscripcion_id):
     """
-    Crea un rol y lo agrega a la bd
+    Setea los numeros de cuota para cuotas, que no tienen numero
     """
     cuotas = Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=None).order_by(
         Cuota.fecha_vencimiento.asc()).all()
@@ -515,6 +530,9 @@ def set_nro_cuota_by_inscripcion(inscripcion_id):
 
 
 def get_elements_per_page():
+    """
+    Obtiene la cantidad de elementos por pagina, seteados en la configuracion
+    """
     config = list_configuracion()
     return config.elementos_pagina
 
@@ -536,7 +554,8 @@ def generate_payment(cuota_ids):
 
 def get_pagos_search_paginated(page, filter, search_text):
     """
-    Retorna los pagos
+    Retorna los pagos de forma paginada, filtrados segun la busqueda que haya hecho el usuario 
+    en la vista de pagos
     """
     per_page = get_elements_per_page()
     if filter == 1:
@@ -546,6 +565,9 @@ def get_pagos_search_paginated(page, filter, search_text):
 
 
 def create_cuotas_by_inscripcion(socio, disciplina):
+    """
+    Crea las cuotas para una disciplina, se utiliza al momento de inscribir un usuario
+    """
     valor_base = list_configuracion().valor_base_cuota
     cuotas = []
     for numero in range(1, 12):
@@ -563,6 +585,10 @@ def create_cuotas_by_inscripcion(socio, disciplina):
 
 
 def update_valor_cuotas(new_value_cuota):
+    """
+    Actualiza el valor de una cuota, segun el valor pasado por parametro. Se utiliza al cambiar el
+    valor base de la cuota en la configuracion
+    """
     fecha_actual = datetime.now()
     cuotas = Cuota.query.filter(
         Cuota.estado_pago == False,
