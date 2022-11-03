@@ -11,13 +11,11 @@ from src.core.board.database import db
 disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplinas")
 
 @disciplina_blueprint.get("/")
-@disciplina_blueprint.get("/disciplinas")
 #@login_required
 def disciplina_index():
-    page = request.args.get('page', 1, type=int)
-    disciplinas = Disciplina.query.paginate(page=page, per_page= 6)
-    return render_template('disciplinas.html',disciplinas= disciplinas)
-    #disciplinas = board.list_disciplinas()
+   disciplinas = board.list_disciplinas()
+   return render_template('disciplinas.html',disciplinas= disciplinas)
+ 
 
 
 @disciplina_blueprint.post("/")
