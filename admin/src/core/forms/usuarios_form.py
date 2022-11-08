@@ -78,7 +78,7 @@ class CambiarClaveForm(FlaskForm):
 
 
 class BusquedaUsuarioForm(FlaskForm):
-    email = EmailField(label=('Email'), validators=[])
+    email = StringField(label=('Email'), validators=[])
     estado = SelectField(label=("Estado"),
         choices=(("", "Todos"), ("true", "Activo"), ("false", "Inactivo")), coerce=str, validators=[])
     buscar = SubmitField(label=("Buscar"))

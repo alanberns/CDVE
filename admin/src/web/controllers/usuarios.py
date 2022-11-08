@@ -53,8 +53,15 @@ def busqueda_filtrada():
     page = int(request.args.get('page', 1))
     usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
 
+    estado_choices = {
+        "": "Todos",
+        "true": "Activo",
+        "false": "Inactivo",
+    }
+    estado_choice = estado_choices[estado]
+
     return render_template("usuarios/usuariosFilter.html",
-                           usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
+                           usuarios_pag=usuarios_pag, email=email, estado=estado_choice)
 
 
 @usuario_blueprint.get("/add")
