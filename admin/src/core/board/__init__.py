@@ -110,18 +110,12 @@ def filter_usuarios(email, activo, page=1, per_page=10):
                 .paginate(page=page, per_page=per_page, error_out=False)
             )
     else:
-        if activo != "":
-            usuarios = (
-                Usuario.query.filter_by(activo=activo, email=email)
-                .order_by(Usuario.id.asc())
-                .paginate(page=page, per_page=per_page, error_out=False)
-            )
+        if (activo != ""):
+            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.like(email +"%")).order_by(
+                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
         else:
-            usuarios = (
-                Usuario.query.filter_by(email=email)
-                .order_by(Usuario.id.asc())
-                .paginate(page=page, per_page=per_page, error_out=False)
-            )
+            usuarios = Usuario.query.filter(Usuario.email.like(email +"%")).order_by(
+                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
 
 
