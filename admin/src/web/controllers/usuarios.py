@@ -161,6 +161,7 @@ def modify_activo(id):
     Cambia el estado "activo" a su inverso.
     No se puede dar de baja a un administrador
     Si se inactiva a un usuario socio, eliminar socio
+    Si se activa a un usuario socio, activar su perfil de socio
     """
     # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
@@ -172,15 +173,29 @@ def modify_activo(id):
         flash("No se puede inactivar a un administrador", "danger")
         return redirect(url_for('usuarios.usuario_index', id=id))
 
-    # Chequear si: se inactiva, a un usuario socio, activo
+    # Chequear si: se inactiva, a un usuario socio, activo > inactivar socio
     if usuario.activo:
         query = board.find_socio_by_id_usuario(id)
         if query:
-            if query[0].activo:
+            if query.activo:
                 board.update_activo_usuario(id)
-                board.soft_delete_socio(query[0].id)
+                board.soft_delete_socio(query.id)
                 flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
                 return redirect(url_for('usuarios.usuario_index', id=id))
+
+    # Chequear si: se activa a un usuario socio > activar socio
+    if not usuario.activo:
+        query = board.find_socio_by_id_usuario(id)
+        if query:
+            if not query.activo:
+                board.update_activo_usuario(id)
+                kwargs = {
+                    "activo": True,
+                }
+                board.update_socio(query.id, **kwargs)
+                flash("Se actualizo el estado del usuario, y el socio fue activado", "success")
+                return redirect(url_for('usuarios.usuario_index', id=id))
+
     
     # Cambiar estado usuario
     board.update_activo_usuario(id)
@@ -208,8 +223,8 @@ def quitar_rol():
                 # Si el usuario tiene perfil de socio y es un socio activo
                 query = board.find_socio_by_id_usuario(usuario_id)
                 if query:
-                    if query[0].activo:
-                        board.soft_delete_socio(query[0].id)
+                    if query.activo:
+                        board.soft_delete_socio(query.id)
                         flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
                         return redirect(url_for('usuarios.view_usuario',id=usuario_id))
 
