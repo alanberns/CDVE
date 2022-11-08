@@ -26,14 +26,6 @@
         <label for="floatingInput">Activo</label>
       </div>
       {% endif %}
-      <div class="form-floating mb-3">
-        <input type="text" name="" id="floatingInput" value="{{ usuario.created_at.strftime('%Y-%m-%d %H:%M') }}" class="form-control" readonly>
-        <label for="floatingInput">Fecha de alta</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" name="" id="floatingInput" value="{{usuario.updated_at.strftime('%Y-%m-%d %H:%M')}}" class="form-control" readonly>
-        <label for="floatingInput">Última modificación</label>
-      </div>
   
       <div class="form-floating mb-3">
         {{form.email(class="form-control")}}

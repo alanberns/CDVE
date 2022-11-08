@@ -50,11 +50,11 @@
         <th>{{ usuario.last_name }}</th>
         {% if usuario.activo %}
         <th>Si</th>
-        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de baja</button></a></th>
+        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Inactivar</button></a></th>
         {% endif %}
         {% if not usuario.activo %}
         <th>No</th>
-        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Dar de alta</button></a></th>
+        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Activar</button></a></th>
         {% endif %}
         <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button><i class="bi bi-plus-lg"></i></button></a></th>
       </tr>
