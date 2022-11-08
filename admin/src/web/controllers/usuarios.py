@@ -172,18 +172,15 @@ def modify_activo(id):
     """
     Cambia el estado "activo" a su inverso.
     No se puede dar de baja a un administrador
-    Si se inactiva a un usuario socio, eliminar socio
-    Si se activa a un usuario socio, activar su perfil de socio
+    Si se inactiva a un usuario con perfil de socio, eliminar socio
+    Si se activa a un usuario con perfil de socio, activar su perfil de socio
     """
     # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
-    roles = board.get_roles()
-    for rol in roles:
-        if rol.nombre == "Administrador":
-            rol_administrador = rol
-    if rol_administrador in usuario.roles:
-        flash("No se puede inactivar a un administrador", "danger")
-        return redirect(url_for("usuarios.usuario_index", id=id))
+    for rol in usuario.roles:
+        if board.usuario_has_rol("Administrador",rol.id):
+            flash("No se puede inactivar a un administrador", "danger")
+            return redirect(url_for('usuarios.usuario_index', id=id))
 
     # Chequear si: se inactiva, a un usuario socio, activo > inactivar socio
     if usuario.activo:
@@ -228,17 +225,14 @@ def quitar_rol():
     board.quitar_rol(rol_id, usuario_id)
 
     # Chequear si el rol es Socio
-    roles = board.get_roles()
-    for rol in roles:
-        if rol.id == int(rol_id):
-            if rol.nombre == "Socio":
-                # Si el usuario tiene perfil de socio y es un socio activo
-                query = board.find_socio_by_id_usuario(usuario_id)
-                if query:
-                    if query.activo:
-                        board.soft_delete_socio(query.id)
-                        flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
-                        return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+    if board.usuario_has_rol("Socio",rol_id):
+        # Si el usuario tiene perfil de socio y es un socio activo
+        query = board.find_socio_by_id_usuario(usuario_id)
+        if query:
+            if query.activo:
+                board.soft_delete_socio(query.id)
+                flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
+                return redirect(url_for('usuarios.view_usuario',id=usuario_id))
 
     flash("Se quitó el rol exitosamente", "success")
     return redirect(url_for("usuarios.view_usuario", id=usuario_id))
@@ -259,9 +253,6 @@ def asignar_rol():
     flash("Se asignó el rol al usuario", "success")
 
     # Chequear si el rol es Socio
-    roles = board.get_roles()
-    for rol in roles:
-        if rol.id == int(rol_id):
-            if rol.nombre == "Socio":
-                return redirect(url_for("socios.add_socio", usuario_id=usuario_id))
-    return redirect(url_for("usuarios.view_usuario", id=usuario_id))
+    if board.usuario_has_rol("Socio",rol_id):
+        return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
+    return redirect(url_for('usuarios.view_usuario',id=usuario_id))

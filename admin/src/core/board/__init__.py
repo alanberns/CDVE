@@ -149,6 +149,18 @@ def get_roles():
     """
     return Rol.query.all()
 
+def usuario_has_rol(rol_name, rol_id):
+    """
+    Indica si el id del rol es el de socio
+    """
+    roles = get_roles()
+    for rol in roles:
+        if rol.id == int(rol_id):
+            if rol.nombre == rol_name:
+                return True
+            else:
+                return False
+
 
 def find_user_by_email(email):
     """
