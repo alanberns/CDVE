@@ -11,8 +11,7 @@
     onsubmit="return confirm('¿Estas seguro que deseas modificar tus datos?');">
       {{ form.csrf_token }} 
       <div class="form-floating mb-3">
-        <input type="text" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
-        <label for="floatingInput">ID</label>
+        <input type="hidden" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
       </div>
       {% if usuario.activo %}
       <div class="form-floating mb-3">
