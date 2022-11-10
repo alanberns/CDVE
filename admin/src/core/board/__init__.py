@@ -674,3 +674,7 @@ def update_valor_cuotas(new_value_cuota):
         cuota.valor_cuota = new_value_cuota + cuota.inscripcion.disciplina.costo_mensual
         record_update(cuota)
     return cuotas
+
+
+def get_pagos_by_socio_id(socio_id):
+    return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == socio_id).distinct()
