@@ -13,14 +13,17 @@ class Usuario(db.Model):
     password = db.Column(db.String(255), nullable=False)
     activo = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.now(),
-                           onupdate=datetime.now, nullable=False)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.now(), onupdate=datetime.now, nullable=False
+    )
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     roles = db.relationship("Rol", secondary="usuario_tiene_rol")
-    socio = db.relationship('Socio', backref='usuario')
+    socio = db.relationship("Socio", backref="usuario")
 
-    def __init__(self, username, email, password, created_at, updated_at, first_name, last_name):
+    def __init__(
+        self, username, email, password, created_at, updated_at, first_name, last_name
+    ):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
@@ -40,8 +43,5 @@ class Usuario(db.Model):
     def update_password(self, password):
         self.password = generate_password_hash(password)
 
-    def verify_password(self,password):
-        return check_password_hash(self.password,password)
-    
-
-    
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)

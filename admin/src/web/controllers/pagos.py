@@ -14,8 +14,7 @@ from src.web.helpers.permissions.user_permission import pago_index_req, pago_sho
 from datetime import datetime
 import pdfkit
 
-pago_blueprint = Blueprint(
-    "pagos", __name__, url_prefix="/pagos")
+pago_blueprint = Blueprint("pagos", __name__, url_prefix="/pagos")
 
 
 @pago_blueprint.get("/")
@@ -23,7 +22,7 @@ pago_blueprint = Blueprint(
 @pago_index_req
 def pagos_index():
     form = PagoSearchForm()
-    page = request.args.get('page', default=1, type=int)
+    page = request.args.get("page", default=1, type=int)
     pagos = board.list_pagos(page)
     return render_template("pagos/pagos.html", pagos=pagos, form=form)
 
@@ -40,7 +39,7 @@ def pagos_searching():
     form = PagoSearchForm(request.form)
     if not form.validate:
         abort(400)
-    page = request.args.get('page', default=1, type=int)
+    page = request.args.get("page", default=1, type=int)
     filtro = form.select_busqueda.data
     busqueda = form.texto_busqueda.data
     if filtro == 0:  # Caso en que se ingreso alguna letra para buscar por nro_socio
@@ -48,18 +47,22 @@ def pagos_searching():
             int(busqueda)
         except ValueError:
             abort(400)
-    return redirect(url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda))
+    return redirect(
+        url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda)
+    )
 
 
 @pago_blueprint.get("/search")
 @login_required
 @pago_index_req
 def pagos_search():
-    page = request.args.get('page', default=1, type=int)
+    page = request.args.get("page", default=1, type=int)
     filtro = request.args.get("filtro", type=int)
     busqueda = request.args.get("busqueda", type=str)
     pagos = board.get_pagos_search_paginated(page, filtro, busqueda)
-    return render_template("pagos/search.html", pagos=pagos, filtro=filtro, busqueda=busqueda)
+    return render_template(
+        "pagos/search.html", pagos=pagos, filtro=filtro, busqueda=busqueda
+    )
 
 
 @pago_blueprint.post("/")
@@ -69,7 +72,7 @@ def pagos_busqueda_index():
     form = PagoSearchForm()
     if not form.validate:
         abort(400)
-    page = request.args.get('page', default=1, type=int)
+    page = request.args.get("page", default=1, type=int)
     filter = form.select_busqueda.data
     texto_busqueda = form.texto_busqueda.data
     pagos = board.get_pagos_search_paginated(page, filter, texto_busqueda)
@@ -80,7 +83,7 @@ def pagos_busqueda_index():
 @login_required
 @pago_index_req
 def inscripciones_index():
-    page = request.args.get('page', default=1, type=int)
+    page = request.args.get("page", default=1, type=int)
     inscripciones = board.get_inscripciones(page)
     return render_template("pagos/inscripciones.html", inscripciones=inscripciones)
 
@@ -101,8 +104,8 @@ def pago():
     form = EditForm(request.form)
     if not form.validate_on_submit():
         flash("Hubo un error al seleccionar las cuotas", "danger")
-        return redirect(url_for('pagos.pagos_index'))
-    cuota_ids = [cuota["id"]for cuota in form.items.data if cuota["check"]]
+        return redirect(url_for("pagos.pagos_index"))
+    cuota_ids = [cuota["id"] for cuota in form.items.data if cuota["check"]]
     cuotas = board.get_cuotas_by_ids(cuota_ids)
     config = board.list_configuracion()  # para calcular el porcentaje por mora
     return render_template("pagos/pago.html", cuotas=cuotas, cuota_ids=cuota_ids)
@@ -112,17 +115,18 @@ def pago():
 @login_required
 @pago_index_req
 def recibo():
-    pago_id = request.args.get('pago_id', type=int)
+    pago_id = request.args.get("pago_id", type=int)
     if not pago_id:
         abort(400)
     pago = board.get_pago_by_id(pago_id)
     config = board.list_configuracion()
     rendered = render_template(
-        "pagos/comprobante_template.html", pago=pago, config=config)
+        "pagos/comprobante_template.html", pago=pago, config=config
+    )
     pdf = pdfkit.from_string(rendered, False)
     response = make_response(pdf)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'attachment; filename=comprobante.pdf'
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "attachment; filename=comprobante.pdf"
     return response
 
 
@@ -136,7 +140,7 @@ def confirm_pago():
     cuota_ids = args_dict["cuotas"]
     if not cuota_ids:
         flash("Hubo un error al registrar el pago", "danger")
-        return redirect(url_for('pagos.pagos_index'))
+        return redirect(url_for("pagos.pagos_index"))
     board.generate_payment(cuota_ids)
     flash("El pago se realizo de manera satisfactoria", "success")
-    return redirect(url_for('pagos.pagos_index'))
+    return redirect(url_for("pagos.pagos_index"))

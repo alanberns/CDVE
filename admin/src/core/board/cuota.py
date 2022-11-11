@@ -14,9 +14,8 @@ class Cuota(db.Model):
     valor_pago = db.Column(db.Float)
     activo = db.Column(db.Boolean, default=True)
     inscripcion_id = db.Column(db.Integer, db.ForeignKey("inscripciones.id"))
-    inscripcion = db.relationship('Inscripcion', back_populates="cuota")
-    pago = db.relationship(
-        "Pago", secondary="cuotas_pagos", back_populates="cuotas")
+    inscripcion = db.relationship("Inscripcion", back_populates="cuota")
+    pago = db.relationship("Pago", secondary="cuotas_pagos", back_populates="cuotas")
 
     def pagar(self):
         self.valor_pago = self.valor_cuota

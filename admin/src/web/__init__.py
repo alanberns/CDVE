@@ -28,14 +28,14 @@ def create_app(env="development", static_folder="static"):
 
     @app.get("/")
     def entry():
-        # database.reset_db()
-        # seeds.run()
-        return redirect(url_for('auth.login'))
+        database.reset_db()
+        seeds.run()
+        return redirect(url_for("auth.login"))
 
     @app.get("/home")
     @login_required
     def home():
-        return render_template('home.html')
+        return render_template("home.html")
 
     app.register_blueprint(usuario_blueprint)
     app.register_blueprint(configuracion_blueprint)

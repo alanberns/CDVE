@@ -9,7 +9,8 @@ from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import config_all_req
 
 configuracion_blueprint = Blueprint(
-    "configuracion", __name__, url_prefix="/configuracion")
+    "configuracion", __name__, url_prefix="/configuracion"
+)
 
 
 @configuracion_blueprint.get("/")
