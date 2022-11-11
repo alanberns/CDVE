@@ -1,27 +1,42 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, \
-    SubmitField, IntegerField, DecimalField
-from wtforms.validators import ValidationError, DataRequired, \
-    Email, EqualTo, Length, NumberRange
+from wtforms import (
+    StringField,
+    PasswordField,
+    BooleanField,
+    SubmitField,
+    IntegerField,
+    DecimalField,
+)
+from wtforms.validators import (
+    ValidationError,
+    DataRequired,
+    Email,
+    EqualTo,
+    Length,
+    NumberRange,
+)
 
 
 class ConfigurationForm(FlaskForm):
-    elementos_pagina = IntegerField(label=('Elementos por Pagina'),
-                                    validators=[DataRequired(),
-                                                NumberRange(min=1, max=50)])
-    estado_pago = BooleanField(label=('Mostrar tabla de pagos'))
-    estado_info_contactos = BooleanField(label=('Mostrar Info de contactos'))
+    elementos_pagina = IntegerField(
+        label=("Elementos por Pagina"),
+        validators=[DataRequired(), NumberRange(min=1, max=50)],
+    )
+    estado_pago = BooleanField(label=("Mostrar tabla de pagos"))
+    estado_info_contactos = BooleanField(label=("Mostrar Info de contactos"))
     texto_recibo = StringField(
-        label=('Texto para encabezado del recibo'),
-        validators=[DataRequired(),
-                    Length(max=255)])
+        label=("Texto para encabezado del recibo"),
+        validators=[DataRequired(), Length(max=255)],
+    )
     valor_base_cuota = DecimalField(
-        label=('Valor base para la cuota'), validators=[DataRequired()])
+        label=("Valor base para la cuota"), validators=[DataRequired()]
+    )
     porcentaje_cuota = DecimalField(
-        label=('Porcentaje de recargo cuotas adeudadas'), validators=[DataRequired(),
-                                                                      NumberRange(min=0, max=1)])
-    editar = SubmitField(label=('Editar'))
+        label=("Porcentaje de recargo cuotas adeudadas"),
+        validators=[DataRequired(), NumberRange(min=0, max=1)],
+    )
+    editar = SubmitField(label=("Editar"))
 
     def set_from_config(self, configuracion):
         config = configuracion

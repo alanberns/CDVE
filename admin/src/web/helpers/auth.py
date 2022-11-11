@@ -21,4 +21,5 @@ def login_required(f):
         if session.get("user") is None:
             return abort(401)
         return f(*args, **kwargs)
+
     return decorated_function

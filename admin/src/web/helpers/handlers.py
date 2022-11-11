@@ -12,7 +12,7 @@ def not_found_error(e):
 def unauthorized(e):
     kwargs = {
         "error_name": "401 Unauthorized",
-        "error_description": "Debe iniciar sesion para acceder al recurso"
+        "error_description": "Debe iniciar sesion para acceder al recurso",
     }
     return render_template("error.html", **kwargs), 404
 

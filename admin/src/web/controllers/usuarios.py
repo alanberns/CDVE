@@ -12,12 +12,16 @@ from src.core.forms.usuarios_form import ModificarUsuarioForm
 from src.core.forms.usuarios_form import BusquedaUsuarioForm
 from src.core import board
 from src.web.helpers.auth import login_required
-from src.web.helpers.permissions.user_permission import user_create_req, user_index_req, \
-    user_rol_update_req, user_update_req, user_show_req
+from src.web.helpers.permissions.user_permission import (
+    user_create_req,
+    user_index_req,
+    user_rol_update_req,
+    user_update_req,
+    user_show_req,
+)
 
 
-usuario_blueprint = Blueprint(
-    "usuarios", __name__, url_prefix="/usuarios")
+usuario_blueprint = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
 
 @usuario_blueprint.get("/")
@@ -30,10 +34,12 @@ def usuario_index():
     # Paginación
     form = BusquedaUsuarioForm()
     elementos_pagina = board.get_elementos_pagina()
-    page = int(request.args.get('page', 1))
+    page = int(request.args.get("page", 1))
 
-    usuarios_pag = board.list_usuarios(page,elementos_pagina)
-    return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form)
+    usuarios_pag = board.list_usuarios(page, elementos_pagina)
+    return render_template(
+        "usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form
+    )
 
 
 @usuario_blueprint.get("/res")
@@ -50,11 +56,15 @@ def busqueda_filtrada():
 
     # Paginación
     elementos_pagina = board.get_elementos_pagina()
-    page = int(request.args.get('page', 1))
+    page = int(request.args.get("page", 1))
     usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
 
-    return render_template("usuarios/usuariosFilter.html",
-                           usuarios_pag=usuarios_pag, email=email, activo=request.args.get("estado"))
+    return render_template(
+        "usuarios/usuariosFilter.html",
+        usuarios_pag=usuarios_pag,
+        email=email,
+        activo=request.args.get("estado"),
+    )
 
 
 @usuario_blueprint.get("/add")
@@ -77,12 +87,12 @@ def add_usuario():
     """
     form = UsuarioNuevoForm(request.form)
     if form.validate:
-        if (board.exist_email(form.email.data)):
+        if board.exist_email(form.email.data):
             flash("El email ingresado ya está registrado", "danger")
-            return redirect(url_for('usuarios.add_usuario_view'))
-        if (board.exist_username(form.username.data)):
+            return redirect(url_for("usuarios.add_usuario_view"))
+        if board.exist_username(form.username.data):
             flash("El username ingresado ya está registrado", "danger")
-            return redirect(url_for('usuarios.add_usuario_view'))
+            return redirect(url_for("usuarios.add_usuario_view"))
 
         usuario = board.create_usuario(
             username=form.username.data,
@@ -94,9 +104,9 @@ def add_usuario():
             last_name=form.last_name.data,
         )
         flash("Se creó el nuevo usuario", "success")
-        return redirect(url_for('usuarios.view_usuario', id=usuario.id))
+        return redirect(url_for("usuarios.view_usuario", id=usuario.id))
     flash("No se pudo añadir al nuevo usuario", "danger")
-    return redirect(url_for('usuarios.add_usuario_view'))
+    return redirect(url_for("usuarios.add_usuario_view"))
 
 
 @usuario_blueprint.get("/<int:id>")
@@ -110,7 +120,9 @@ def view_usuario(id):
     form = ModificarUsuarioForm()
     form.set_from_usuarios(usuario)
     roles = board.get_roles()
-    return render_template("usuarios/usuario.html", usuario=usuario, form=form, roles=roles)
+    return render_template(
+        "usuarios/usuario.html", usuario=usuario, form=form, roles=roles
+    )
 
 
 @usuario_blueprint.post("/<int:id>")
@@ -123,21 +135,21 @@ def update_usuario(id):
     usuario = board.get_usuario(id)
     form = ModificarUsuarioForm(request.form)
     if not form.validate:
-        flash("No se pudo modificar al usuario","danger")
-        return redirect(url_for('usuarios.view_usuario', id=id))
+        flash("No se pudo modificar al usuario", "danger")
+        return redirect(url_for("usuarios.view_usuario", id=id))
     # Comprobar si se modificó el email
-    if (form.email.data != usuario.email):
+    if form.email.data != usuario.email:
         # Si se modificó, comprobar que el nuevo email no esté en uso
-        if (board.exist_email(form.email.data)):
+        if board.exist_email(form.email.data):
             flash("el email ingresado ya esta registrado", "danger")
-            return redirect(url_for('usuarios.view_usuario', id=id))
+            return redirect(url_for("usuarios.view_usuario", id=id))
 
     # Comprobar si se modificó el username
-    if (form.username.data != usuario.username):
+    if form.username.data != usuario.username:
         # Si se modificó, comprobar que el nuevo username no esté en uso
-        if (board.exist_username(form.username.data)):
+        if board.exist_username(form.username.data):
             flash("el username ingresado ya está registrado", "danger")
-            return redirect(url_for('usuarios.view_usuario', id=id))
+            return redirect(url_for("usuarios.view_usuario", id=id))
 
     # Si no están en uso el email nuevo ni el username nuevo actualiza los datos en la BD
     kwargs = {
@@ -150,7 +162,7 @@ def update_usuario(id):
     }
     board.update_usuario(**kwargs)
     flash("Se actualizaron los datos del usuario", "success")
-    return redirect(url_for('usuarios.usuario_index'))
+    return redirect(url_for("usuarios.usuario_index"))
 
 
 @usuario_blueprint.get("/modifyActivo/<int:id>")
@@ -168,9 +180,9 @@ def modify_activo(id):
     for rol in roles:
         if rol.nombre == "Administrador":
             rol_administrador = rol
-    if (rol_administrador in usuario.roles):
+    if rol_administrador in usuario.roles:
         flash("No se puede inactivar a un administrador", "danger")
-        return redirect(url_for('usuarios.usuario_index', id=id))
+        return redirect(url_for("usuarios.usuario_index", id=id))
 
     # Chequear si: se inactiva, a un usuario socio, activo
     if usuario.activo:
@@ -179,13 +191,16 @@ def modify_activo(id):
             if query[0].activo:
                 board.update_activo_usuario(id)
                 board.soft_delete_socio(query[0].id)
-                flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
-                return redirect(url_for('usuarios.usuario_index', id=id))
-    
+                flash(
+                    "Se actualizo el estado del usuario, y el socio fue eliminado",
+                    "success",
+                )
+                return redirect(url_for("usuarios.usuario_index", id=id))
+
     # Cambiar estado usuario
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
-    return redirect(url_for('usuarios.usuario_index', id=id))
+    return redirect(url_for("usuarios.usuario_index", id=id))
 
 
 @usuario_blueprint.get("/quitarRol")
@@ -193,7 +208,7 @@ def modify_activo(id):
 @user_rol_update_req
 def quitar_rol():
     """
-    Quitar un rol a un usuario. 
+    Quitar un rol a un usuario.
     Si se quita el rol de socio se debe eliminar al socio
     """
     rol_id = request.args.get("rol_id")
@@ -210,11 +225,14 @@ def quitar_rol():
                 if query:
                     if query[0].activo:
                         board.soft_delete_socio(query[0].id)
-                        flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
-                        return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+                        flash(
+                            "Se quitó el rol exitosamente, y el socio fue eliminado",
+                            "success",
+                        )
+                        return redirect(url_for("usuarios.view_usuario", id=usuario_id))
 
     flash("Se quitó el rol exitosamente", "success")
-    return redirect(url_for('usuarios.view_usuario', id=usuario_id))
+    return redirect(url_for("usuarios.view_usuario", id=usuario_id))
 
 
 @usuario_blueprint.get("/asignarRol")
@@ -236,5 +254,5 @@ def asignar_rol():
     for rol in roles:
         if rol.id == int(rol_id):
             if rol.nombre == "Socio":
-                return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
-    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+                return redirect(url_for("socios.add_socio", usuario_id=usuario_id))
+    return redirect(url_for("usuarios.view_usuario", id=usuario_id))

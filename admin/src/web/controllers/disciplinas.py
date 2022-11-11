@@ -3,11 +3,11 @@ from flask import render_template
 from flask import request
 from src.core import board
 from src.core.board.disciplina import Disciplina
-#from src.web.helpers.auth import login_required
+
+# from src.web.helpers.auth import login_required
 
 
-disciplina_blueprint = Blueprint(
-    "disciplinas", __name__, url_prefix="/disciplinas")
+disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplinas")
 
 
 @disciplina_blueprint.get("/")
@@ -17,8 +17,7 @@ def disciplina_index():
     # page = request.args.get('page', 1, type=int)
     # disciplinas = Disciplina.query.paginate(page=page, per_page=5)
     disciplinas = board.list_disciplinas()
-    return render_template('disciplinas.html', disciplinas=disciplinas)
-
+    return render_template("disciplinas.html", disciplinas=disciplinas)
 
 
 @disciplina_blueprint.post("/")
@@ -30,8 +29,8 @@ def newdcp():
         "dia": request.form.get("dia"),
         "hora": request.form.get("hora"),
         "costo_mensual": request.form.get("costo_mensual"),
-        "estado": "Activa"
+        "estado": "Activa",
     }
     board.create_disciplina(**kwargs)
     disciplinas = board.list_disciplinas()
-    return render_template('disciplinas.html', disciplina=disciplinas)
+    return render_template("disciplinas.html", disciplina=disciplinas)
