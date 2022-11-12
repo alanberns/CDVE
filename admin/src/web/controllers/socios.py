@@ -88,7 +88,15 @@ def add_socio(usuario_id):
                 "telefono": form.telefono.data,
             }
             board.create_socio(**kwargs)
-            return redirect(url_for("usuarios.view_usuario", id=usuario_id))
+
+            #Asignar rol de socio
+            for rol in board.get_roles():
+                if rol.nombre == "Socio":
+                    rol_socio = rol
+                board.asignar_rol(rol_socio.id,usuario_id)
+                flash("Se asignó el rol al usuario y se creo el perfil de socio", "success")
+
+                return redirect(url_for("usuarios.view_usuario", id=usuario_id))
         else:
             flash("El documento ingresado pertenece a otro Socio", "danger")
     return render_template("socios/create_socio.html", form=form, title="Crear Socio")
