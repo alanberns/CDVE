@@ -251,14 +251,15 @@ def asignar_rol():
     """
     Asignar un rol a un usuario
     Si el rol es 'Socio' se lo debe enviar a crear perfil de socio
-    """
-    # Asignar el rol
+    """    
     rol_id = request.form.get("rol_id")
     usuario_id = request.form.get("usuario_id")
-    board.asignar_rol(rol_id, usuario_id)
-    flash("Se asignó el rol al usuario", "success")
 
     # Chequear si el rol es Socio
     if board.usuario_has_rol("Socio",rol_id):
         return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
+    
+    # Asignar el rol
+    board.asignar_rol(rol_id, usuario_id)
+    flash("Se asignó el rol al usuario", "success")
     return redirect(url_for('usuarios.view_usuario',id=usuario_id))
