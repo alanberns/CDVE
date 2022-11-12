@@ -30,10 +30,10 @@
   <table class="table table-striped">
     <thead>
       <tr class="table-dark">
+        <th>Apellido</th>
+        <th>Nombre</th>
         <th>Usuario</th>
         <th>Email</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
         <th>Activo</th>
         <th>Cambiar estado</th>
         <th>Ver detalle</th>
@@ -42,10 +42,10 @@
     <tbody>
       {% for usuario in usuarios_pag.items %}
       <tr>
+        <th>{{ usuario.last_name }}</th>
+        <th>{{ usuario.first_name }}</th>
         <th>{{ usuario.username }}</th>
         <th>{{ usuario.email }}</th>
-        <th>{{ usuario.first_name }}</th>
-        <th>{{ usuario.last_name }}</th>
         {% if usuario.activo %}
         <th>Si</th>
         <th>
