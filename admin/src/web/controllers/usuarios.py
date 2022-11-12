@@ -173,33 +173,32 @@ def modify_activo(id):
     Si se inactiva a un usuario con perfil de socio, eliminar socio
     Si se activa a un usuario con perfil de socio, activar su perfil de socio
     """
-        # Chequear que el usuario no sea administrador
+    # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
-    for rol in usuario.roles:
-        if board.usuario_has_rol("Administrador",rol.id):
-            flash("No se puede inactivar a un administrador", "danger")
-            return redirect(url_for('usuarios.usuario_index'))
+    if board.usuario_has_rol("Administrador",usuario.id):
+        flash("No se puede inactivar a un administrador", "danger")
+        return redirect(url_for('usuarios.usuario_index'))
 
-    # Chequear si: se inactiva, a un usuario socio, activo > inactivar socio
+    # Chequear si se inactiva, a un usuario socio activo > inactivar socio
     if usuario.activo:
-        query = board.find_socio_by_id_usuario(id)
-        if query:
-            if query.activo:
+        socio = board.find_socio_by_id_usuario(id)
+        if socio:
+            if socio.activo:
                 board.update_activo_usuario(id)
-                board.soft_delete_socio(query.id)
+                board.soft_delete_socio(socio.id)
                 flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
                 return redirect(url_for('usuarios.usuario_index'))
 
     # Chequear si: se activa a un usuario socio > activar socio
     if not usuario.activo:
-        query = board.find_socio_by_id_usuario(id)
-        if query:
-            if not query.activo:
+        socio = board.find_socio_by_id_usuario(id)
+        if socio:
+            if not socio.activo:
                 board.update_activo_usuario(id)
                 kwargs = {
                     "activo": True,
                 }
-                board.update_socio(query.id, **kwargs)
+                board.update_socio(socio.id, **kwargs)
                 flash("Se actualizo el estado del usuario, y el socio fue activado", "success")
                 return redirect(url_for('usuarios.usuario_index'))
 
@@ -223,12 +222,13 @@ def quitar_rol():
     board.quitar_rol(rol_id, usuario_id)
 
     # Chequear si el rol es Socio
-    if board.usuario_has_rol("Socio",rol_id):
-        # Si el usuario tiene perfil de socio y es un socio activo
-        query = board.find_socio_by_id_usuario(usuario_id)
-        if query:
-            if query.activo:
-                board.soft_delete_socio(query.id)
+    rol_socio = board.get_rol_socio()
+    if rol_socio.id == int(rol_id):
+        # Si el usuario tiene perfil de socio y es un socio activo, borrarlo
+        socio = board.find_socio_by_id_usuario(usuario_id)
+        if socio:
+            if socio.activo:
+                board.soft_delete_socio(socio.id)
                 flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
                 return redirect(url_for('usuarios.view_usuario',id=usuario_id))
 
@@ -248,8 +248,19 @@ def asignar_rol():
     usuario_id = request.form.get("usuario_id")
 
     # Chequear si el rol es Socio
-    if board.usuario_has_rol("Socio",rol_id):
-        return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
+    rol_socio = board.get_rol_socio()
+    if rol_socio.id == int(rol_id):
+        # Si tiene perfil de socio, se le activa el perfil
+        socio = board.find_socio_by_id_usuario(usuario_id)
+        if socio:
+            if not socio.activo:
+                kwargs = {
+                    "activo": True,
+                }
+                board.update_socio(socio.id, **kwargs)
+        # Si no tiene perfil de socio, debe crearse uno
+        else:
+            return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
     
     # Asignar el rol
     board.asignar_rol(rol_id, usuario_id)

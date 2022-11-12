@@ -22,7 +22,7 @@ def list_usuarios(page=1, per_page=10):
     """
     Lista los datos de los usuarios.
     """
-    return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+    return Usuario.query.order_by(Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
 
 
 def create_usuario(**kwargs):
@@ -98,18 +98,18 @@ def filter_usuarios(email, activo, page=1, per_page=10):
     """
     if (email == ""):
         if (activo == ""):
-            usuarios = Usuario.query.order_by(Usuario.id.asc()).paginate(
+            usuarios = Usuario.query.order_by(Usuario.last_name.asc()).paginate(
                 page=page, per_page=per_page, error_out=False)
         else:
             usuarios = Usuario.query.filter_by(activo=activo).order_by(
-                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+                Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     else:
         if (activo != ""):
             usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.like(email +"%")).order_by(
-                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+                Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
         else:
             usuarios = Usuario.query.filter(Usuario.email.like(email +"%")).order_by(
-                Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+                Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
 
 
@@ -142,17 +142,25 @@ def get_roles():
     """
     return Rol.query.all()
 
-def usuario_has_rol(rol_name, rol_id):
+def get_rol_socio():
     """
-    Indica si el id del rol es el de socio
+    Retorna el rol socio
     """
     roles = get_roles()
     for rol in roles:
-        if rol.id == int(rol_id):
-            if rol.nombre == rol_name:
-                return True
-            else:
-                return False
+        if rol.nombre == "Socio":
+            return rol
+
+def usuario_has_rol(rol_name, usuario_id):
+    """
+    Indica si el id del rol esta asignado al usuario
+    """
+    usuario = get_usuario(usuario_id)
+    for rol in usuario.roles:
+        if rol.nombre == rol_name:
+            return True
+        else:
+            return False
 
 
 def find_user_by_email(email):
@@ -274,13 +282,6 @@ def list_socios():
     socios = db.session.query(Socio, Usuario).filter_by(
         activo=True).outerjoin(Usuario, full=True).all()
     return socios
-
-
-def list_usuarios(page=1, per_page=10):
-    """
-    Lista los datos de los usuarios.
-    """
-    return Usuario.query.order_by(Usuario.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
 
 
 def find_socio_by_id_usuario(usuario_id):
