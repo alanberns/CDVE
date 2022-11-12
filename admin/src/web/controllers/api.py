@@ -50,9 +50,27 @@ def login():
 
 @api_blueprint.get("/me/payments")
 @token_required
-def list_payents(current_user):
+def list_payments(current_user):
     try:
         pagos = board.get_pagos_by_socio_id(current_user.socio[0].id)
     except KeyError:
         return jsonify({"message": "EL usuario actual no es un socio"}), 401
     return jsonify(payments=[pago.serialize for pago in pagos])
+
+
+# @api_blueprint.post("/me/payments")
+# @token_required
+# def pay(current_user):
+#     month = request.json[0]["month"]
+#     amount = request.json[0]["amount"]
+#     if not month or not amount:
+#         return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
+#     try:
+#         cuotas = board.get_cuotas_by_socio_id_and_nro_cuota(
+#             current_user.socio[0].id, month)
+#     except KeyError:
+#         return jsonify({"message": "EL usuario actual no es un socio"}), 401
+#     if not cuotas.valor_cuota == amount:
+#         return jsonify({"message": f"Para realizar el pago necesita un monto de cuotas.valor_cuota"}), 401
+#     pagos = board.generate_payment([cuotas.id])
+#     return jsonify(payments=[pago.serialize for pago in pagos])

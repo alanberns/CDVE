@@ -529,6 +529,18 @@ def get_cuotas_by_ids(cuota_ids):
     return Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
 
 
+def get_cuotas_by_socio_id_and_nro_cuota(socio_id, nro_cuota):
+    """
+    Retorna las cuotas para un socio dado su id
+    """
+    cuota = Cuota.query.join(Inscripcion.cuota).filter(
+        Inscripcion.socio_id == socio_id,
+    ).filter(
+        Cuota.nro_cuota == nro_cuota,
+    ).first()
+    return cuota
+
+
 def user_get_permisos(usuario_id):
     """
     Obtiene los permisos dada la id de un usuario
@@ -573,7 +585,7 @@ def pago_assign_cuotas(pago, cuotas):
 
 def create_pago(**kwargs):
     """
-    Crea un rol y lo agrega a la bd
+    Crea un pago
     """
     pago = Pago(**kwargs)
     record_update(pago)
@@ -616,7 +628,7 @@ def generate_payment(cuota_ids):
 
 def get_pagos_search_paginated(page, filter, search_text):
     """
-    Retorna los pagos de forma paginada, filtrados segun la busqueda que haya hecho el usuario 
+    Retorna los pagos de forma paginada, filtrados segun la busqueda que haya hecho el usuario
     en la vista de pagos
     """
     per_page = get_elements_per_page()
