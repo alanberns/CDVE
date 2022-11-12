@@ -62,13 +62,23 @@
         <tr>
           {% if rol in usuario.roles %}
             <th>{{rol.nombre}}</th>
-            <th><a href="{{ url_for('usuarios.quitar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
-              <button>Quitar rol</button></a>
+            <th>
+              <form action="{{url_for('usuarios.quitar_rol')}}" method="post">
+                {{ form.csrf_token }}
+                <input type="hidden" value="{{rol.id}}" name="rol_id">
+                <input type="hidden" value="{{usuario.id}}" name="usuario_id">
+                <button>Quitar rol</button>
+              </form>
             </th>
           {% else %}
             <th>{{rol.nombre}}</th>
-            <th><a href="{{url_for('usuarios.asignar_rol', rol_id=rol.id, usuario_id=usuario.id)}}" method="get">
-            <button>Asignar rol</button></a>
+            <th>
+              <form action="{{url_for('usuarios.asignar_rol')}}" method="post">
+                {{ form.csrf_token }}
+                <input type="hidden" value="{{rol.id}}" name="rol_id">
+                <input type="hidden" value="{{usuario.id}}" name="usuario_id">
+                <button>Asignar rol</button>
+              </form>
             </th>
           {% endif %}
         </tr>

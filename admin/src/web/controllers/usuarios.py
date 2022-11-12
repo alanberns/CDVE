@@ -36,7 +36,7 @@ def usuario_index():
     return render_template("usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form)
 
 
-@usuario_blueprint.get("/res")
+@usuario_blueprint.post("/buscar")
 @login_required
 @user_index_req
 def busqueda_filtrada():
@@ -44,27 +44,31 @@ def busqueda_filtrada():
     Filtrar usuarios por email y estado.
     """
     # Obtener email y estado para la busqueda
-    form = BusquedaUsuarioForm(request.args)
-    estado = form.estado.data
-    email = form.email.data
+    form = BusquedaUsuarioForm(request.form)
+    if form.validate:
+        estado = form.estado.data
+        email = form.email.data
 
-    # Paginación
-    elementos_pagina = board.get_elementos_pagina()
-    page = int(request.args.get('page', 1))
-    usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
+        # Paginación
+        elementos_pagina = board.get_elementos_pagina()
+        page = int(request.args.get('page', 1))
+        usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
 
-    estado_choices = {
-        "": "Todos",
-        "true": "Activo",
-        "false": "Inactivo",
-    }
-    estado_choice = estado_choices[estado]
+        estado_choices = {
+            "": "Todos",
+            "true": "Activo",
+            "false": "Inactivo",
+        }
+        estado_choice = estado_choices[estado]
 
-    return render_template("usuarios/usuariosFilter.html",
-                           usuarios_pag=usuarios_pag, email=email, estado=estado_choice)
+        return render_template("usuarios/usuariosFilter.html",
+                           usuarios_pag=usuarios_pag, email=email, estado=estado_choice, form=form)
+    else:
+        flash("No se pudo realizar la busqueda","danger")
+        return redirect(url_for('usuarios.usuario_index'))
 
 
-@usuario_blueprint.get("/add")
+@usuario_blueprint.get("/nuevo")
 @login_required
 @user_create_req
 def add_usuario_view():
@@ -75,7 +79,7 @@ def add_usuario_view():
     return render_template("usuarios/nuevoUsuario.html", form=form)
 
 
-@usuario_blueprint.post("/add")
+@usuario_blueprint.post("/nuevo")
 @login_required
 @user_create_req
 def add_usuario():
@@ -159,8 +163,7 @@ def update_usuario(id):
     flash("Se actualizaron los datos del usuario", "success")
     return redirect(url_for('usuarios.usuario_index'))
 
-
-@usuario_blueprint.get("/modifyActivo/<int:id>")
+@usuario_blueprint.post("/modifyActivo/<int:id>")
 @login_required
 @user_update_req
 def modify_activo(id):
@@ -170,12 +173,12 @@ def modify_activo(id):
     Si se inactiva a un usuario con perfil de socio, eliminar socio
     Si se activa a un usuario con perfil de socio, activar su perfil de socio
     """
-    # Chequear que el usuario no sea administrador
+        # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
     for rol in usuario.roles:
         if board.usuario_has_rol("Administrador",rol.id):
             flash("No se puede inactivar a un administrador", "danger")
-            return redirect(url_for('usuarios.usuario_index', id=id))
+            return redirect(url_for('usuarios.usuario_index'))
 
     # Chequear si: se inactiva, a un usuario socio, activo > inactivar socio
     if usuario.activo:
@@ -185,7 +188,7 @@ def modify_activo(id):
                 board.update_activo_usuario(id)
                 board.soft_delete_socio(query.id)
                 flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
-                return redirect(url_for('usuarios.usuario_index', id=id))
+                return redirect(url_for('usuarios.usuario_index'))
 
     # Chequear si: se activa a un usuario socio > activar socio
     if not usuario.activo:
@@ -198,16 +201,16 @@ def modify_activo(id):
                 }
                 board.update_socio(query.id, **kwargs)
                 flash("Se actualizo el estado del usuario, y el socio fue activado", "success")
-                return redirect(url_for('usuarios.usuario_index', id=id))
+                return redirect(url_for('usuarios.usuario_index'))
 
     
     # Cambiar estado usuario
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
-    return redirect(url_for('usuarios.usuario_index', id=id))
+    return redirect(url_for('usuarios.usuario_index'))
 
 
-@usuario_blueprint.get("/quitarRol")
+@usuario_blueprint.post("/quitarRol")
 @login_required
 @user_rol_update_req
 def quitar_rol():
@@ -215,8 +218,8 @@ def quitar_rol():
     Quitar un rol a un usuario. 
     Si se quita el rol de socio se debe eliminar al socio
     """
-    rol_id = request.args.get("rol_id")
-    usuario_id = request.args.get("usuario_id")
+    rol_id = request.form.get("rol_id")
+    usuario_id = request.form.get("usuario_id")
     board.quitar_rol(rol_id, usuario_id)
 
     # Chequear si el rol es Socio
@@ -233,7 +236,7 @@ def quitar_rol():
     return redirect(url_for('usuarios.view_usuario', id=usuario_id))
 
 
-@usuario_blueprint.get("/asignarRol")
+@usuario_blueprint.post("/asignarRol")
 @login_required
 @user_rol_update_req
 def asignar_rol():
@@ -242,8 +245,8 @@ def asignar_rol():
     Si el rol es 'Socio' se lo debe enviar a crear perfil de socio
     """
     # Asignar el rol
-    rol_id = request.args.get("rol_id")
-    usuario_id = request.args.get("usuario_id")
+    rol_id = request.form.get("rol_id")
+    usuario_id = request.form.get("usuario_id")
     board.asignar_rol(rol_id, usuario_id)
     flash("Se asignó el rol al usuario", "success")
 

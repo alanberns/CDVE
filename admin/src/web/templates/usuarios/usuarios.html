@@ -10,8 +10,8 @@
   <a href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
 
   <section id="borde_contenedor"><h6>Buscar por:</h6>
-    <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="get">
-      {{ form.csrf_token }} 
+    <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="post">
+      {{ form.csrf_token }} {{ form.hidden_tag() }}
       <div class="form-group">
         {{form.email.label(class="form=control-label")}}
         {{form.email(class="form-control form=control-lg")}}
@@ -48,13 +48,27 @@
         <th>{{ usuario.last_name }}</th>
         {% if usuario.activo %}
         <th>Si</th>
-        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Bloquear</button></a></th>
+        <th>
+          <form action="{{url_for('usuarios.modify_activo', id=usuario.id)}}" method="post">
+            {{ form.csrf_token }}
+            <button>Bloquear</button>
+          </form>
+        </th>
         {% endif %}
         {% if not usuario.activo %}
         <th>No</th>
-        <th><a href="{{url_for('usuarios.modify_activo', id=usuario.id)}}"><button>Activar</button></a></th>
+        <th>
+          <form action="{{url_for('usuarios.modify_activo', id=usuario.id)}}" method="post">
+            {{ form.csrf_token }}
+            <button>Activar</button>
+          </form>
+        </th>
         {% endif %}
-        <th><a href="{{ url_for('usuarios.view_usuario', id=usuario.id)}}"><button><i class="bi bi-plus-lg"></i></button></a></th>
+        <th>
+          <form action="{{url_for('usuarios.view_usuario', id=usuario.id)}}" method="get">
+            <button><i class="bi bi-plus-lg"></i></button>
+          </form>
+        </th>
       </tr>
       {% else %}
       <th>No hay resultados</th>
