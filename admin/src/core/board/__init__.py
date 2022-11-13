@@ -633,15 +633,7 @@ def get_pagos_search_paginated(page, filter, search_text):
     """
     per_page = get_elements_per_page()
     if filter == 1:
-        return (
-            Pago.query.join(Cuota.pago)
-            .join(Inscripcion)
-            .join(Socio)
-            .join(Usuario)
-            .filter(Usuario.last_name == search_text)
-            .distinct()
-            .paginate(page=page, per_page=per_page)
-        )
+        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).join(Usuario).filter(Usuario.last_name.ilike(f"{search_text}%")).distinct().paginate(page=page, per_page=per_page)
     elif filter == 0:
         return (
             Pago.query.join(Cuota.pago)
