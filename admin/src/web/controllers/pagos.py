@@ -22,9 +22,12 @@ pago_blueprint = Blueprint("pagos", __name__, url_prefix="/pagos")
 @pago_index_req
 def pagos_index():
     form = PagoSearchForm()
-    page = request.args.get("page", default=1, type=int)
+    page = request.args.get('page', default=1, type=int)
+    filter = request.args.get('filter', default=0, type=int)
+    error = request.args.get('error', type=int)
+    form.select_busqueda.data = filter
     pagos = board.list_pagos(page)
-    return render_template("pagos/pagos.html", pagos=pagos, form=form)
+    return render_template("pagos/pagos.html", pagos=pagos, form=form, error=error)
 
 
 @pago_blueprint.post("/searching")
@@ -46,10 +49,8 @@ def pagos_searching():
         try:
             int(busqueda)
         except ValueError:
-            abort(400)
-    return redirect(
-        url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda)
-    )
+            return redirect(url_for("pagos.pagos_index", filtro=filtro, error=1))
+    return redirect(url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda))
 
 
 @pago_blueprint.get("/search")
