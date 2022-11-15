@@ -17,12 +17,14 @@ from src.web.controllers.perfil import perfil_blueprint
 from src.web.controllers.disciplinas import disciplina_blueprint
 from src.web.controllers.api import api_blueprint
 from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 from src.web.helpers.auth import login_required
 
 
 def create_app(env="development", static_folder="static"):
     app = Flask(__name__, static_folder=static_folder)
     app.config.from_object(config[env])
+    CORS(app)
     csrf = CSRFProtect()
     csrf.init_app(app)
     csrf.exempt(api_blueprint)
