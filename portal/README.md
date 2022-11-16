@@ -1,4 +1,4 @@
-# public
+# portal
 
 ## Project setup
 ```
