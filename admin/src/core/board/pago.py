@@ -10,6 +10,16 @@ class Pago(db.Model):
     cuotas = db.relationship(
         "Cuota", secondary="cuotas_pagos", back_populates="pago")
 
+    @property
+    def serialize(self):
+        """Devuelve instancias de Pago en formato json"""
+        return {
+            "id": self.id,
+            "fecha": self.fecha,
+            "monto": self.monto,
+            "cuotas": [cuota.nro_cuota for cuota in self.cuotas]
+        }
+
 
 cuotas_pagos = db.Table(
     "cuotas_pagos",

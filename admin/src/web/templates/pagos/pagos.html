@@ -13,6 +13,11 @@
 
 <div class="container">
   <h2>Pagos</h2>
+  {% if error and error == 1 %}
+  <p class="fs-6 text-danger">
+    Por favor asegurese de introducir un numero de socio valido
+  </p>
+  {%endif%}
   <form method="POST" action="{{ url_for('pagos.pagos_searching') }}">
     {{ form.csrf_token }} {{ form.hidden_tag() }}
     <fieldset class="form-group">
