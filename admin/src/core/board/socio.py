@@ -15,11 +15,11 @@ class Socio(db.Model):
     direccion = db.Column(db.String(255), nullable=False)
     telefono = db.Column(db.Integer(), nullable=False)
     activo = db.Column(db.Boolean, default=True)
-    disciplina = db.relationship(
-        'Inscripcion', back_populates='socio')
+    disciplina = db.relationship("Inscripcion", back_populates="socio")
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.now(),
-                           onupdate=datetime.now, nullable=False)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.now(), onupdate=datetime.now, nullable=False
+    )
 
     def __init__(
         self,

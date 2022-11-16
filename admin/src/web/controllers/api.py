@@ -74,3 +74,20 @@ def list_payments(current_user):
 #         return jsonify({"message": f"Para realizar el pago necesita un monto de cuotas.valor_cuota"}), 401
 #     pagos = board.generate_payment([cuotas.id])
 #     return jsonify(payments=[pago.serialize for pago in pagos])
+
+@api_blueprint.get("/club/disciplines")
+def get_disciplines():
+    disciplines = board.list_disciplinas()
+    disciplinas = []
+    for discipline in disciplines:
+        disc = {
+            "nombre": discipline.nombre,
+            "categoria": discipline.categoria,
+            "entrenador": discipline.entrenador,
+            "dia": discipline.dia,
+            "hora": discipline.hora,
+            "costo_mensual": discipline.costo_mensual,
+        }
+        disciplinas.append(disc)
+    disciplinas = jsonify(disciplinas)
+    return disciplinas

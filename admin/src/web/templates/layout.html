@@ -17,9 +17,11 @@
           {%endif%}
 
           <a class="nav-link" href="{{ url_for('disciplinas.disciplina_index') }}">Disciplinas</a>
-          <a class="nav-link" href="{{ url_for('socios.socios_index') }}"
-            >Socios</a
-          >
+          
+          {%if has_permission("socio_index",session)%}
+          <a class="nav-link" href="{{ url_for('socios.socios_index') }}">Socios</a>
+          {%endif%}
+
           {%if has_permission("pago_index",session)%}
           <a class="nav-link" href="{{ url_for('pagos.pagos_index') }}"
             >Pagos</a

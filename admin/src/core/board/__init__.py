@@ -22,7 +22,13 @@ def list_usuarios(page=1, per_page=10):
     """
     Lista los datos de los usuarios.
     """
+<<<<<<< HEAD
     return Usuario.query.order_by(Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
+=======
+    return Usuario.query.order_by(Usuario.id.asc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+>>>>>>> development
 
 
 def create_usuario(**kwargs):
@@ -48,7 +54,7 @@ def update_usuario(**kwargs):
     """
     Actualiza la informacion del usuario
     """
-    usuario = get_usuario(kwargs['id'])
+    usuario = get_usuario(kwargs["id"])
     usuario.update(**kwargs)
     db.session.commit()
 
@@ -59,8 +65,8 @@ def update_password(**kwargs):
     """
     Actualizar contraseña
     """
-    usuario = get_usuario(kwargs['id'])
-    usuario.update_password(kwargs['password'])
+    usuario = get_usuario(kwargs["id"])
+    usuario.update_password(kwargs["password"])
     db.session.commit()
     return usuario
 
@@ -96,6 +102,7 @@ def filter_usuarios(email, activo, page=1, per_page=10):
     Filtra a usuarios por email y estado. Si el email ingresado es vacio y el estado que se pide es ambos
     no se incluye en el filtrado.
     """
+<<<<<<< HEAD
     if (email == ""):
         if (activo == ""):
             usuarios = Usuario.query.order_by(Usuario.last_name.asc()).paginate(
@@ -110,6 +117,32 @@ def filter_usuarios(email, activo, page=1, per_page=10):
         else:
             usuarios = Usuario.query.filter(Usuario.email.like(email +"%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
+=======
+    if email == "":
+        if activo == "":
+            usuarios = Usuario.query.order_by(Usuario.id.asc()).paginate(
+                page=page, per_page=per_page, error_out=False
+            )
+        else:
+            usuarios = (
+                Usuario.query.filter_by(activo=activo)
+                .order_by(Usuario.id.asc())
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+    else:
+        if activo != "":
+            usuarios = (
+                Usuario.query.filter_by(activo=activo, email=email)
+                .order_by(Usuario.id.asc())
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        else:
+            usuarios = (
+                Usuario.query.filter_by(email=email)
+                .order_by(Usuario.id.asc())
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+>>>>>>> development
     return usuarios
 
 
@@ -118,7 +151,8 @@ def quitar_rol(rol_id, usuario_id):
     Elimina una tupla de 'usuario_tiene_rol', quita un rol a un usuario
     """
     usuario_tiene_rol = Usuario_tiene_rol.query.filter_by(
-        usuario_id=usuario_id, rol_id=rol_id).first()
+        usuario_id=usuario_id, rol_id=rol_id
+    ).first()
     db.session.delete(usuario_tiene_rol)
     db.session.commit()
 
@@ -183,9 +217,12 @@ def list_disciplinas():
 
 
 def list_disciplinas_not_socio(socio_id):
-    disciplinas_inscripto = db.session.query(
-        Inscripcion.disciplina_id).filter(Inscripcion.socio_id == socio_id)
-    return Disciplina.query.filter(~Disciplina.id.in_(disciplinas_inscripto), Disciplina.estado == "Activo").all()
+    disciplinas_inscripto = db.session.query(Inscripcion.disciplina_id).filter(
+        Inscripcion.socio_id == socio_id
+    )
+    return Disciplina.query.filter(
+        ~Disciplina.id.in_(disciplinas_inscripto), Disciplina.estado == "Activo"
+    ).all()
 
 
 def find_disciplina_by_id(disciplina_id):
@@ -195,7 +232,7 @@ def find_disciplina_by_id(disciplina_id):
 
 def delete_disciplina(id):
     disciplina = Disciplina.query.get(id)
-    disciplina.estado = "Inactivo",
+    disciplina.estado = ("Inactivo",)
     db.session.commit()
 
 
@@ -279,26 +316,58 @@ def list_socios():
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(
-        activo=True).outerjoin(Usuario, full=True).all()
+    socios = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True)
+        .outerjoin(Usuario, full=True)
+        .all()
+    )
     return socios
 
 
+<<<<<<< HEAD
+=======
+def list_usuarios(page=1, per_page=10):
+    """
+    Lista los datos de los usuarios.
+    """
+    return Usuario.query.order_by(Usuario.id.asc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+
+
+>>>>>>> development
 def find_socio_by_id_usuario(usuario_id):
     """
     Devuelve un socio por el id de usuario
     """
+<<<<<<< HEAD
     socio = db.session.query(Socio, Usuario).outerjoin(
         Usuario, full=True).filter_by(id=usuario_id).first()
     return socio[0]
+=======
+    socio = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True)
+        .outerjoin(Usuario, full=True)
+        .filter_by(id=usuario_id)
+        .first()
+    )
+    return socio
+>>>>>>> development
 
 
 def list_socios_join_users(page=1, per_page=10):
     """
     Devuelve la lista de socios activos (sin borrado lógico)
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(
-        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True)
+        .outerjoin(Usuario, full=True)
+        .order_by(Usuario.last_name)
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
     return socios
 
 
@@ -306,8 +375,13 @@ def list_socios_habilitado(habilitado, page=1, per_page=10):
     """
     Devuelve la lista de socios activos habilitados o deshabilitados
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
-        Usuario, full=True).paginate(page=page, per_page=per_page, error_out=False)
+    socios = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True, habilitado=habilitado)
+        .outerjoin(Usuario, full=True)
+        .order_by(Usuario.last_name)
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
     return socios
 
 
@@ -315,17 +389,29 @@ def find_socio_by_apellido(last_name, page=1, per_page=10):
     """
     Devuelve los socios activos dado un apellido
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True).outerjoin(Usuario, full=True).filter_by(
-        last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True)
+        .outerjoin(Usuario, full=True)
+        .filter(Usuario.last_name.ilike(f"{last_name}%"))
+        .order_by(Usuario.last_name)
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
     return socios
 
-
+    
 def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
     """
     Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
     """
-    socios = db.session.query(Socio, Usuario).filter_by(activo=True, habilitado=habilitado).outerjoin(
-        Usuario, full=True).filter_by(last_name=last_name).paginate(page=page, per_page=per_page, error_out=False)
+    socios = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True, habilitado=habilitado)
+        .outerjoin(Usuario, full=True)
+        .filter(Usuario.last_name.ilike(f"{last_name}%"))
+        .order_by(Usuario.last_name)
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
     return socios
 
 
@@ -341,8 +427,12 @@ def find_socio_join_usuario_by_id(socio_id):
     """
     Devuelve la información de un socio junto con su información de usuario.
     """
-    socio = db.session.query(Socio, Usuario).filter_by(
-        activo=True, id=socio_id).outerjoin(Usuario, full=True).first()
+    socio = (
+        db.session.query(Socio, Usuario)
+        .filter_by(activo=True, id=socio_id)
+        .outerjoin(Usuario, full=True)
+        .first()
+    )
     return socio
 
 
@@ -350,14 +440,22 @@ def exist_socio_documento(documento):
     """
     Verifica que el documento dado está disponible y no le pertenece a otro socio activo
     """
-    return Socio.query.filter(Socio.numero_documento == documento, Socio.activo == True).first() == None
+    return (
+        Socio.query.filter(
+            Socio.numero_documento == documento, Socio.activo == True
+        ).first()
+        == None
+    )
 
 
 def exist_socio_documento_id(documento, id):
     """
     Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
     """
-    return Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first() == None
+    return (
+        Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first()
+        == None
+    )
 
 
 def update_socio(socio_id, **kwargs):
@@ -440,7 +538,8 @@ def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     Retorna una inscripcion, dado un socio y una disciplina
     """
     inscripcion = Inscripcion.query.filter_by(
-        socio_id=socio.id, disciplina_id=disciplina.id).first()
+        socio_id=socio.id, disciplina_id=disciplina.id
+    ).first()
     return inscripcion
 
 
@@ -547,8 +646,11 @@ def set_nro_cuota_by_inscripcion(inscripcion_id):
     """
     Setea los numeros de cuota para cuotas, que no tienen numero
     """
-    cuotas = Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=None).order_by(
-        Cuota.fecha_vencimiento.asc()).all()
+    cuotas = (
+        Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=None)
+        .order_by(Cuota.fecha_vencimiento.asc())
+        .all()
+    )
     for count, cuota in enumerate(cuotas, start=1):
         cuota.nro_cuota = count
         record_update(cuota)
@@ -569,10 +671,7 @@ def generate_payment(cuota_ids):
     time_stamp = datetime.now()
     cuotas = pay_cuotas_by_ids(cuota_ids)
     monto = sum(cuota.valor_cuota for cuota in cuotas)
-    pago = create_pago(
-        fecha=time_stamp,
-        monto=monto
-    )
+    pago = create_pago(fecha=time_stamp, monto=monto)
     pago_assign_cuotas(pago, cuotas)
     return pago
 
@@ -586,7 +685,14 @@ def get_pagos_search_paginated(page, filter, search_text):
     if filter == 1:
         return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).join(Usuario).filter(Usuario.last_name.ilike(f"{search_text}%")).distinct().paginate(page=page, per_page=per_page)
     elif filter == 0:
-        return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == search_text).distinct().paginate(page=page, per_page=per_page)
+        return (
+            Pago.query.join(Cuota.pago)
+            .join(Inscripcion)
+            .join(Socio)
+            .filter(Socio.id == search_text)
+            .distinct()
+            .paginate(page=page, per_page=per_page)
+        )
 
 
 def create_cuotas_by_inscripcion(socio, disciplina):
@@ -603,7 +709,7 @@ def create_cuotas_by_inscripcion(socio, disciplina):
             estado_pago=0,
             fecha_vencimiento=fecha,
             valor_cuota=valor_base + disciplina.costo_mensual,
-            activo=True
+            activo=True,
         )
         cuotas.append(cuota)
     inscripion_assign_cuotas(socio, disciplina, cuotas)
@@ -616,8 +722,8 @@ def update_valor_cuotas(new_value_cuota):
     """
     fecha_actual = datetime.now()
     cuotas = Cuota.query.filter(
-        Cuota.estado_pago == False,
-        Cuota.fecha_vencimiento > fecha_actual).all()
+        Cuota.estado_pago == False, Cuota.fecha_vencimiento > fecha_actual
+    ).all()
     for cuota in cuotas:
         cuota.valor_cuota = new_value_cuota + cuota.inscripcion.disciplina.costo_mensual
         record_update(cuota)

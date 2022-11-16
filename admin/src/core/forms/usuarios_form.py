@@ -1,29 +1,38 @@
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField, SelectField
-from wtforms.validators import ValidationError, DataRequired, \
-    Email, Length, NumberRange, EqualTo
+from wtforms import (
+    StringField,
+    PasswordField,
+    SubmitField,
+    EmailField,
+    IntegerField,
+    SelectField,
+)
+from wtforms.validators import (
+    ValidationError,
+    DataRequired,
+    Email,
+    Length,
+    NumberRange,
+    EqualTo,
+)
 
 
 class UsuarioNuevoForm(FlaskForm):
-    email = EmailField(label=('Email'), validators=[DataRequired()])
+    email = EmailField(label=("Email"), validators=[DataRequired()])
     username = StringField(
-        label=('Nombre de usuario'),
-        validators=[DataRequired(),
-                    Length(min=3,max=255)])
+        label=("Nombre de usuario"), validators=[DataRequired(), Length(min=3, max=255)]
+    )
     password = PasswordField(
-        label=('Contraseña'),
-        validators=[DataRequired(),
-                    Length(min=5, max=50)])
+        label=("Contraseña"), validators=[DataRequired(), Length(min=5, max=50)]
+    )
     first_name = StringField(
-        label=('Nombre'),
-        validators=[DataRequired(),
-                    Length(min=3,max=255)])
+        label=("Nombre"), validators=[DataRequired(), Length(min=3, max=255)]
+    )
     last_name = StringField(
-        label=('Apellido'),
-        validators=[DataRequired(),
-                    Length(min=3,max=255)])
-    enviar = SubmitField(label=('Enviar'))
+        label=("Apellido"), validators=[DataRequired(), Length(min=3, max=255)]
+    )
+    enviar = SubmitField(label=("Enviar"))
 
     """
     Validacion personalizada
@@ -37,20 +46,17 @@ class UsuarioNuevoForm(FlaskForm):
 
 
 class ModificarUsuarioForm(FlaskForm):
-    email = EmailField(label=('Email'), validators=[DataRequired()])
+    email = EmailField(label=("Email"), validators=[DataRequired()])
     username = StringField(
-        label=('Nombre de usuario'),
-        validators=[DataRequired(),
-                    Length(min=3,max=255)])
+        label=("Nombre de usuario"), validators=[DataRequired(), Length(min=3, max=255)]
+    )
     first_name = StringField(
-        label=('Nombre'),
-        validators=[DataRequired(),
-                    Length(min=3,max=255)])
+        label=("Nombre"), validators=[DataRequired(), Length(min=3, max=255)]
+    )
     last_name = StringField(
-        label=('Apellido'),
-        validators=[DataRequired(),
-                    Length(min=3,max=255)])
-    modificar = SubmitField(label=('Modificar'))
+        label=("Apellido"), validators=[DataRequired(), Length(min=3, max=255)]
+    )
+    modificar = SubmitField(label=("Modificar"))
 
     def set_from_usuarios(self, usuario):
         self.email.data = usuario.email
@@ -61,25 +67,32 @@ class ModificarUsuarioForm(FlaskForm):
 
 class CambiarClaveForm(FlaskForm):
     password_ant = PasswordField(
-        label=('Ingrese su clave actual'),
-        validators=[DataRequired(),
-                    Length(min=5, max=50)])
+        label=("Ingrese su clave actual"),
+        validators=[DataRequired(), Length(min=5, max=50)],
+    )
     password_nueva = PasswordField(
-        label=('Ingrese la clave nueva'),
-        validators=[DataRequired(),
-                    EqualTo('password_repetir'),
-                    Length(min=5, max=50)])
+        label=("Ingrese la clave nueva"),
+        validators=[DataRequired(), EqualTo("password_repetir"), Length(min=5, max=50)],
+    )
     password_repetir = PasswordField(
-        label=('Repita la clave nueva'),
-        validators=[DataRequired(),
-                    Length(min=5, max=50),
-                    EqualTo('password_nueva')])
+        label=("Repita la clave nueva"),
+        validators=[DataRequired(), Length(min=5, max=50), EqualTo("password_nueva")],
+    )
     cambiar = SubmitField(label=("Cambiar"))
 
 
 class BusquedaUsuarioForm(FlaskForm):
+<<<<<<< HEAD
     email = StringField(label=('Email'), validators=[])
     estado = SelectField(label=("Estado"),
         choices=(("", "Todos"), ("true", "Activo"), ("false", "Inactivo")), coerce=str, validators=[])
+=======
+    email = EmailField(label=("Email"), validators=[])
+    estado = SelectField(
+        label=("Estado"),
+        choices=(("", "Todos"), ("true", "Activo"), ("false", "Inactivo")),
+        coerce=str,
+        validators=[],
+    )
+>>>>>>> development
     buscar = SubmitField(label=("Buscar"))
-    

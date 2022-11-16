@@ -14,8 +14,7 @@ from src.core.forms.usuarios_form import ModificarUsuarioForm
 from src.core.forms.usuarios_form import CambiarClaveForm
 
 
-perfil_blueprint = Blueprint(
-    "perfil", __name__, url_prefix="/MiPerfil")
+perfil_blueprint = Blueprint("perfil", __name__, url_prefix="/MiPerfil")
 
 
 @perfil_blueprint.get("/")
@@ -30,6 +29,7 @@ def show_perfil():
     form.set_from_usuarios(usuario)
     return render_template("perfil/perfil.html", form=form, usuario=usuario)
 
+
 @perfil_blueprint.post("/")
 @login_required
 def modify_perfil():
@@ -42,22 +42,22 @@ def modify_perfil():
 
     if not form.validate:
         flash("No se pudo modificar los datos", "danger")
-        return redirect(url_for('perfil.show_perfil'))
+        return redirect(url_for("perfil.show_perfil"))
 
     # Comprobar si se modificó el email
-    if (form.email.data != usuario.email):
+    if form.email.data != usuario.email:
         # Si se modificó, comprobar que el nuevo email no esté en uso
-        if (board.exist_email(form.email.data)):
+        if board.exist_email(form.email.data):
             flash("el email ingresado ya esta registrado", "danger")
-            return redirect(url_for('perfil.show_perfil'))
+            return redirect(url_for("perfil.show_perfil"))
 
     # Comprobar si se modificó el username
-    if (form.username.data != usuario.username):
+    if form.username.data != usuario.username:
         # Si se modificó, comprobar que el nuevo username no esté en uso
-        if (board.exist_username(form.username.data)):
+        if board.exist_username(form.username.data):
             flash("el username ingresado ya está registrado", "danger")
-            return redirect(url_for('perfil.show_perfil'))
-    
+            return redirect(url_for("perfil.show_perfil"))
+
     kwargs = {
         "id": usuario.id,
         "email": form.email.data,
@@ -68,7 +68,8 @@ def modify_perfil():
     }
     board.update_usuario(**kwargs)
     flash("Se actualizaron los datos del perfil", "success")
-    return redirect(url_for('perfil.show_perfil'))
+    return redirect(url_for("perfil.show_perfil"))
+
 
 @perfil_blueprint.get("/CambiarClave")
 @login_required
@@ -78,6 +79,7 @@ def change_password_view():
     """
     form = CambiarClaveForm()
     return render_template("perfil/CambiarClave.html", form=form)
+
 
 @perfil_blueprint.post("/CambiarClave")
 @login_required
@@ -94,12 +96,12 @@ def change_password():
     usuario = board.find_user_by_email(usuario_email)
     if not usuario.verify_password(form.password_ant.data):
         flash("Contraseña incorrecta", "danger")
-        return (redirect(url_for('perfil.change_password_view')))
+        return redirect(url_for("perfil.change_password_view"))
 
     # Contraseñas deben coincidir. No funciona EqualTo
     if not form.password_nueva == form.password_repetir:
         flash("Las contraseñas deben coincidir", "danger")
-        return (redirect(url_for('perfil.change_password_view')))
+        return redirect(url_for("perfil.change_password_view"))
 
     # modificar la contraseña
     kwargs = {
@@ -108,4 +110,4 @@ def change_password():
     }
     board.update_password(**kwargs)
     flash("Se cambió su contraseña", "success")
-    return (redirect(url_for('perfil.change_password_view')))
+    return redirect(url_for("perfil.change_password_view"))

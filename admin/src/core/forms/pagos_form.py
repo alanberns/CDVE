@@ -23,7 +23,7 @@ class PagoForm(FlaskForm):
 
 class EditForm(FlaskForm):
     items = FieldList(FormField(PagoForm))
-    pagar = SubmitField(label=('Realizar Pago'))
+    pagar = SubmitField(label=("Realizar Pago"))
 
 
 class PagoSearchForm(FlaskForm):

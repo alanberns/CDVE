@@ -39,7 +39,7 @@ def create_app(env="development", static_folder="static"):
     @app.get("/home")
     @login_required
     def home():
-        return render_template('home.html')
+        return render_template("home.html")
 
     app.register_blueprint(usuario_blueprint)
     app.register_blueprint(configuracion_blueprint)

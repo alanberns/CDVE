@@ -9,9 +9,7 @@ class Inscripcion(db.Model):
 
     disciplina_id = db.Column(db.ForeignKey("disciplinas.id"))
 
-    socio = db.relationship(
-        "Socio", back_populates="disciplina")
-    disciplina = db.relationship(
-        "Disciplina", back_populates="socio")
-    cuota = db.relationship('Cuota', back_populates="inscripcion")
+    socio = db.relationship("Socio", back_populates="disciplina")
+    disciplina = db.relationship("Disciplina", back_populates="socio")
+    cuota = db.relationship("Cuota", back_populates="inscripcion")
     tiene_deuda = db.Column(db.Boolean, default=False)

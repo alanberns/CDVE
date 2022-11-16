@@ -6,8 +6,10 @@ Inicializacion de la BD
 db = SQLAlchemy()
 
 "Enlazar la app Flask con la base datos que acabamos de crear"
+
+
 def init_app(app):
-    
+
     db.init_app(app)
     config_db(app)
 
