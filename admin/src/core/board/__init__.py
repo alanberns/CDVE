@@ -3,21 +3,45 @@ from src.core.board.disciplina import Disciplina
 #from src.core.board.issue  import Issues
 from src.core.board.database import db
 
-def list_disciplinas():
-    return Disciplina.query.all()
+
+#Lista todas las disciplinas
+def list_disciplinas(page=1, per_page=10):
+    return Disciplina.query.order_by(Disciplina.id.asc()).paginate(page=page,per_page=per_page,error_out=False)
 
 
+# Crea una nueva disciplina
 def create_disciplina(**kwargs):
    disciplina = Disciplina(**kwargs)
    db.session.add(disciplina)
    db.session.commit()
 
-#parte nueva 
+@classmethod
+def get_disciplinas(self):
+    disciplinas = Disciplina.query.all()
+    for row in disciplinas:
+      disciplina=Disciplina(row[1], row[2], row[3])
+      disciplinas.append(disciplina)
+    return disciplinas
 
-def delete_disciplina(id):
-   disciplina = Disciplina.query.get(id)
-   disciplina.estado = "Inactivo",
-   db.session.commit()
 
+
+# Busca una disciplina por su ID y la devuelve
+def get_disciplina(id):
+   disciplina = Disciplina.query.filter(Disciplina.id == id).first()
+   return disciplina
+
+#Cambia es estado de una disciplina
+def update_estado_disciplina(id):
+  disciplina = get_disciplina(id)
+  disciplina.estado = not (disciplina.estado)
+  db.session.commit()
+  return disciplina
+
+#Cantidad de elementos de pagina, establecidos en configuracion
+def get_elementos_pagina():
+  #configuracion = Configuracion.query.first()
+  #return configuracion.elementos_pagina
+  elementos_pagina = 4
+  return elementos_pagina
   
-
+  

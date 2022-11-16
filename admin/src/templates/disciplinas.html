@@ -49,20 +49,20 @@
          <h3> Disciplinas </h3> 
          <table class="table table-striped">
             <thead>
-               <tr>
+               <tr class="table-dark">
                   <th>Nombre</th>
                   <th>Categoria</th>
                   <th>Instructor</th>
                   <th>Dia</th>
                   <th>Hora</th>
                   <th>Precio </th>
-                  <th>Estado</th>
+                  <th>Activa</th>
                   <th>Editar</th>
-                  <th>Eliminar</th>
+                  <th>Estado</th>
                 </tr>
                </thead>
                <tbody>
-                    {% for disciplina in disciplinas %}
+                    {% for disciplina in disciplinas_pag.items %}
                      <tr>
                         <th>{{disciplina.nombre}}</th>
                         <th>{{disciplina.categoria}}</th>
@@ -73,11 +73,8 @@
                         <th>{{disciplina.estado}}</th>
                         <td width="130">
                           <button class="btn btn-primary">Editar</button>
-                        </td>
-                        <td width="130">
-                           <button type="button" class="btn btn-success" data-toggle="modal"
-                            data-target="#update_disciplina{{disciplina['id']}}">Eliminar</button>
-                         </td>  
+                          <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button>Cambiar</button></a></th>
+                        </td> 
                       </tr>
                     {% endfor %} 
                     </tbody>          
@@ -85,7 +82,16 @@
                </table>
                 <button class="btn btn-primary">Exportar PDF </button>
                <button class="btn btn-primary">Exportar.CV</button>
-         </div>
+               <div class=pagination>
+                  {% for page in disciplinas_pag.iter_pages() %} 
+                      {% if page %}  
+                        {% if page != disciplinas_pag.page %} 
+                          <a href="{{ url_for('disciplinas.disciplina_index',page=page) }}"><button class="btn btn-secondary">{{ page }}</button></a>
+                        {% endif %} 
+                      {% endif %} 
+                  {% endfor %} 
+               </div>
+          </div>
       </div>
      </div>  
 </body>
