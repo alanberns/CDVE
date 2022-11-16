@@ -112,5 +112,6 @@ flask_session
 .vim
 coc-settings.json
 .vscode
+package-lock.json
 
 
