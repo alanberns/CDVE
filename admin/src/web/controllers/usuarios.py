@@ -55,7 +55,6 @@ def busqueda_filtrada():
         estado = form.estado.data
         email = form.email.data
 
-<<<<<<< HEAD
         # Paginación
         elementos_pagina = board.get_elementos_pagina()
         page = int(request.args.get('page', 1))
@@ -73,19 +72,6 @@ def busqueda_filtrada():
     else:
         flash("No se pudo realizar la busqueda","danger")
         return redirect(url_for('usuarios.usuario_index'))
-=======
-    # Paginación
-    elementos_pagina = board.get_elementos_pagina()
-    page = int(request.args.get("page", 1))
-    usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
-
-    return render_template(
-        "usuarios/usuariosFilter.html",
-        usuarios_pag=usuarios_pag,
-        email=email,
-        activo=request.args.get("estado"),
-    )
->>>>>>> development
 
 
 @usuario_blueprint.get("/nuevo")
@@ -197,19 +183,9 @@ def modify_activo(id):
     """
     # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
-<<<<<<< HEAD
     if board.usuario_has_rol("Administrador",usuario.id):
         flash("No se puede inactivar a un administrador", "danger")
         return redirect(url_for('usuarios.usuario_index'))
-=======
-    roles = board.get_roles()
-    for rol in roles:
-        if rol.nombre == "Administrador":
-            rol_administrador = rol
-    if rol_administrador in usuario.roles:
-        flash("No se puede inactivar a un administrador", "danger")
-        return redirect(url_for("usuarios.usuario_index", id=id))
->>>>>>> development
 
     # Chequear si se inactiva, a un usuario socio activo > inactivar socio
     if usuario.activo:
@@ -217,7 +193,6 @@ def modify_activo(id):
         if socio:
             if socio.activo:
                 board.update_activo_usuario(id)
-<<<<<<< HEAD
                 board.soft_delete_socio(socio.id)
                 flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
                 return redirect(url_for('usuarios.usuario_index'))
@@ -240,19 +215,6 @@ def modify_activo(id):
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
     return redirect(url_for('usuarios.usuario_index'))
-=======
-                board.soft_delete_socio(query[0].id)
-                flash(
-                    "Se actualizo el estado del usuario, y el socio fue eliminado",
-                    "success",
-                )
-                return redirect(url_for("usuarios.usuario_index", id=id))
-
-    # Cambiar estado usuario
-    board.update_activo_usuario(id)
-    flash("Se actualizo el estado del usuario", "success")
-    return redirect(url_for("usuarios.usuario_index", id=id))
->>>>>>> development
 
 
 @usuario_blueprint.post("/quitarRol")
@@ -268,7 +230,6 @@ def quitar_rol():
     board.quitar_rol(rol_id, usuario_id)
 
     # Chequear si el rol es Socio
-<<<<<<< HEAD
     rol_socio = board.get_rol_socio()
     if rol_socio.id == int(rol_id):
         # Si el usuario tiene perfil de socio y es un socio activo, borrarlo
@@ -278,22 +239,6 @@ def quitar_rol():
                 board.soft_delete_socio(socio.id)
                 flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
                 return redirect(url_for('usuarios.view_usuario',id=usuario_id))
-=======
-    roles = board.get_roles()
-    for rol in roles:
-        if rol.id == int(rol_id):
-            if rol.nombre == "Socio":
-                # Si el usuario tiene perfil de socio y es un socio activo
-                query = board.find_socio_by_id_usuario(usuario_id)
-                if query:
-                    if query[0].activo:
-                        board.soft_delete_socio(query[0].id)
-                        flash(
-                            "Se quitó el rol exitosamente, y el socio fue eliminado",
-                            "success",
-                        )
-                        return redirect(url_for("usuarios.view_usuario", id=usuario_id))
->>>>>>> development
 
     flash("Se quitó el rol exitosamente", "success")
     return redirect(url_for("usuarios.view_usuario", id=usuario_id))
@@ -311,7 +256,6 @@ def asignar_rol():
     usuario_id = request.form.get("usuario_id")
 
     # Chequear si el rol es Socio
-<<<<<<< HEAD
     rol_socio = board.get_rol_socio()
     if rol_socio.id == int(rol_id):
         # Si tiene perfil de socio, se le activa el perfil
@@ -330,11 +274,3 @@ def asignar_rol():
     board.asignar_rol(rol_id, usuario_id)
     flash("Se asignó el rol al usuario", "success")
     return redirect(url_for('usuarios.view_usuario',id=usuario_id))
-=======
-    roles = board.get_roles()
-    for rol in roles:
-        if rol.id == int(rol_id):
-            if rol.nombre == "Socio":
-                return redirect(url_for("socios.add_socio", usuario_id=usuario_id))
-    return redirect(url_for("usuarios.view_usuario", id=usuario_id))
->>>>>>> development

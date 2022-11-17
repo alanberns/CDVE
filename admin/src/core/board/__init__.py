@@ -22,13 +22,7 @@ def list_usuarios(page=1, per_page=10):
     """
     Lista los datos de los usuarios.
     """
-<<<<<<< HEAD
     return Usuario.query.order_by(Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
-=======
-    return Usuario.query.order_by(Usuario.id.asc()).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
->>>>>>> development
 
 
 def create_usuario(**kwargs):
@@ -102,7 +96,6 @@ def filter_usuarios(email, activo, page=1, per_page=10):
     Filtra a usuarios por email y estado. Si el email ingresado es vacio y el estado que se pide es ambos
     no se incluye en el filtrado.
     """
-<<<<<<< HEAD
     if (email == ""):
         if (activo == ""):
             usuarios = Usuario.query.order_by(Usuario.last_name.asc()).paginate(
@@ -112,37 +105,11 @@ def filter_usuarios(email, activo, page=1, per_page=10):
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     else:
         if (activo != ""):
-            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.like(email +"%")).order_by(
+            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.ilike(email +"%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
         else:
-            usuarios = Usuario.query.filter(Usuario.email.like(email +"%")).order_by(
+            usuarios = Usuario.query.filter(Usuario.email.ilike(email +"%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
-=======
-    if email == "":
-        if activo == "":
-            usuarios = Usuario.query.order_by(Usuario.id.asc()).paginate(
-                page=page, per_page=per_page, error_out=False
-            )
-        else:
-            usuarios = (
-                Usuario.query.filter_by(activo=activo)
-                .order_by(Usuario.id.asc())
-                .paginate(page=page, per_page=per_page, error_out=False)
-            )
-    else:
-        if activo != "":
-            usuarios = (
-                Usuario.query.filter_by(activo=activo, email=email)
-                .order_by(Usuario.id.asc())
-                .paginate(page=page, per_page=per_page, error_out=False)
-            )
-        else:
-            usuarios = (
-                Usuario.query.filter_by(email=email)
-                .order_by(Usuario.id.asc())
-                .paginate(page=page, per_page=per_page, error_out=False)
-            )
->>>>>>> development
     return usuarios
 
 
@@ -325,36 +292,13 @@ def list_socios():
     return socios
 
 
-<<<<<<< HEAD
-=======
-def list_usuarios(page=1, per_page=10):
-    """
-    Lista los datos de los usuarios.
-    """
-    return Usuario.query.order_by(Usuario.id.asc()).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
-
-
->>>>>>> development
 def find_socio_by_id_usuario(usuario_id):
     """
     Devuelve un socio por el id de usuario
     """
-<<<<<<< HEAD
     socio = db.session.query(Socio, Usuario).outerjoin(
         Usuario, full=True).filter_by(id=usuario_id).first()
     return socio[0]
-=======
-    socio = (
-        db.session.query(Socio, Usuario)
-        .filter_by(activo=True)
-        .outerjoin(Usuario, full=True)
-        .filter_by(id=usuario_id)
-        .first()
-    )
-    return socio
->>>>>>> development
 
 
 def list_socios_join_users(page=1, per_page=10):

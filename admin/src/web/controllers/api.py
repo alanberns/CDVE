@@ -81,13 +81,34 @@ def get_disciplines():
     disciplinas = []
     for discipline in disciplines:
         disc = {
-            "nombre": discipline.nombre,
+            "name": discipline.nombre,
             "categoria": discipline.categoria,
-            "entrenador": discipline.entrenador,
-            "dia": discipline.dia,
-            "hora": discipline.hora,
+            "teacher": discipline.entrenador,
+            "days": discipline.dia,
+            "time": discipline.hora,
             "costo_mensual": discipline.costo_mensual,
         }
         disciplinas.append(disc)
     disciplinas = jsonify(disciplinas)
     return disciplinas
+
+@api_blueprint.get("/me/profile")
+# @token_required
+def get_user_info():
+    current_user = {
+        "id": 1,
+    }
+    usuario = board.get_usuario(current_user['id'])
+    socio = board.find_socio_by_id_usuario(current_user['id'])
+    user_data = {
+        "user": usuario.username,
+        "email": usuario.email,
+        "number": socio.id,
+        "document_type": socio.tipo_documento,
+        "document_number": socio.numero_documento,
+        "gender": socio.genero,
+        "address": socio.direccion,
+        "phone": socio.telefono,
+    }
+    usuario_data = jsonify(user_data)
+    return usuario_data
