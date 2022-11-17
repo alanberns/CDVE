@@ -67,11 +67,11 @@ def socios_index():
             return response
         if form.exportcsv.data:
             with open('src/web/templates/socios/socios.csv', 'w', newline='') as csvfile:
-                fieldnames = ['nombre', 'mail']
+                fieldnames = ['Apellido', 'Nombre', 'Documento', 'Genero', 'Email']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
                 for socio in socios_pag.items:
-                    writer.writerow({'nombre':socio[1].first_name, 'mail':socio[1].email})
+                    writer.writerow({'Apellido':socio[1].last_name,'Nombre':socio[1].first_name, 'Documento':socio[0].numero_documento, 'Genero':socio[0].genero, 'Email':socio[1].email})
                 csv_dir  = "templates/socios"
                 csv_file = "socios.csv"
                 csv_path = os.path.join(csv_dir, csv_file)
