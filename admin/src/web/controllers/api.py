@@ -13,6 +13,10 @@ api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
 def token_required(f):
+    """
+    Esta funcion se utiliza como wrapper, y exije que la peticion realizada envie el token jwt
+    Si el token caduco o no es valido, se envia el mensaje correspondiente.
+    """
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -32,6 +36,10 @@ def token_required(f):
 
 @api_blueprint.post("/login")
 def login():
+    """
+    Funcion que sirve para realizar el login, si se envia un usuario y contraseña validos dentro
+    de la BD, entonces devuelve un token.
+    """
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
         return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
@@ -51,6 +59,9 @@ def login():
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
+    """
+    Funcion que devuelve el listado de pagos del usuario actual.
+    """
     try:
         pagos = board.get_pagos_by_socio_id(current_user.socio[0].id)
     except KeyError:
@@ -58,19 +69,34 @@ def list_payments(current_user):
     return jsonify(payments=[pago.serialize for pago in pagos])
 
 
-# @api_blueprint.post("/me/payments")
-# @token_required
-# def pay(current_user):
-#     month = request.json[0]["month"]
-#     amount = request.json[0]["amount"]
-#     if not month or not amount:
-#         return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
-#     try:
-#         cuotas = board.get_cuotas_by_socio_id_and_nro_cuota(
-#             current_user.socio[0].id, month)
-#     except KeyError:
-#         return jsonify({"message": "EL usuario actual no es un socio"}), 401
-#     if not cuotas.valor_cuota == amount:
-#         return jsonify({"message": f"Para realizar el pago necesita un monto de cuotas.valor_cuota"}), 401
-#     pagos = board.generate_payment([cuotas.id])
-#     return jsonify(payments=[pago.serialize for pago in pagos])
+@api_blueprint.post("/me/payments")
+@token_required
+def pay(current_user):
+    """
+    Funcion que realiza un pago, recibe el nro_cuota, el monto y la disciplina que el usuario
+    quiere pagar.
+    Si el monto no es correcto devuelve un mensaje indicando el monto necesario.
+    """
+    nro_cuota = request.json[0]["month"]
+    amount = request.json[0]["amount"]
+    disciplina = request.json[0]["disciplina"]
+    try:
+        amount = int(amount)
+    except ValueError:
+        return jsonify({"message": "El monto debe ser un numero"}), 401
+    if not nro_cuota or not amount or not disciplina:
+        return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
+    try:
+        disciplina = board.find_disciplina_by_name(disciplina)
+        inscripcion = board.get_inscripcion_by_socio_and_disciplina(
+            current_user.socio[0], disciplina)
+        cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
+            inscripcion.id, nro_cuota)
+    except KeyError:
+        return jsonify({"message": "EL usuario actual no es un socio"}), 401
+    if cuota.estado_pago:
+        return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
+    if not cuota.valor_cuota == amount:
+        return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
+    pago = board.generate_payment([cuota.id])
+    return jsonify(payments=pago.serialize)
