@@ -4,11 +4,13 @@ from pathlib import Path
 from flask import redirect
 from flask import url_for
 from flask import flash
-from src.core.board import disciplina
 from flask import request
+
+from src.core.forms.disciplinas_form import DisciplinaNewForm
+from src.core.board import disciplina
 from src.core import board
 from src.core.board.disciplina import Disciplina
-from src.core.board.database import db
+#from src.core.database import db
 
 
 
@@ -26,22 +28,22 @@ def disciplina_index():
    disciplinas_pag = board.list_disciplinas(page, elem_pagina)
    return render_template('disciplinas.html', disciplinas_pag= disciplinas_pag)
 
-
+#Se crea una nueva disciplina
 @disciplina_blueprint.post("/")
 def newdcp():
-    kwargs = {
-             "nombre":request.form.get("nombre"),
-             "categoria":request.form.get("categoria"),
-             "entrenador":request.form.get("entrenador"),
-             "dia":request.form.get("dia"),
-             "hora":request.form.get("hora"),
-             "costo_mensual":request.form.get("costo_mensual")
-             #"estado": request.form.get(True)
-            } 
-    board.create_disciplina(**kwargs)
-    disciplinas = board.list_disciplinas()
-    flash ("Se agrego una nueva Disciplina", "success")
-    return redirect(url_for('disciplinas.disciplina_index', id=id))
+   form = DisciplinaNewForm(request.form)
+   disciplina = board.create_disciplina(
+       nombre= form.nombre.data,
+       categoria= form.categoria.data,
+       entrenador= form.entrenador.data,
+       dia = form.dia.data,
+       hora = form.hora.data,
+       costo_mensual = form.costo_mensual.data,
+       estado = True,
+   )
+   flash ("Se agrego una nueva Disciplina", "success")
+   return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id))
+    #disciplinas = board.list_disciplinas()
    
 
 @disciplina_blueprint.get("/modifyState/<int:id>")
@@ -50,7 +52,6 @@ def modify_state(id):
    flash ("Se cambio de Estado la Disciplina", "success")
    return redirect(url_for('disciplinas.disciplina_index', id=id))
    
-
 
 @classmethod
 def get_disciplinas():

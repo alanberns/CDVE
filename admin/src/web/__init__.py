@@ -1,11 +1,11 @@
 #from asyncio.base_futures import _format_callbacks
 from flask import Flask
 from flask import render_template
-from src.helpers import handlers
-from src.controllers.disciplinas import disciplina_blueprint
-from src.config import config
-from src.core.board import database
-from src.core.board import seeds
+from src.web.helpers import handlers
+from src.web.controllers.disciplinas import disciplina_blueprint
+from src.web.config import config
+from src.core import database
+from src.core import seeds
 
 
 

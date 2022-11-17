@@ -1,6 +1,6 @@
 #from datetime import datetime
 
-from src.core.board.database import db
+from src.core.database import db
 
 class Disciplina(db.Model):
 
@@ -14,13 +14,15 @@ class Disciplina(db.Model):
      costo_mensual = (db.Column(db.Integer))
      estado = (db.Column(db.Boolean))
 
-     def __init__(self, nombre, categoria, entrenador, dia, hora, costo_mensual):
+     def __init__(self, nombre, categoria, entrenador, dia, hora, costo_mensual,estado):
           self.nombre = nombre
           self.categoria = categoria
           self.entrenador = entrenador
           self.dia = dia
           self.hora = hora
           self.costo_mensual = costo_mensual
+          self.estado = estado
+
 
      def to_JSON(self):
           return { 

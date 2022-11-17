@@ -1,4 +1,4 @@
-from src import create_app
+from src.web import create_app
 from pathlib import Path
 from flask import Flask
 from flask import jsonify
