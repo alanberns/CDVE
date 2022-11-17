@@ -488,7 +488,9 @@ def get_inscripciones(page):
     Retorna las Inscripciones
     """
     per_page = get_elements_per_page()
-    return Inscripcion.query.paginate(page=page, per_page=per_page)
+    return Inscripcion.query.join(Disciplina).filter(
+        Disciplina.estado.ilike("activo%")
+    ).paginate(page=page, per_page=per_page)
 
 
 def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
