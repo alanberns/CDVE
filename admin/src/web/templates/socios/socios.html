@@ -20,14 +20,18 @@
           {{ form.habilitado.label(class="form=control-label") }}
           {{ form.habilitado }}
         </div>
+        {% if socios_pag.items %}
         <br>
         <div class="form-group">
-          {{ form.export(class="btn btn-primary btn-sm") }}
+          {{ form.exportpdf(class="btn btn-primary btn-sm") }}
+        </div>
+        <br>
+        <div class="form-group">
+          {{ form.exportcsv(class="btn btn-primary btn-sm") }}
         </div>
       </fieldset>
     </form>
     <br>
-    {% if socios_pag.items %}
     <table class="table table-hover">
       <thead>
         <tr class="table-dark">

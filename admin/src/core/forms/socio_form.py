@@ -33,4 +33,5 @@ class DocumentoForm(FlaskForm):
         "Mostrar", choices=((0, "Todos"), (1, "Activos"), (2, "Inactivos")), coerce=int
     )
     submit = SubmitField(label="Buscar")
-    export = SubmitField(label="Exportar pdf")
+    exportpdf = SubmitField(label="Exportar pdf")
+    exportcsv = SubmitField(label="Exportar csv")
