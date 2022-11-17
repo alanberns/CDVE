@@ -499,6 +499,8 @@ def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     """
     inscripcion = Inscripcion.query.filter_by(
         socio_id=socio.id, disciplina_id=disciplina.id
+    ).join(Disciplina).filter(
+        Disciplina.estado.ilike("activo%")
     ).first()
     return inscripcion
 
@@ -698,4 +700,6 @@ def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):
     return Cuota.query.filter_by(
         inscripcion_id=inscripcion_id,
         nro_cuota=nro_cuota
+    ).join(Inscripcion).join(Disciplina).filter(
+        Disciplina.estado.ilike("activo%")
     ).first()
