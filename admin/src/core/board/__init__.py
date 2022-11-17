@@ -105,10 +105,10 @@ def filter_usuarios(email, activo, page=1, per_page=10):
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     else:
         if (activo != ""):
-            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.like(email +"%")).order_by(
+            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.ilike(email +"%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
         else:
-            usuarios = Usuario.query.filter(Usuario.email.like(email +"%")).order_by(
+            usuarios = Usuario.query.filter(Usuario.email.ilike(email +"%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
 
