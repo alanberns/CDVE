@@ -1,11 +1,13 @@
 from flask import Blueprint
 from flask import render_template
-from flask import request, redirect, url_for, flash
+from flask import request, redirect, url_for, flash, send_file
 from flask import make_response
 from src.core.forms.socio_form import SocioForm, DocumentoForm
 from src.web.helpers.auth import login_required
 from src.core import board
 import pdfkit
+import csv
+import os
 
 from src.web.helpers.permissions.user_permission import (
     socio_create_req,
@@ -52,7 +54,7 @@ def socios_index():
                 socios_pag = board.list_socios_habilitado(
                     activo, page, elementos_pagina
                 )
-        if form.export.data:
+        if form.exportpdf.data:
             rendered = render_template(
                 "socios/socios_export.html", socios_pag=socios_pag
             )
@@ -63,6 +65,17 @@ def socios_index():
                 "Content-Disposition"
             ] = "attachment; filename=listado_socios.pdf"
             return response
+        if form.exportcsv.data:
+            with open('src/web/templates/socios/socios.csv', 'w', newline='') as csvfile:
+                fieldnames = ['nombre', 'mail']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
+                for socio in socios_pag.items:
+                    writer.writerow({'nombre':socio[1].first_name, 'mail':socio[1].email})
+                csv_dir  = "templates/socios"
+                csv_file = "socios.csv"
+                csv_path = os.path.join(csv_dir, csv_file)
+            return send_file(csv_path, as_attachment=True)
     else:
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
     return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
