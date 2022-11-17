@@ -64,7 +64,8 @@ def run():
         [configuracion_all, pago_index, pago_show, pago_update, pago_delete],
     )
 
-    board.rol_assign_permiso(rol_operador, [pago_index, pago_show, pago_update])
+    board.rol_assign_permiso(
+        rol_operador, [pago_index, pago_show, pago_update])
 
     # Permisos modulo usuarios
     user_index = board.create_permiso(nombre="user_index")
@@ -75,7 +76,8 @@ def run():
     user_rol_update = board.create_permiso(nombre="user_rol_update")
     board.rol_assign_permiso(
         rol_administrador,
-        [user_index, user_create, user_show, user_delete, user_rol_update, user_update],
+        [user_index, user_create, user_show,
+            user_delete, user_rol_update, user_update],
     )
 
     # Permisos socios
@@ -175,22 +177,13 @@ def run():
         costo_mensual="3400",
         estado="Activo",
     )
-    t_disciplina5 = board.create_disciplina(
+    t_disciplina6 = board.create_disciplina(
         nombre="Hockey",
         categoria="Mini",
         entrenador="Maria Forcherio",
         dia="Viernes",
         hora="18 Hs",
         costo_mensual="4600",
-        estado="Activo",
-    )
-    t_disciplina5 = board.create_disciplina(
-        nombre="Futbol",
-        categoria="2014 ",
-        entrenador="Marcelo Gallardo",
-        dia="Lunes",
-        hora="14 Hs",
-        costo_mensual="7600",
         estado="Activo",
     )
 

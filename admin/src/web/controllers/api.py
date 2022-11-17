@@ -92,8 +92,10 @@ def pay(current_user):
             current_user.socio[0], disciplina)
         cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
             inscripcion.id, nro_cuota)
+    except AttributeError:
+        return jsonify({"message": "La disciplina que intenta pagar esta inactiva"}), 401
     except KeyError:
-        return jsonify({"message": "EL usuario actual no es un socio"}), 401
+        return jsonify({"message": "El usuario actual no es un socio"}), 401
     if cuota.estado_pago:
         return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
     if not cuota.valor_cuota == amount:
