@@ -180,12 +180,19 @@ def list_disciplinas_not_socio(socio_id):
         Inscripcion.socio_id == socio_id
     )
     return Disciplina.query.filter(
-        ~Disciplina.id.in_(disciplinas_inscripto), Disciplina.estado == "Activo"
+        ~Disciplina.id.in_(
+            disciplinas_inscripto), Disciplina.estado == "Activo"
     ).all()
 
 
 def find_disciplina_by_id(disciplina_id):
     disciplina = Disciplina.query.filter_by(id=disciplina_id).first()
+    return disciplina
+
+
+def find_disciplina_by_name(disciplina_name):
+    disciplina = Disciplina.query.filter(
+        Disciplina.nombre.ilike(f"{disciplina_name}%")).first()
     return disciplina
 
 
@@ -349,7 +356,7 @@ def find_socio_by_apellido(last_name, page=1, per_page=10):
     )
     return socios
 
-    
+
 def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10):
     """
     Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
@@ -403,7 +410,8 @@ def exist_socio_documento_id(documento, id):
     Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
     """
     return (
-        Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first()
+        Socio.query.filter(Socio.numero_documento ==
+                           documento, Socio.id != id).first()
         == None
     )
 
@@ -529,7 +537,7 @@ def get_cuotas_by_ids(cuota_ids):
     return Cuota.query.filter(Cuota.id.in_(cuota_ids)).all()
 
 
-def get_cuotas_by_socio_id_and_nro_cuota(socio_id, nro_cuota):
+def get_cuotas_by_socio_id_and_nro_cuota(socio_id, nro_cuota, inscripcion):
     """
     Retorna las cuotas para un socio dado su id
     """
@@ -682,3 +690,10 @@ def update_valor_cuotas(new_value_cuota):
 
 def get_pagos_by_socio_id(socio_id):
     return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == socio_id).distinct()
+
+
+def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):
+    return Cuota.query.filter_by(
+        inscripcion_id=inscripcion_id,
+        nro_cuota=nro_cuota
+    ).first()
