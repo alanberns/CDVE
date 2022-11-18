@@ -40,10 +40,11 @@ def run():
     default_config = board.init_configuracion(
         elementos_pagina=20,
         estado_pago=True,
-        estado_info_contactos=True,
         texto_recibo="Recibimos de USUARIO el importe en pesos de MONTO por el concepto de cuota societaria de la disciplina DISCIPLINA. A continuacion se detalla lo pagado.",
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
+        email_club="club@gmail.com",
+        numero_club="2214151861"
     )
 
     # Roles

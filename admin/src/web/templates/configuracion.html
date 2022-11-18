@@ -28,16 +28,18 @@ block head %} {{ super() }}
           {{form.estado_pago.label}}
         </label>
       </div>
-      <div class="form-check">
-        {{form.estado_info_contactos(class="form-check-input")}}
-        <label class="form-check-label" for="flexCheckDefault">
-          {{form.estado_info_contactos.label}}
-        </label>
-      </div>
     </div>
     <div class="form-floating mb-3">
       {{form.texto_recibo(class="form-control")}}
       <label for="floatingInput">{{form.texto_recibo.label}}</label>
+    </div>
+    <div class="form-floating mb-3">
+      {{form.email_club(class="form-control")}}
+      <label for="floatingInput">{{form.email_club.label}}</label>
+    </div>
+    <div class="form-floating mb-3">
+      {{form.numero_club(class="form-control")}}
+      <label for="floatingInput">{{form.numero_club.label}}</label>
     </div>
     <div class="form-floating mb-3">
       {{form.valor_base_cuota(class="form-control")}}
