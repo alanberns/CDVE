@@ -1,40 +1,40 @@
 <template>
     <div>
-      <table>
+        <table>
         <thead>
-          <tr>
+            <tr>
             <th>NOMBRE</th>
             <th>EMAIL</th>
-          </tr>
+            </tr>
         </thead>
         <tbody>
-          <tr>
+            <tr>
             <td>{{ user_info.user }}</td>
             <td>{{ user_info.email }}</td>
-          </tr>
+            </tr>
         </tbody>
-      </table>
+        </table>
     </div>
-  </template>
-  
-  <script>
-  import axios from "axios";
-  export default {
+</template>
+
+<script>
+    import axios from "axios";
+    export default {
     name: "Usuario",
     data() {
-      return {
+        return {
         user_info: [],
-      };
+        };
     },
     created() {
-      let url = "http://127.0.0.1:5000/api/me/profile";
-  
-      axios
+        let url = "http://127.0.0.1:5000/api/me/profile";
+
+        axios
         .get(url)
         .then((response => (this.user_info = response.data)))
         .catch((error) => console.log(error));
     },
-  };
-  </script>
-  
-  <style></style>
+    };
+</script>
+
+<style></style>

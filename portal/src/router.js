@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // Componentes
-import HelloWorld from "./components/HelloWorld.vue";
+import Home from "./components/Home.vue";
 import Disciplinas from "./components/Disciplinas.vue";
 import Usuario from "./components/Usuario.vue";
 import Login from "./components/Login.vue";
@@ -10,7 +10,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HelloWorld,
+    component: Home,
   },
   {
     path: "/disciplinas",
