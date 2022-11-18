@@ -103,6 +103,16 @@ def pay(current_user):
     pago = board.generate_payment([cuota.id])
     return jsonify(payments=pago.serialize)
 
+
+@api_blueprint.get("/club/info")
+def info_club():
+    """
+    Funcion que devuelve el email y numero de telefono del club.
+    """
+    config = board.list_configuracion()
+    return jsonify(info=config.serialize_info_club)
+
+
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
     disciplines = board.list_disciplinas()
@@ -119,6 +129,7 @@ def get_disciplines():
         disciplinas.append(disc)
     disciplinas = jsonify(disciplinas)
     return disciplinas
+
 
 @api_blueprint.get("/me/profile")
 @token_required
