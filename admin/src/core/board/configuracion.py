@@ -40,3 +40,11 @@ class Configuracion(db.Model):
         """
         for key in kwargs:
             setattr(self, key, kwargs[key])
+
+    @property
+    def serialize_info_club(self):
+        """Devuelve email y telefono en formato json"""
+        return {
+            "email": self.email_club,
+            "phone": self.numero_club,
+        }
