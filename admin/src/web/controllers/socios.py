@@ -98,6 +98,7 @@ def soft_delete_socio(socio_id):
 def add_socio(usuario_id):
     """
     Agregado de un socio dado un id de Usuario.
+    Se le asigna el rol de socio al usuario
     """
     form = SocioForm()
     if form.validate_on_submit():
@@ -111,6 +112,15 @@ def add_socio(usuario_id):
                 "telefono": form.telefono.data,
             }
             board.create_socio(**kwargs)
+
+            # Asignar rol de socio
+            roles = board.get_roles()
+            for rol in roles:
+                if rol.nombre == "Socio":
+                    rol_socio = rol
+                    board.asignar_rol(rol_socio.id,usuario_id)
+                    flash("Se asignó el rol al usuario y se creo el perfil de socio", "success")
+
             return redirect(url_for("usuarios.view_usuario", id=usuario_id))
         else:
             flash("El documento ingresado pertenece a otro Socio", "danger")
