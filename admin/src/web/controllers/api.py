@@ -112,8 +112,12 @@ def info_club():
     config = board.list_configuracion()
     return jsonify(info=config.serialize_info_club)
 
+
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
+    """
+    Devuelve las disciplinas del club
+    """
     disciplines = board.list_disciplinas()
     disciplinas = []
     for discipline in disciplines:
@@ -130,13 +134,13 @@ def get_disciplines():
     return disciplinas
 
 @api_blueprint.get("/me/profile")
-# @token_required
-def get_user_info():
-    current_user = {
-        "id": 1,
-    }
-    usuario = board.get_usuario(current_user['id'])
-    socio = board.find_socio_by_id_usuario(current_user['id'])
+@token_required
+def get_user_info(current_user):
+    """
+    Devuelve la información del usuario logueado
+    """
+    usuario = board.get_usuario(current_user.id)
+    socio = board.find_socio_by_id_usuario(current_user.id)
     user_data = {
         "user": usuario.username,
         "email": usuario.email,
