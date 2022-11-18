@@ -115,6 +115,9 @@ def info_club():
 
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
+    """
+    Devuelve las disciplinas del club
+    """
     disciplines = board.list_disciplinas()
     disciplinas = []
     for discipline in disciplines:
@@ -134,6 +137,9 @@ def get_disciplines():
 @api_blueprint.get("/me/profile")
 @token_required
 def get_user_info(current_user):
+    """
+    Devuelve la información del usuario logueado
+    """
     usuario = board.get_usuario(current_user.id)
     socio = board.find_socio_by_id_usuario(current_user.id)
     user_data = {
