@@ -8,6 +8,7 @@ from src.core import board
 import pdfkit
 import csv
 import os
+import io
 
 from src.web.helpers.permissions.user_permission import (
     socio_create_req,
@@ -66,16 +67,19 @@ def socios_index():
             ] = "attachment; filename=listado_socios.pdf"
             return response
         if form.exportcsv.data:
-            with open('src/web/templates/socios/socios.csv', 'w', newline='') as csvfile:
-                fieldnames = ['Apellido', 'Nombre', 'Documento', 'Genero', 'Email']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                writer.writeheader()
-                for socio in socios_pag.items:
-                    writer.writerow({'Apellido':socio[1].last_name,'Nombre':socio[1].first_name, 'Documento':socio[0].numero_documento, 'Genero':socio[0].genero, 'Email':socio[1].email})
-                csv_dir  = "templates/socios"
-                csv_file = "socios.csv"
-                csv_path = os.path.join(csv_dir, csv_file)
-            return send_file(csv_path, as_attachment=True)
+            output = io.StringIO()
+            csvdata = ['Apellido', 'Nombre', 'Documento', 'Genero', 'Email']
+            writer = csv.writer(output)
+            writer.writerow(csvdata)
+            for socio in socios_pag.items:
+                csvdata = ([ socio[1].last_name ,socio[1].first_name, socio[0].numero_documento, socio[0].genero, socio[1].email])
+                writer.writerow(csvdata)
+            response = make_response(output.getvalue())
+            response.headers["Content-Type"] = "application/csv"
+            response.headers[
+                "Content-Disposition"
+            ] = "attachment; filename=listado_socios.csv"
+            return response
     else:
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
     return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
