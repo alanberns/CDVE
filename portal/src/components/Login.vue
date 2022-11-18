@@ -36,7 +36,6 @@
       </form>
     </div>
   </div>
-  <p class="flow-text">{{ info }}</p>
 </template>
 
 <script>
@@ -63,7 +62,9 @@ export default {
             },
           }
         )
-        .then((response) => (this.info = response.data))
+        .then(
+          (response) => ((this.info = response.data), console.log(this.info))
+        )
         .catch((error) => console.log(error));
     },
   },
