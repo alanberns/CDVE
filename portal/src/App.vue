@@ -1,16 +1,16 @@
 <template>
-<div id="app">
-  <router-link to="/disciplinas">Disciplinas</router-link>
-  <router-link to="/user"> User</router-link>
-  <router-view></router-view>
-</div>
+  <div id="app">
+    <router-link to="/disciplinas">Disciplinas</router-link>
+    <router-link to="/user">User</router-link>
+    <router-link to="/Login">Login</router-link>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-}
+  name: "App",
+};
 </script>
 
 <style>
