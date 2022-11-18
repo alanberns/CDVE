@@ -7,6 +7,9 @@ from src.core import board
 from src.core.forms.configuration_form import ConfigurationForm
 from src.web.helpers.auth import login_required
 from src.web.helpers.permissions.user_permission import config_all_req
+from src.web.helpers.percentage import percentage_to_float
+from src.web.helpers.percentage import float_to_percentage
+
 
 configuracion_blueprint = Blueprint(
     "configuracion", __name__, url_prefix="/configuracion"
@@ -20,6 +23,8 @@ def configuracion_index():
     configuracion = board.list_configuracion()
     form = ConfigurationForm(request.form)
     form.set_from_config(configuracion)
+    form.porcentaje_cuota.data = float_to_percentage(
+        form.porcentaje_cuota.data)
     return render_template("configuracion.html", form=form)
 
 
@@ -34,10 +39,11 @@ def configuracion_update():
     kwargs = {
         "elementos_pagina": form.elementos_pagina.data,
         "estado_pago": form.estado_pago.data,
-        "estado_info_contactos": form.estado_info_contactos.data,
         "texto_recibo": form.texto_recibo.data,
         "valor_base_cuota": form.valor_base_cuota.data,
-        "porcentaje_cuota": form.porcentaje_cuota.data,
+        "porcentaje_cuota": percentage_to_float(form.porcentaje_cuota.data),
+        "email_club": form.email_club.data,
+        "numero_club": form.numero_club.data,
     }
     config = board.list_configuracion()
     if config.valor_base_cuota != form.valor_base_cuota.data:

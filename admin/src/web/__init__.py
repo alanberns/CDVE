@@ -19,6 +19,7 @@ from src.web.controllers.api import api_blueprint
 from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS
 from src.web.helpers.auth import login_required
+from src.web.helpers.percentage import float_to_percentage
 
 
 def create_app(env="development", static_folder="static"):
@@ -57,6 +58,7 @@ def create_app(env="development", static_folder="static"):
 
     app.jinja_env.globals.update(is_authenticated=auth.is_authenticated)
     app.jinja_env.globals.update(has_permission=auth.has_permission)
+    app.jinja_env.globals.update(float_to_percentage=float_to_percentage)
 
     @app.cli.command(name="seeds")
     def seeds_configuracion():
