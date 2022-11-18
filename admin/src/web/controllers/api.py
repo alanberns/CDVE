@@ -102,3 +102,12 @@ def pay(current_user):
         return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
     pago = board.generate_payment([cuota.id])
     return jsonify(payments=pago.serialize)
+
+
+@api_blueprint.get("/club/info")
+def info_club():
+    """
+    Funcion que devuelve el email y numero de telefono del club.
+    """
+    config = board.list_configuracion()
+    return jsonify(info=config.serialize_info_club)
