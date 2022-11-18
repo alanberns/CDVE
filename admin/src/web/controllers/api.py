@@ -133,6 +133,7 @@ def get_disciplines():
     disciplinas = jsonify(disciplinas)
     return disciplinas
 
+
 @api_blueprint.get("/me/profile")
 @token_required
 def get_user_info(current_user):
