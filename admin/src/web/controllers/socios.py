@@ -1,13 +1,12 @@
 from flask import Blueprint
 from flask import render_template
-from flask import request, redirect, url_for, flash, send_file
+from flask import request, redirect, url_for, flash
 from flask import make_response
 from src.core.forms.socio_form import SocioForm, DocumentoForm
 from src.web.helpers.auth import login_required
 from src.core import board
 import pdfkit
 import csv
-import os
 import io
 
 from src.web.helpers.permissions.user_permission import (
