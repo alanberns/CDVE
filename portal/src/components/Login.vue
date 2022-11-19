@@ -1,11 +1,16 @@
 <template>
-  <div class="container center-align">
+  <div class="container">
     <div class="row">
-      <form @submit.prevent="login" class="col s12 center-align">
-        <div class="row center-align">
-          <div class="input-field col s6 center-align">
+      <form
+        @submit.prevent="login"
+        class="col s12 m8 l8 offset-l2 offset-m4 m4 offset-s3 s6"
+      >
+        <div class="row">
+          <h3>Iniciar Sesion</h3>
+        </div>
+        <div class="row">
+          <div class="input-field">
             <input
-              placeholder="Placeholder"
               id="first_name"
               type="text"
               class="validate center-align"
@@ -14,25 +19,26 @@
             <label for="first_name">Email</label>
           </div>
         </div>
-        <div class="row center-align">
-          <div class="input-field col s6 center-align">
+        <div class="row">
+          <div class="input-field">
             <input
               id="password"
               type="password"
               class="validate center-align"
               v-model="password"
             />
-            <label for="password">Password</label>
+            <label for="password">Contraseña</label>
           </div>
         </div>
-        <button
-          class="btn waves-effect waves-light"
-          type="submit"
-          name="action"
-        >
-          Submit
-          <i class="material-icons right">send</i>
-        </button>
+        <div class="row">
+          <button
+            class="btn waves-effect waves-light"
+            type="submit"
+            name="action"
+          >
+            Iniciar Sesion
+          </button>
+        </div>
       </form>
     </div>
   </div>
