@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // Componentes
-import Home from "./components/Home.vue";
-import Disciplinas from "./components/Disciplinas.vue";
-import Usuario from "./components/Usuario.vue";
-import Login from "./components/Login.vue";
+import Home from "@/components/Home.vue";
+import Disciplinas from "@/components/Disciplinas.vue";
+import Usuario from "@/components/Usuario.vue";
+import Login from "@/components/Login.vue";
 // definir objeto rutas
 const routes = [
   {

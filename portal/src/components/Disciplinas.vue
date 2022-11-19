@@ -1,16 +1,26 @@
 <template>
+  <h1>Nuestras disciplinas</h1>
   <div>
-    <table>
+    <table class="striped centered responsive-table highlight">
       <thead>
         <tr>
           <th>NOMBRE</th>
           <th>CATEGORIA</th>
+          <th>DIA</th>
+          <th>HORA</th>
+          <th>VALOR</th>
+          <th>PROFESOR</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="disciplina in disciplinas" :key="disciplina.id">
           <td>{{ disciplina.name }}</td>
           <td>{{ disciplina.categoria }}</td>
+          <td>{{disciplina.days}}</td>
+          <td>{{disciplina.time}}</td>
+          <td>{{disciplina.costo_mensual}}</td>
+          <td>{{disciplina.teacher}}</td>
         </tr>
       </tbody>
     </table>
