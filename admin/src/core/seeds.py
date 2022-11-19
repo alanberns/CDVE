@@ -189,6 +189,7 @@ def run():
     )
 
     cuota_enero = board.create_cuota(
+        nro_cuota=1,
         estado_pago=0,
         fecha_vencimiento=parse("2022-01-10 22:00:00"),
         valor_cuota=500,
@@ -196,6 +197,7 @@ def run():
     )
 
     cuota_febrero = board.create_cuota(
+        nro_cuota=2,
         estado_pago=0,
         fecha_vencimiento=parse("2022-02-10 22:00:00"),
         valor_cuota=520,
@@ -203,6 +205,7 @@ def run():
     )
 
     cuota_marzo = board.create_cuota(
+        nro_cuota=3,
         estado_pago=0,
         fecha_vencimiento=parse("2022-03-10 22:00:00"),
         valor_cuota=550,
@@ -234,6 +237,7 @@ def run():
     )
 
     cuota1_socio2 = board.create_cuota(
+        nro_cuota=1,
         estado_pago=0,
         fecha_vencimiento=parse("2022-01-10 22:00:00"),
         valor_cuota=500,
@@ -241,6 +245,7 @@ def run():
     )
 
     cuota2_socio2 = board.create_cuota(
+        nro_cuota=2,
         estado_pago=0,
         fecha_vencimiento=parse("2022-02-10 22:00:00"),
         valor_cuota=520,
@@ -248,6 +253,7 @@ def run():
     )
 
     cuota3_socio2 = board.create_cuota(
+        nro_cuota=3,
         estado_pago=0,
         fecha_vencimiento=parse("2022-03-10 22:00:00"),
         valor_cuota=520,

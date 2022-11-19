@@ -5,6 +5,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 import Disciplinas from "./components/Disciplinas.vue";
 import Usuario from "./components/Usuario.vue";
 import Login from "./components/Login.vue";
+import ListPagos from "./components/ListPagos.vue";
 // definir objeto rutas
 const routes = [
   {
@@ -23,6 +24,10 @@ const routes = [
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/pagos",
+    component: ListPagos,
   },
 ];
 
