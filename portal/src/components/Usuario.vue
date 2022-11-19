@@ -1,18 +1,18 @@
 <template>
     <div>
         <table>
-        <thead>
-            <tr>
-            <th>NOMBRE</th>
-            <th>EMAIL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            <td>{{ user_info.user }}</td>
-            <td>{{ user_info.email }}</td>
-            </tr>
-        </tbody>
+            <thead>
+                <tr>
+                    <th>NOMBRE</th>
+                    <th>EMAIL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ user_info.user }}</td>
+                    <td>{{ user_info.email }}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </template>
