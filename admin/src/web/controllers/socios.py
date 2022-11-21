@@ -8,7 +8,7 @@ from src.core import board
 import pdfkit
 import csv
 import io
-
+from qrcode import QRCode
 from src.web.helpers.permissions.user_permission import (
     socio_create_req,
     socio_index_req,
@@ -40,7 +40,8 @@ def socios_index():
                     apellido, page, elementos_pagina
                 )
             else:
-                socios_pag = board.list_socios_join_users(page, elementos_pagina)
+                socios_pag = board.list_socios_join_users(
+                    page, elementos_pagina)
         else:
             if habilitado == 1:
                 activo = True
@@ -71,7 +72,8 @@ def socios_index():
             writer = csv.writer(output)
             writer.writerow(csvdata)
             for socio in socios_pag.items:
-                csvdata = ([ socio[1].last_name ,socio[1].first_name, socio[0].numero_documento, socio[0].genero, socio[1].email])
+                csvdata = ([socio[1].last_name, socio[1].first_name,
+                           socio[0].numero_documento, socio[0].genero, socio[1].email])
                 writer.writerow(csvdata)
             response = make_response(output.getvalue())
             response.headers["Content-Type"] = "application/csv"
@@ -121,8 +123,9 @@ def add_socio(usuario_id):
             for rol in roles:
                 if rol.nombre == "Socio":
                     rol_socio = rol
-                    board.asignar_rol(rol_socio.id,usuario_id)
-                    flash("Se asignó el rol al usuario y se creo el perfil de socio", "success")
+                    board.asignar_rol(rol_socio.id, usuario_id)
+                    flash(
+                        "Se asignó el rol al usuario y se creo el perfil de socio", "success")
 
             return redirect(url_for("usuarios.view_usuario", id=usuario_id))
         else:
