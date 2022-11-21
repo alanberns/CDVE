@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <p v-if="loginStore.isAuthenticated">AUTENTICADO</p>
     <div class="row">
       <form
         @submit.prevent="login"
@@ -46,8 +47,14 @@
 
 <script>
 import axios from "axios";
+import { useLoginStore } from "../stores/LoginStore.js";
+
 export default {
   name: "Login",
+  setup() {
+    const loginStore = useLoginStore();
+    return { loginStore };
+  },
   data() {
     return {
       info: null,
@@ -71,6 +78,7 @@ export default {
         .then((response) => {
           console.log(response.data.token);
           localStorage.setItem("token", response.data.token);
+          this.loginStore.signIn(response.data.token);
         })
         .catch((error) => console.log(error));
     },
