@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Usuario{% endblock %}
+{% block title %}Disciplina{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -74,11 +74,11 @@
                         <th>{{disciplina.hora}}</th>
                         <th>{{disciplina.costo_mensual}}</th>
                         <th>{{disciplina.estado}}</th>
-                        <td width="130">
-                          <button class="btn btn-primary">Editar</button>
-                          <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button>Cambiar</button></a></th>
-                        </td> 
-                      </tr>
+                        <td width="30">
+                          <th><a href="{{url_for('disciplinas.edit_discip',id=disciplina.id)}}"><button class="btn btn-primary">Editar</button></a></th>
+                          <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button class="btn btn-primary">Cambiar</button></a></th>
+                        </td>
+                     </tr>
                     {% endfor %} 
                     </tbody>          
                 </thead>
