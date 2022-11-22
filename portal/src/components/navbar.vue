@@ -12,6 +12,7 @@
             <li><router-link to="/user">User</router-link></li>
             <li><router-link to="/Login">Login</router-link></li>
             <li><router-link to="/pagos">Pagos</router-link></li>
+            <li><router-link to="/">Home</router-link></li>
           </ul>
         </div>
       </nav>
@@ -20,7 +21,7 @@
   
   <script>
   export default {
-    name: "NavbarComponent",
+    name: "navbarComponent",
   };
   </script>
   

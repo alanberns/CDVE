@@ -53,9 +53,8 @@ export default {
             data.push(element.num_socios);
             })
         )
-        this.chartData.datasets[0].data=data
-        this.loaded = true
-        .catch(e => console.log(e))
+        this.chartData.datasets[0].data=data;
+        this.loaded = true;
   }
 
 }

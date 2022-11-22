@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+//import { HomeViews } from "./views/HomeViews.vue";
 
 // Componentes
 import Home from "./components/Home.vue";
@@ -6,7 +7,8 @@ import Disciplinas from "./components/Disciplinas.vue";
 import Usuario from "./components/Usuario.vue";
 import Login from "./components/Login.vue";
 import ListPagos from "./components/ListPagos.vue";
-import SociosPorDisciplina from "./components/SociosPorDisciplina.vue"
+import SociosPorDisciplina from "./components/SociosPorDisciplina.vue";
+import estadistica from "./components/estadisticaDiscip.vue";
 
 // definir objeto rutas
 const routes = [
@@ -34,6 +36,10 @@ const routes = [
   {
     path: "/statics/sociosPorDisciplina",
     component: SociosPorDisciplina,
+  },
+  {
+    path: "/statics/sd",
+    component: estadistica,
   }
 ];
 
