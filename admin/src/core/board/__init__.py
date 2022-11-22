@@ -8,7 +8,10 @@ from src.core.database import db
 def list_disciplinas(page=1, per_page=10):
     return Disciplina.query.order_by(Disciplina.id.asc()).paginate(page=page,per_page=per_page,error_out=False)
 
+def listAll_disciplinas():
+  return Disciplina.query.all()
 
+  
 # Crea una nueva disciplina
 def create_disciplina(**kwargs):
    disciplina = Disciplina(**kwargs)

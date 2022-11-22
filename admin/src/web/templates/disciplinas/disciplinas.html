@@ -43,7 +43,7 @@
             </div>
             <div class="d-grid gap-2">
               <label for="Activo" class="form-label">(* ) Campos obligatorios</label>
-              <button class="btn btn-success">Nuevo</button>
+              <button class="btn btn-success">Ingrese nueva Disciplina</button>
               <button class="btn btn-primary">Guardar</button>
             </div>
          </form>
@@ -60,6 +60,7 @@
                   <th>Hora</th>
                   <th>Precio </th>
                   <th>Activa</th>
+                  <th></th>
                   <th>Editar</th>
                   <th>Estado</th>
                 </tr>
@@ -83,7 +84,7 @@
                     </tbody>          
                 </thead>
                </table>
-                <button class="btn btn-primary">Exportar PDF </button>
+               <th><a href="{{url_for('disciplinas.export_discip')}}"><button class="btn btn-primary">Exportar</button></a></th> 
                <button class="btn btn-primary">Exportar.CV</button>
                <div class=pagination>
                   {% for page in disciplinas_pag.iter_pages() %} 
