@@ -1,4 +1,5 @@
 <template>
+  <br><br>
   <div>
       <Bar
     :chart-options="chartOptions"
@@ -47,7 +48,7 @@ export default {
   mounted() {
     let data = []
     axios
-        .get("http://localhost:5000/api/statics/inscripcionesPorDisciplina")
+        .get("http://localhost:5000/api/statistics/inscripcionesPorDisciplina")
         .then(response => response.data.forEach(element => {
             this.chartData.labels.push(element.nombre);
             data.push(element.num_socios);

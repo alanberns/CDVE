@@ -155,7 +155,7 @@ def get_user_info(current_user):
     usuario_data = jsonify(user_data)
     return usuario_data
 
-@api_blueprint.get("/statics/inscripcionesPorDisciplina")
+@api_blueprint.get("/statistics/inscripcionesPorDisciplina")
 def get_statics_inscripcionesPorDisciplina():
     """
     Devuelve las disciplinas y sus inscriptos
