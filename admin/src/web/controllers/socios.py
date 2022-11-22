@@ -8,7 +8,7 @@ from src.core import board
 import pdfkit
 import csv
 import io
-from qrcode import QRCode
+#from qrcode import QRCode
 from src.web.helpers.permissions.user_permission import (
     socio_create_req,
     socio_index_req,

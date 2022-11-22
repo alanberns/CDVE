@@ -154,3 +154,20 @@ def get_user_info(current_user):
     }
     usuario_data = jsonify(user_data)
     return usuario_data
+
+@api_blueprint.get("/statics/inscripcionesPorDisciplina")
+def get_statics_inscripcionesPorDisciplina():
+    """
+    Devuelve las disciplinas y sus inscriptos
+    """
+    disciplinas = board.list_disciplinas()
+    data = []
+    for disciplina in disciplinas:
+        d = {
+            'nombre': disciplina.nombre + " "+ disciplina.categoria,
+            'num_socios': len(disciplina.socio)
+        }
+        data.append(d)
+    
+    return data
+        
