@@ -2,10 +2,12 @@
   <div class="navbar-fixed">
     <nav>
       <div class="nav-wrapper blue-grey darken-4">
-        <a href="#" class="brand-logo right"
-          ><i class="material-icons right"
-            ><i class="material-icons right">account_circle</i></i
-          ></a
+        <a
+          href="#"
+          class="brand-logo right"
+          v-if="loginStore.isAuthenticated"
+          @click="loginStore.logOut"
+          >Cerrar Sesion</a
         >
         <ul id="nav-mobile" class="left hide-on-med-and-down">
           <li><router-link to="/disciplinas">Disciplinas</router-link></li>
@@ -19,8 +21,14 @@
 </template>
 
 <script>
+import { useLoginStore } from "@/stores/LoginStore";
+
 export default {
   name: "NavbarComponent",
+  setup() {
+    const loginStore = useLoginStore();
+    return { loginStore };
+  },
 };
 </script>
 
