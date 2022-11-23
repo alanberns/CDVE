@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <p v-if="loginStore.isAuthenticated">AUTENTICADO</p>
+    <p v-if="loginStore.tokenExpired">
+      Token expirado,por favor inice sesion nuevamente
+    </p>
     <div class="row">
       <form
         @submit.prevent="login"
@@ -46,7 +48,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import router from "@/router";
+import { apiService } from "../apiService";
 import { useLoginStore } from "../stores/LoginStore.js";
 
 export default {
@@ -64,9 +67,9 @@ export default {
   },
   methods: {
     async login() {
-      await axios
+      await apiService
         .post(
-          "http://127.0.0.1:5000/api/login",
+          "/login",
           {},
           {
             auth: {
@@ -81,6 +84,7 @@ export default {
           this.loginStore.signIn(response.data.token);
         })
         .catch((error) => console.log(error));
+      router.push("/pagos");
     },
   },
 };

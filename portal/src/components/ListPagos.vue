@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { apiService } from "../apiService";
 export default {
   name: "ListPagos",
   data() {
@@ -27,9 +27,8 @@ export default {
     };
   },
   created() {
-    let url = "http://127.0.0.1:5000/api/me/payments";
-    axios
-      .get(url, {
+    apiService
+      .get("/me/payments", {
         headers: {
           Authorization: `${localStorage.getItem("token")}`,
         },
