@@ -18,8 +18,8 @@
 </template>
 
 <script>
-    import axios from "axios";
-    export default {
+import { apiService } from "../apiService";
+export default {
     name: "Usuario",
     data() {
         return {
@@ -27,10 +27,14 @@
         };
     },
     created() {
-        let url = "http://127.0.0.1:5000/api/me/profile";
+        let url = "me/profile";
 
-        axios
-        .get(url)
+        apiService
+        .get(url, {
+        headers: {
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      })
         .then((response => (this.user_info = response.data)))
         .catch((error) => console.log(error));
     },

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { apiService } from "../apiService";
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
@@ -47,8 +47,8 @@ export default {
   },
   mounted() {
     let data = []
-    axios
-        .get("http://localhost:5000/api/statistics/inscripcionesPorDisciplina")
+    apiService
+        .get("statistics/inscripcionesPorDisciplina")
         .then(response => response.data.forEach(element => {
             this.chartData.labels.push(element.nombre);
             data.push(element.num_socios);

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { apiService } from "../apiService";
     export default {
     name: "InfoClub",
     data() {
@@ -59,7 +59,7 @@ import axios from "axios";
     created() {
         let url = "http://127.0.0.1:5000/api/club/info";
 
-        axios
+        apiService
             .get(url)
             .then(response => this.club_info = response.data.info);
     },

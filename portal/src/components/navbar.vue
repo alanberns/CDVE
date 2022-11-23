@@ -10,9 +10,10 @@
             >Cerrar Sesion</a
           >
           <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><router-link to="/"><strong>Home</strong></router-link></li>
             <li><router-link to="/disciplinas">Disciplinas</router-link></li>
             <li><router-link to="/user">User</router-link></li>
-            <li><router-link to="/Login">Login</router-link></li>
+            <li><router-link to="/login">Login</router-link></li>
             <li><router-link to="/pagos">Pagos</router-link></li>
           </ul>
         </div>
