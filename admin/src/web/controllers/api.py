@@ -116,9 +116,9 @@ def info_club():
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
     """
-    Devuelve las disciplinas del club
+    Devuelve las disciplinas activas del club
     """
-    disciplines = board.list_disciplinas()
+    disciplines = board.list_disciplinas_activas()
     disciplinas = []
     for discipline in disciplines:
         disc = {

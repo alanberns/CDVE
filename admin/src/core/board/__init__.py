@@ -154,14 +154,13 @@ def get_rol_socio():
 
 def usuario_has_rol(rol_name, usuario_id):
     """
-    Indica si el id del rol esta asignado al usuario
+    Indica si el rol esta asignado al usuario
     """
     usuario = get_usuario(usuario_id)
     for rol in usuario.roles:
         if rol.nombre == rol_name:
             return True
-        else:
-            return False
+    return False
 
 
 def find_user_by_email(email):
@@ -177,6 +176,12 @@ def list_configuracion():
     Lista los datos de la configuracion, devuelve una sola tupla
     """
     return Configuracion.query.first()
+
+def list_disciplinas_activas():
+    """
+    Retorna las disciplinas activas
+    """
+    return Disciplina.query.filter_by(estado="Activo").all()
 
 
 def list_disciplinas():
