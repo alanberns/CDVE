@@ -1,6 +1,7 @@
 <template>
   <div>
-    <table>
+    <br /><br />
+    <table class="responsive-table centered highlight">
       <thead>
         <tr>
           <th>Monto</th>
