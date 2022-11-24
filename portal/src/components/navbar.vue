@@ -17,20 +17,7 @@
         </ul>
         <ul id="nav-mobile2" class="right left hide-on-med-and-down">
           <li>
-            <a
-              href="#"
-              class="waves-effect waves-light btn red darken-2"
-              v-if="loginStore.isAuthenticated"
-              @click="loginStore.logOut"
-              >Cerrar Sesion
-            </a>
-          </li>
-          <li v-if="!loginStore.isAuthenticated">
-            <router-link
-              class="waves-effect waves-light btn blue darken-3 valign-wrapper"
-              to="/login"
-              >Iniciar Sesion</router-link
-            >
+            <LoginButton></LoginButton>
           </li>
         </ul>
       </div>
@@ -39,10 +26,13 @@
 </template>
 
 <script>
-import { useLoginStore } from "@/stores/LoginStore";
-
+import { useLoginStore } from "../stores/LoginStore";
+import LoginButton from "./LoginButton.vue";
 export default {
   name: "NavbarComponent",
+  components: {
+    LoginButton,
+  },
   setup() {
     const loginStore = useLoginStore();
     return { loginStore };

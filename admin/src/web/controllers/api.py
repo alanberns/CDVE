@@ -48,7 +48,7 @@ def login():
         return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
     if user.verify_password(auth.password):
         token = jwt.encode(
-            {"id": user.id, "exp": datetime.utcnow() + timedelta(minutes=30)},
+            {"id": user.id, "exp": datetime.utcnow() + timedelta(minutes=1)},
             current_app.config["SECRET_KEY"],
             algorithm="HS256"
         )
@@ -155,6 +155,7 @@ def get_user_info(current_user):
     usuario_data = jsonify(user_data)
     return usuario_data
 
+
 @api_blueprint.get("/statistics/inscripcionesPorDisciplina")
 def get_statics_inscripcionesPorDisciplina():
     """
@@ -164,10 +165,9 @@ def get_statics_inscripcionesPorDisciplina():
     data = []
     for disciplina in disciplinas:
         d = {
-            'nombre': disciplina.nombre + " "+ disciplina.categoria,
+            'nombre': disciplina.nombre + " " + disciplina.categoria,
             'num_socios': len(disciplina.socio)
         }
         data.append(d)
-    
+
     return data
-        

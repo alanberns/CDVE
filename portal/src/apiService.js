@@ -16,6 +16,7 @@ apiService.interceptors.response.use(
     if (error.response.status === 401) {
       console.log("Token expirado");
       loginStore.logOut();
+      loginStore.setTokenExpired(true);
     }
     return Promise.reject(error);
   }
