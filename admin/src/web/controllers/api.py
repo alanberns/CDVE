@@ -8,6 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
+from flask_cors import cross_origin
 
 api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
@@ -48,7 +49,7 @@ def login():
         return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
     if user.verify_password(auth.password):
         token = jwt.encode(
-            {"id": user.id, "exp": datetime.utcnow() + timedelta(minutes=1)},
+            {"id": user.id, "exp": datetime.utcnow() + timedelta(minutes=30)},
             current_app.config["SECRET_KEY"],
             algorithm="HS256"
         )
@@ -56,17 +57,25 @@ def login():
     return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
 
 
+@cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
     """
     Funcion que devuelve el listado de pagos del usuario actual.
     """
+    page = request.args.get("page", default=1, type=int)
     try:
-        pagos = board.get_pagos_by_socio_id(current_user.socio[0].id)
+        pagos = board.get_pagos_by_socio_id(current_user.socio[0].id, page)
     except KeyError:
         return jsonify({"message": "EL usuario actual no es un socio"}), 401
-    return jsonify(payments=[pago.serialize for pago in pagos])
+
+    payments = {
+        "pages": pagos.pages,
+        "current_page": pagos.page,
+        "payments": [pago.serialize for pago in pagos.items]
+    }
+    return jsonify(payments)
 
 
 @api_blueprint.post("/me/payments")
