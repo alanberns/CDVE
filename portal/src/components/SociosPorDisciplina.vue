@@ -48,7 +48,11 @@ export default {
   mounted() {
     let data = []
     apiService
-        .get("statistics/inscripcionesPorDisciplina")
+        .get("statistics/inscripcionesPorDisciplina", {
+        headers: {
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      })
         .then(response => response.data.forEach(element => {
             this.chartData.labels.push(element.nombre);
             data.push(element.num_socios);

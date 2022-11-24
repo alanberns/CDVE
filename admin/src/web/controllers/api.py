@@ -127,9 +127,10 @@ def get_disciplines():
     """
     Devuelve las disciplinas activas del club
     """
-    disciplines = board.list_disciplinas_activas()
+    page = request.args.get("page", default=1, type=int)
+    disciplines = board.list_disciplinas_activas(page)
     disciplinas = []
-    for discipline in disciplines:
+    for discipline in disciplines.items:
         disc = {
             "name": discipline.nombre,
             "categoria": discipline.categoria,
@@ -139,8 +140,12 @@ def get_disciplines():
             "costo_mensual": discipline.costo_mensual,
         }
         disciplinas.append(disc)
-    disciplinas = jsonify(disciplinas)
-    return disciplinas
+    data = {
+            "pages": disciplines.pages,
+            "current_page": disciplines.page,
+            "data": disciplinas,
+        }
+    return data
 
 
 @api_blueprint.get("/me/profile")
@@ -165,8 +170,10 @@ def get_user_info(current_user):
     return usuario_data
 
 
+@cross_origin
 @api_blueprint.get("/statistics/inscripcionesPorDisciplina")
-def get_statics_inscripcionesPorDisciplina():
+@token_required
+def get_statics_inscripcionesPorDisciplina(current_user):
     """
     Devuelve las disciplinas y sus inscriptos
     """
@@ -178,5 +185,4 @@ def get_statics_inscripcionesPorDisciplina():
             'num_socios': len(disciplina.socio)
         }
         data.append(d)
-
     return data

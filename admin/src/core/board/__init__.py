@@ -180,11 +180,13 @@ def list_configuracion():
     return Configuracion.query.first()
 
 
-def list_disciplinas_activas():
+
+def list_disciplinas_activas(page):
     """
     Retorna las disciplinas activas
     """
-    return Disciplina.query.filter_by(estado="Activo").all()
+    per_page = get_elements_per_page()
+    return Disciplina.query.filter_by(estado="Activo").paginate(page=page, per_page=per_page)
 
 
 def list_disciplinas():
