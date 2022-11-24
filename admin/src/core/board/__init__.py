@@ -1,6 +1,5 @@
 from parser import issuite
 from src.core.board.disciplina import Disciplina
-#from src.core.board.issue  import Issues
 from src.core.database import db
 
 
@@ -45,14 +44,13 @@ def update_estado_disciplina(id):
 def get_elementos_pagina():
   #configuracion = Configuracion.query.first()
   #return configuracion.elementos_pagina
-  elementos_pagina = 4
+  elementos_pagina = 10
   return elementos_pagina
   
   
 def update_disciplina(id, **kwargs):
   disciplina = get_disciplina(id)
   disciplina.update(**kwargs)
-  #db.session.merge(disciplina)
   db.session.commit()
   return disciplina
 

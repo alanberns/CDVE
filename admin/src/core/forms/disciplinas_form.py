@@ -9,7 +9,7 @@ class DisciplinaNewForm(FlaskForm):
      entrenador = StringField(label=('entrenador'), validators=[DataRequired(),Length(min=4, max=255)])
      dia = StringField(label=('dia'), validators=[DataRequired(),Length(min=5, max=255)])
      hora = StringField(label=('hora'), validators=[DataRequired(),Length(min=4, max=255)])
-     costo_mensual = IntegerField(label=('costo_mensual'), validators=[DataRequired(),NumberRange(min=100, max=50000)])
+     costo_mensual = IntegerField(label=('costo_mensual'), validators=[DataRequired(),NumberRange(min=1, max=500000)])
 
 
 

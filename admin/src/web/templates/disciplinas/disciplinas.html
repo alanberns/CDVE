@@ -17,29 +17,70 @@
       <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
          <h2> Registrar nueva disciplina </h2> 
          <form action = "{{url_for('disciplinas.newdcp')}}" method="post">
-            <div class="ms-3">
-              <label for="Nombre" class="form-label">* Nombre</label>
-              <input type="text" class="form-control" id="nombre" name = "nombre" placeholder="nombre" required="1">
-            </div>
-            <div class="ms-3">
-              <label for="Categoria" class="form-label">* Categoria</label>
-              <input type="text" class="form-control" id="categoria" name = "categoria" placeholder="categoria" required="1">
-            </div>
+          <div class="ms-3">
+             <label for="Nombre" class="form-label">* Nombre</label>
+             <select class="form-select" id="nombre" name="nombre" required="">
+               <option value="">--Seleccionar--</option>
+               <option selected="" value="Futbol">Futbol</option>
+               <option value="Tenis">Tenis</option>
+               <option value="Boxeo">Boxeo</option>
+               <option value="Basquet">Basquet</option>
+               <option value="Voley">Voley</option>
+               <option value="Natacion">Natacion</option>
+               <option value="Padel">Padel</option>
+               <option value="Yoga">Yoga</option>
+               <option value="Karate">Karate</option>
+               <option value="Taekwondo">Taekwondo</option>
+             </select>
+           </div>
+           <div class="ms-3">
+             <label for="Categoria" class="form-label">* Categoria</label>
+             <select class="form-select" id="categoria" name="categoria" required="">
+               <option value="">--Seleccionar--</option>
+               <option selected="" value="Mini(2-6)">Mini (2 a 6 Años)</option>
+               <option value="Chicos(6-12)">Chicos (6 a 12 Años)</option>
+               <option value="Jovenes(13-17)">Jovenes (13 a 17 Años)</option>
+               <option value="Adultos(18-40)">Adultos (18 a 40 Años)</option>
+               <option value="Mayores(+40)">Mayores (Mas 40 Años)</option>
+             </select>
+           </div>
             <div class="ms-3">
               <label for="Instructor" class="form-label">* Instructor</label>
               <input type="text" class="form-control" id="entrenador" name = "entrenador" placeholder="entrenador" required="1">
             </div>
             <div class="ms-3">
-              <label for="Dia" class="form-label">* Dia</label>
-              <input type="text" class="form-control" id="dia" name="dia" placeholder="dia" required = "1">
+              <label for="dia" class="form-label">* Dia</label>
+              <select class="form-select" id="dia" name="dia" required="">
+                 <option value="">--Seleccionar--</option>
+                 <option selected="" value="Lunes">Lunes</option>
+                 <option value="Martes">Martes</option>
+                 <option value="Miercoles">Miercoles</option>
+                 <option value="Jueves">Jueves</option>
+                 <option value="Viernes">Viernes</option>
+                 <option value="Sabado">Sabado</option>
+              </select>
             </div>
             <div class="ms-3">
               <label for="Hora" class="form-label">* Hora</label>
-              <input type="text" class="form-control" id="hora" name="hora" placeholder="hora" required="1">
+              <select class="form-select" id="hora" name="hora" required="">
+                   <option value="">--Seleccionar--</option>
+                   <option selected="" value="9 Hs">9 Hs</option>
+                   <option value="10 Hs">10 Hs</option>
+                   <option value="11 Hs">11 Hs</option>
+                   <option value="12 Hs">12 Hs</option>
+                   <option value="13 Hs">13 Hs</option>
+                   <option value="14 Hs">14 Hs</option>
+                   <option value="15 Hs">15 Hs</option>
+                   <option value="16 Hs">16 Hs</option>
+                   <option value="17 Hs">17 Hs</option>
+                   <option value="18 Hs">18 Hs</option>
+                   <option value="19 Hs">19 Hs</option>
+                   <option value="20 Hs">20 Hs</option>
+                </select>
             </div>
             <div class="ms-3">
               <label for="Costo Precio" class="form-label">* Costo / Precio</label>
-              <input type="number" class="form-control" id="costo" name = "costo" placeholder="costo" required="1">
+              <input type="number" class="form-control" id="costo_mensual" name = "costo_mensual" placeholder="costo_mensual" required="1">
             </div>
             <div class="d-grid gap-2">
               <label for="Activo" class="form-label">(* ) Campos obligatorios</label>
