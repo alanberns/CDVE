@@ -9,8 +9,14 @@ from datetime import timedelta
 from flask import current_app
 from functools import wraps
 from flask_cors import cross_origin
-
-api_blueprint = Blueprint("api", __name__, url_prefix="/api")
+from flask import url_for
+from flask import current_app
+from werkzeug.utils import secure_filename
+from os.path import join as path_join
+from os.path import abspath as abs_path
+from os.path import dirname as up
+api_blueprint = Blueprint(
+    "api", __name__, url_prefix="/api")
 
 
 def token_required(f):
@@ -197,4 +203,12 @@ def comprobante(current_user):
     """
     Funcion que recibe y guarda el comprobante enviado desde el frontend.
     """
-    return jsonify(data={})
+    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    if 'file' not in request.files:
+        return jsonify({"message": "Archivo no encontrado en la peticion"}), 400
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    admin_path = up(abs_path(current_app.instance_path))
+    filepath = path_join(admin_path, "public", "comprobantes", filename)
+    file.save(filepath)
+    return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200

@@ -23,7 +23,8 @@ from src.web.helpers.percentage import float_to_percentage
 
 
 def create_app(env="development", static_folder="static"):
-    app = Flask(__name__, static_folder=static_folder)
+    app = Flask(__name__, instance_relative_config=True,
+                static_folder=static_folder)
     app.config.from_object(config[env])
     CORS(app)
     app.config['CORS_HEADERS'] = 'Content-Type'
