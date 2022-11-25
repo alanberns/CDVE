@@ -101,6 +101,17 @@ def add_usuario():
             flash("El username ingresado ya está registrado", "danger")
             return redirect(url_for("usuarios.add_usuario_view"))
 
+        # Validar nombre, apellido y username
+        if not validate_only_letters(form.username.data):
+            flash("el nombre de usuario solo debe contener letras", "danger")
+            return redirect(url_for("usuarios.add_usuario_view"))
+        if not validate_only_letters(form.first_name.data):
+            flash("el nombre solo debe contener letras", "danger")
+            return redirect(url_for("usuarios.add_usuario_view"))
+        if not validate_only_letters(form.last_name.data):
+            flash("el apellido solo debe contener letras", "danger")
+            return redirect(url_for("usuarios.add_usuario_view"))
+
         usuario = board.create_usuario(
             username=form.username.data,
             email=form.email.data,
@@ -157,6 +168,18 @@ def update_usuario(id):
         if board.exist_username(form.username.data):
             flash("el username ingresado ya está registrado", "danger")
             return redirect(url_for("usuarios.view_usuario", id=id))
+    
+    # Validar nombre, apellido y username
+    if not validate_only_letters(form.username.data):
+        flash("el nombre de usuario solo debe contener letras", "danger")
+        return redirect(url_for("usuarios.view_usuario", id=id))
+    if not validate_only_letters(form.first_name.data):
+        flash("el nombre solo debe contener letras", "danger")
+        return redirect(url_for("usuarios.view_usuario", id=id))
+    if not validate_only_letters(form.last_name.data):
+        flash("el apellido solo debe contener letras", "danger")
+        return redirect(url_for("usuarios.view_usuario", id=id))
+    
 
     # Si no están en uso el email nuevo ni el username nuevo actualiza los datos en la BD
     kwargs = {
@@ -274,3 +297,14 @@ def asignar_rol():
     board.asignar_rol(rol_id, usuario_id)
     flash("Se asignó el rol al usuario", "success")
     return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+
+
+def validate_only_letters(string):
+    """
+    Verifica que el string solo contenga letras
+    """
+    valid_chars = " qwertyuiopasdfghjklñzxcvbnmQWERTYUIOPASDFGHJKLÑZXCVBNMÁÉÚÍÓáéíóú"
+    for char in string:
+        if char not in valid_chars:
+            return False
+    return True

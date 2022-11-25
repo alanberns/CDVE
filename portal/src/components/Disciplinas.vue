@@ -23,6 +23,18 @@
         </tr>
       </tbody>
     </table>
+    <div class="container">
+      <ul class="pagination">
+        <li
+          v-for="page in pages"
+          v-bind:key="page"
+          v-bind:class="{ active: page == current_page }"
+          class="waves-effect"
+        >
+          <a @click="nextPage(page)" href="#">{{ page }}</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -33,16 +45,31 @@ export default {
   data() {
     return {
       disciplinas: [],
+      current_page: 1,
+      pages: 1,
     };
   },
-  created() {
-    let url = "club/disciplines";
-
-    apiService
-      .get(url)
-      .then((response) => (this.disciplinas = response.data))
-      .catch((error) => console.log(error));
+  async mounted() {
+    await this.nextPage();
   },
+  methods: {
+    async nextPage(page) {
+      let url = "club/disciplines";
+      page = page || this.current_page;
+      apiService
+        .get(url, {
+        params: {
+            page: page,
+          },
+        })    
+        .then((response) => {
+          this.disciplinas = response.data.data
+          this.pages = response.data.pages;
+          this.current_page = response.data.current_page;
+        })
+        .catch((error) => console.log(error));
+    },
+  }
 };
 </script>
 

@@ -11,7 +11,6 @@ export const useLoginStore = defineStore("loginStore", {
       localStorage.removeItem("token");
       this.token = null;
       this.isAuthenticated = false;
-      this.tokenExpired = true;
       router.push("/login");
     },
     signIn(token) {
@@ -19,5 +18,11 @@ export const useLoginStore = defineStore("loginStore", {
       this.isAuthenticated = true;
       this.tokenExpired = false;
     },
+    setTokenExpired(value) {
+      this.tokenExpired = value;
+    },
+  },
+  getters: {
+    getToken: (state) => state.token,
   },
 });

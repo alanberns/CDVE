@@ -5,7 +5,9 @@
             <thead>
                 <tr>
                     <th>N° SOCIO</th>
+                    <th>NOMBRE DE USUARIO</th>
                     <th>NOMBRE</th>
+                    <th>APELLIDO</th>
                     <th>EMAIL</th>
                     <th>TIPO DOCUMENTO</th>
                     <th>N° DOCUMENTO</th>
@@ -16,14 +18,16 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{user_info.number}}</td>
+                    <td>{{ user_info.number }}</td>
+                    <td>{{ user_info.first_name }}</td>
+                    <td>{{ user_info.last_name }}</td>
                     <td>{{ user_info.user }}</td>
                     <td>{{ user_info.email }}</td>
-                    <td>{{user_info.document_type}}</td>
-                    <td>{{user_info.document_number}}</td>
-                    <td>{{user_info.gender}}</td>
-                    <td>{{user_info.phone}}</td>
-                    <td>{{user_info.address}}</td>
+                    <td>{{ user_info.document_type }}</td>
+                    <td>{{ user_info.document_number }}</td>
+                    <td>{{ user_info.gender }}</td>
+                    <td>{{ user_info.phone }}</td>
+                    <td>{{ user_info.address }}</td>
                 </tr>
             </tbody>
         </table>
@@ -33,25 +37,25 @@
 <script>
 import { apiService } from "../apiService";
 export default {
-    name: "Usuario",
-    data() {
-        return {
-        user_info: [],
-        };
-    },
-    created() {
-        let url = "me/profile";
+  name: "Usuario",
+  data() {
+    return {
+      user_info: [],
+    };
+  },
+  created() {
+    let url = "me/profile";
 
-        apiService
-        .get(url, {
+    apiService
+      .get(url, {
         headers: {
           Authorization: `${localStorage.getItem("token")}`,
         },
       })
-        .then((response => (this.user_info = response.data)))
-        .catch((error) => console.log(error));
-    },
-    };
+      .then((response) => (this.user_info = response.data))
+      .catch((error) => console.log(error));
+  },
+};
 </script>
 
 <style></style>

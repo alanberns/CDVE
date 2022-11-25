@@ -1,7 +1,10 @@
 <template>
   <div class="container">
-    <p v-if="loginStore.tokenExpired">
-      Token expirado,por favor inice sesion nuevamente
+    <p
+      class="center-align flow-text token-expired-message"
+      v-if="loginStore.tokenExpired"
+    >
+      Token expirado, por favor inicie sesion nuevamente
     </p>
     <div class="row">
       <form
@@ -79,7 +82,6 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response.data.token);
           localStorage.setItem("token", response.data.token);
           this.loginStore.signIn(response.data.token);
         })
@@ -90,4 +92,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.token-expired-message {
+  color: #d50000;
+}
+</style>
