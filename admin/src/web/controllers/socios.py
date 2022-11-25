@@ -246,9 +246,12 @@ def ver_carnet():
     form = CarnetExport()
     if request.method == 'POST':
         rendered = render_template(
-                "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado
-            )
-        pdf = pdfkit.from_string(rendered, False)
+            "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado
+        )
+        options = {
+            "enable-local-file-access": None
+        }
+        pdf = pdfkit.from_string(rendered, False, options=options)
         response = make_response(pdf)
         response.headers["Content-Type"] = "application/pdf"
         response.headers[
