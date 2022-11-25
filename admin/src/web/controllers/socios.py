@@ -2,12 +2,14 @@ from flask import Blueprint
 from flask import render_template
 from flask import request, redirect, url_for, flash
 from flask import make_response
-from src.core.forms.socio_form import SocioForm, DocumentoForm
+from src.core.forms.socio_form import SocioForm, DocumentoForm, CarnetUpload, CarnetExport
 from src.web.helpers.auth import login_required
 from src.core import board
 import pdfkit
 import csv
 import io
+import os
+from datetime import datetime
 from qrcode import QRCode
 from src.web.helpers.permissions.user_permission import (
     socio_create_req,
@@ -219,3 +221,75 @@ def inscribir_socio_disciplina(socio_id, disciplina_id):
     board.socio_assign_disciplina(socio, disciplina)
     board.create_cuotas_by_inscripcion(socio, disciplina)
     return redirect(url_for("socios.ver_socio", socio_id=socio_id))
+
+
+@socio_blueprint.route("/verCarnet", methods=["get", "post"])
+@login_required
+@socio_show_req
+def ver_carnet():
+    socio_id = request.args.get('socio_id')
+    socio = board.find_socio_by_id(socio_id)
+    usuario = board.get_usuario(socio.id_usuario)
+    data = "http://localhost:5000/socios/verCarnet?socio_id="+str(socio.id)
+
+    socio_info = {
+        'nombre': usuario.first_name,
+        'apellido': usuario.last_name,
+        'numero': socio.id,
+        'numero_documento': socio.numero_documento,
+        'tipo_documento': socio.tipo_documento,
+        'fecha_alta': usuario.created_at,
+        'estado': socio.habilitado,
+    }
+    carnet = board.get_carnet(socio_id)
+    estado = not board.es_moroso(socio_id)
+    form = CarnetExport()
+    if request.method == 'POST':
+        rendered = render_template(
+                "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado
+            )
+        pdf = pdfkit.from_string(rendered, False)
+        response = make_response(pdf)
+        response.headers["Content-Type"] = "application/pdf"
+        response.headers[
+            "Content-Disposition"
+        ] = "attachment; filename=carnet_socio.pdf"
+        return response
+    return render_template("socios/carnet.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado, form=form)
+
+
+@socio_blueprint.route('/<int:socio_id>/carnet', methods=['POST', 'GET'])
+@login_required
+@socio_create_req
+def alta_carnet(socio_id):
+    """
+    Genera el carnet para un socio.
+    """
+    if (not board.get_carnet(socio_id)):
+        form = CarnetUpload()
+        if form.validate_on_submit():
+            datenow = datetime.now()
+            nameimg = f"uploads/{datenow}img.jpg"
+            nameqr = f"uploads/{datenow}qr.jpg"
+            form.image.data.save("public/"+nameimg)
+            data = "http://localhost:5000/socios/verCarnet?socio_id="+str(socio_id)
+            qr = QRCode(version = 1,
+                box_size = 10,
+                border = 5)
+            qr.add_data(data)
+            qr.make(fit = True)
+            img = qr.make_image(fill_color = 'black',back_color = 'white').convert('RGB')
+            img.save("public/"+nameqr)
+            kwargs = {
+                "id_socio": socio_id,
+                "url_imagen": nameimg,
+                "url_qr": nameqr,
+            }
+            board.create_carnet(**kwargs)
+            return redirect(url_for("socios.ver_carnet", socio_id=socio_id))
+    else:
+        return redirect(url_for("socios.socios_index"))
+    socio = board.find_socio_by_id(socio_id)
+    usuario = board.get_usuario(socio.id_usuario)
+    return render_template('socios/carnet_alta.html', form=form, apellido=usuario.last_name, nombre=usuario.first_name)
+
