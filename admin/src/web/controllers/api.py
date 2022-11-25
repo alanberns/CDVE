@@ -170,4 +170,37 @@ def get_statics_inscripcionesPorDisciplina():
         data.append(d)
     
     return data
+
+
+@api_blueprint.get("/me/license")
+@token_required
+def get_socio_state(current_user):
+    """
+    Devuelve la información de un socio y su estado de credencial
+    """
+    usuario = board.get_usuario(current_user.id)
+    socio = board.find_socio_by_id_usuario(current_user.id)
+    user_data = {
+        "status": "",
+        "description": "",
+        "profile": {
+            "user": usuario.username,
+            "email": usuario.email,
+            "number": socio.id,
+            "document_type": socio.tipo_documento,
+            "document_number": socio.numero_documento,
+            "gender": socio.genero,
+            "address": socio.direccion,
+            "phone": socio.telefono,
+        }
+    }
+    if (not board.es_moroso(socio.id)):
+        user_data["description"] = "El socio no registra deuda ni sanción."
+        user_data["status"] = "OK"
+    else:
+        user_data["description"] = "El socio es moroso."
+        user_data["status"] = "NOT OK"
+    usuario_data = jsonify(user_data)
+    return usuario_data
+
         
