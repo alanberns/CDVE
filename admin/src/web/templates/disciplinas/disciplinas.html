@@ -86,6 +86,7 @@
               <label for="Activo" class="form-label">(* ) Campos obligatorios</label>
               <button class="btn btn-success">Ingrese nueva Disciplina</button>
               <button class="btn btn-primary">Guardar</button>
+              <th><a href="{{url_for('disciplinas.export_discip')}}"><button class="btn btn-primary">Exportar Pdf </button></a></th> 
             </div>
          </form>
        </div>
@@ -125,8 +126,6 @@
                     </tbody>          
                 </thead>
                </table>
-               <th><a href="{{url_for('disciplinas.export_discip')}}"><button class="btn btn-primary">Exportar</button></a></th> 
-               <button class="btn btn-primary">Exportar.CV</button>
                <div class=pagination>
                   {% for page in disciplinas_pag.iter_pages() %} 
                       {% if page %}  

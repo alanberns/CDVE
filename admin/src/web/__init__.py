@@ -8,7 +8,6 @@ from src.core import database
 from src.core import seeds
 
 
-
 def create_app(env="development",static_folder= "static"):
     app = Flask(__name__,static_folder=static_folder )
 
@@ -21,6 +20,7 @@ def create_app(env="development",static_folder= "static"):
     def home():
         return render_template("home.html") 
     
+     
      
     @app.cli.command(name="resetdb")
     def resetdb():

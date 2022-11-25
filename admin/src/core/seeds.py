@@ -15,7 +15,7 @@ def run():
     t_disciplinaf3 = board.create_disciplina(
         nombre = "Futbol",
         categoria = "Chicos(6-12)",
-        entrenador ="Nicolás Dematei",
+        entrenador ="Nicolas Dematei",
         dia = "Martes",
         hora = "14 Hs",
         costo_mensual = 7000,
@@ -57,7 +57,7 @@ def run():
     t_disciplinat1 = board.create_disciplina(
         nombre = "Tenis",
         categoria = "Mini(2-6)",
-        entrenador = "María Terán",
+        entrenador = "Maria Teran",
         dia = "Viernes",
         hora = "12 Hs",
         costo_mensual = 6000,
@@ -77,7 +77,7 @@ def run():
     t_disciplinat4 = board.create_disciplina(
         nombre = "Tenis",
         categoria = "Jovenes(13-17)",
-        entrenador = "Paola Suárez",
+        entrenador = "Paola Suarez",
         dia = "Miercoles",
         hora = "12 Hs",
         costo_mensual = 10000,
@@ -87,7 +87,7 @@ def run():
     t_disciplinat6 = board.create_disciplina(
         nombre = "Tenis",
         categoria = "Adultos(18-40)",
-        entrenador = "Franco Davín",
+        entrenador = "Franco Davin",
         dia = "Martes",
         hora = "11 Hs",
         costo_mensual = 12000,
@@ -97,7 +97,7 @@ def run():
     t_disciplinat8 = board.create_disciplina(
         nombre = "Tenis",
         categoria =  "Mayores(+ 40)",
-        entrenador = " Hernán Gumy",
+        entrenador = " Hernan Gumy",
         dia = "Jueves", 
         hora = "17 Hs",
         costo_mensual = 13000,
@@ -108,7 +108,7 @@ def run():
     t_disciplinab3 = board.create_disciplina(
         nombre = "Boxeo",
         categoria = "Jovenes(13-17)",
-        entrenador = "Omar Narváez",
+        entrenador = "Omar Narvaez",
         dia = "Miercoles",
         hora = "17 Hs",
         costo_mensual = 10000,
@@ -151,7 +151,7 @@ def run():
     t_disciplinabq3 = board.create_disciplina(
         nombre = "Basquet",
         categoria = "Chicos(6-12)",
-        entrenador = "Marcos Delía",
+        entrenador = "Marcos Delia",
         dia = "Lunes",
         hora = "11 Hs",
         costo_mensual = 6000,
@@ -172,7 +172,7 @@ def run():
     t_disciplinabq7 = board.create_disciplina(
         nombre = "Basquet",
         categoria = "Adultos(18-40)",
-        entrenador = "Néstor García",
+        entrenador = "Nestor Garcia",
         dia = "Martes",
         hora = "10 Hs",
         costo_mensual = 12000,
@@ -192,7 +192,7 @@ def run():
     t_disciplinav2 = board.create_disciplina(
         nombre = "Voley",
         categoria = "Mini(2-6)",
-        entrenador = "Matías Sánchez",
+        entrenador = "Matias Sanchez",
         dia = "Lunes",
         hora = "10 Hs",
         costo_mensual = 6000,
@@ -253,7 +253,7 @@ def run():
     t_disciplinan3 = board.create_disciplina(
         nombre = "Natacion",
         categoria = "Chicos(6-12)",
-        entrenador = "Ana María Schultz",
+        entrenador = "Ana Maria Schultz",
         dia = "Miercoles",
         hora = "14 Hs",
         costo_mensual = 12000,
@@ -293,7 +293,7 @@ def run():
     t_disciplinap3 = board.create_disciplina(
         nombre = "Padel",
         categoria = "Jovenes(13-17)",
-        entrenador = "María Riera",
+        entrenador = "Maria Riera",
         dia =  "Lunes",
         hora = "10 Hs",
         costo_mensual = 10000,
@@ -313,7 +313,7 @@ def run():
     t_disciplinap7 = board.create_disciplina(
         nombre = "Padel",
         categoria = "Mayores(+ 40)",
-        entrenador = "Martín Di Nenno",
+        entrenador = "Martin Di Nenno",
         dia =  "Lunes",
         hora = "15 Hs",
         costo_mensual = 14000,
@@ -364,7 +364,7 @@ def run():
     t_disciplinak3 = board.create_disciplina(
         nombre = "Karate",
         categoria = "Jovenes(13-17)",
-        entrenador = "Lucía Mariojoulus",
+        entrenador = "Lucia Mariojoulus",
         dia =  "Miercoles",
         hora = "9 Hs",
         costo_mensual = 6000,

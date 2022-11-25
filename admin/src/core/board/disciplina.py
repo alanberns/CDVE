@@ -1,4 +1,4 @@
-#from datetime import datetime
+from datetime import datetime
 
 from src.core.database import db
 
@@ -24,19 +24,7 @@ class Disciplina(db.Model):
           self.estado = estado
 
 
-     def to_JSON(self):
-          return { 
-          'nombre': self.nombre,
-          'categoria': self.categoria,
-          'entrenador': self.entrenador,
-          'dia': self.dia,
-          'hora': self.hora,
-          'costo_mensual': self.costo_mensual
-          }
-
-
-
-
+  
 
 
 
