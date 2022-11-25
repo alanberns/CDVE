@@ -7,6 +7,7 @@ import Usuario from "./components/Usuario.vue";
 import Login from "./components/Login.vue";
 import ListPagos from "./components/ListPagos.vue";
 import SociosPorDisciplina from "./components/SociosPorDisciplina.vue";
+import GenerarPago from "./components/GenerarPago";
 
 // definir objeto rutas
 const routes = [
@@ -32,9 +33,13 @@ const routes = [
     component: ListPagos,
   },
   {
+    path: "/pagar",
+    component: GenerarPago,
+  },
+  {
     path: "/statistics/sociosPorDisciplina",
     component: SociosPorDisciplina,
-  }
+  },
 ];
 
 // crear objeto rutas

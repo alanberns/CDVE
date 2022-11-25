@@ -14,6 +14,9 @@
           <li v-if="loginStore.isAuthenticated">
             <router-link to="/pagos">Pagos</router-link>
           </li>
+          <li v-if="loginStore.isAuthenticated">
+            <router-link to="/pagar">Pagar</router-link>
+          </li>
         </ul>
         <ul id="nav-mobile2" class="right left hide-on-med-and-down">
           <li>

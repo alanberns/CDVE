@@ -22,4 +22,7 @@ export const useLoginStore = defineStore("loginStore", {
       this.tokenExpired = value;
     },
   },
+  getters: {
+    getToken: (state) => state.token,
+  },
 });

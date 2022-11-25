@@ -141,10 +141,10 @@ def get_disciplines():
         }
         disciplinas.append(disc)
     data = {
-            "pages": disciplines.pages,
-            "current_page": disciplines.page,
-            "data": disciplinas,
-        }
+        "pages": disciplines.pages,
+        "current_page": disciplines.page,
+        "data": disciplinas,
+    }
     return data
 
 
@@ -186,3 +186,15 @@ def get_statics_inscripcionesPorDisciplina(current_user):
         }
         data.append(d)
     return data
+
+  # Sin esto no permite hacer la peticion localmente desde el front
+
+
+@cross_origin
+@api_blueprint.post("/me/comprobante")
+@token_required
+def comprobante(current_user):
+    """
+    Funcion que recibe y guarda el comprobante enviado desde el frontend.
+    """
+    return jsonify(data={})
