@@ -234,3 +234,18 @@ def me_get_disciplines(current_user):
         "data": disciplinas,
     }
     return data
+
+
+@cross_origin
+@api_blueprint.get("/me/cuotas")
+@token_required
+def me_get_cuotas(current_user):
+    """
+    Devuelve las disciplinas activas  del usuario
+    """
+    disciplina = request.args.get("disciplina")
+    disciplina = board.find_disciplina_by_name(disciplina)
+    inscripcion = board.get_inscripcion_by_socio_and_disciplina(
+        current_user.socio[0], disciplina)
+    cuotas = board.get_cuotas_adeudadas_by_inscripcion_id(inscripcion.id)
+    return jsonify(cuotas=[cuota.serialize for cuota in cuotas])

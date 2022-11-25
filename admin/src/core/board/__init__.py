@@ -536,6 +536,13 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
     return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
 
 
+def get_cuotas_adeudadas_by_inscripcion_id(inscripcion_id):
+    """
+    Retorna las cuotas para un socio dado su id
+    """
+    return Cuota.query.filter_by(inscripcion_id=inscripcion_id).filter_by(estado_pago=False).all()
+
+
 def pay_cuotas_by_ids(cuota_ids):
     """
     Paga multiples cuotas, pasadas como una lista de ids de cuotas
