@@ -7,6 +7,9 @@ import Usuario from "./components/Usuario.vue";
 import Login from "./components/Login.vue";
 import ListPagos from "./components/ListPagos.vue";
 import SociosPorDisciplina from "./components/SociosPorDisciplina.vue";
+import Genero from "./components/genero.vue";
+import Concurrencia from "./components/Concurrencia.vue";
+import GenerarPago from "./components/GenerarPago";
 
 // definir objeto rutas
 const routes = [
@@ -38,6 +41,14 @@ const routes = [
   {
     path: "/statistics/sociosPorDisciplina",
     component: SociosPorDisciplina,
+  },
+  {
+    path: "/statistics/genero",
+    component: Genero,
+  },
+  {
+    path: "./statistics",
+    component: Concurrencia,
   }
 ];
 

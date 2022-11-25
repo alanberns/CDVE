@@ -242,9 +242,9 @@ def get_statistics_genero(current_user):
         'cantidad': cantidades,
     }
     return data
-  # Sin esto no permite hacer la peticion localmente desde el front
 
-
+    
+# Sin esto no permite hacer la peticion localmente desde el front
 # @cross_origin
 @api_blueprint.post("/me/comprobante")
 @token_required
