@@ -13,7 +13,7 @@
           />
         </div>
         <div class="file-path-wrapper">
-          <input class="file-path validate" type="text" />
+          <input :value="fileName" class="file-path validate" type="text" />
         </div>
       </div>
       <button>Upload!</button>
@@ -27,22 +27,27 @@ import { useLoginStore } from "../stores/LoginStore";
 export default {
   name: "SubirArchivo",
   data() {
-    return {};
+    return {
+      images: null,
+      fileName: null,
+    };
   },
   setup() {
     const loginStore = useLoginStore();
     return { loginStore };
   },
   methods: {
-    uploadFile() {
-      this.Images = this.$refs.file.files[0];
+    uploadFile(e) {
+      console.log(e);
+      this.images = this.$refs.file.files[0];
+      this.fileName = e.target.files[0].name;
     },
     submitFile() {
       apiService.defaults.headers[
         "Authorization"
       ] = `${this.loginStore.getToken}`;
       const formData = new FormData();
-      formData.append("file", this.Images);
+      formData.append("file", this.images);
       const headers = {
         "Content-Type": "multipart/form-data",
       };
