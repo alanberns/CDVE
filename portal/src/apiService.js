@@ -2,7 +2,7 @@ import axios from "axios";
 import { useLoginStore } from ".//stores/LoginStore.js";
 
 const apiService = axios.create({
-  baseURL: "http://127.0.0.1:5000/api",
+  baseURL: "https://admin-grupo14.proyecto2022.linti.unlp.edu.ar/api",
 });
 
 // Response interceptor for API calls
