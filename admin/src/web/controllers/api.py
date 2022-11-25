@@ -165,6 +165,8 @@ def get_user_info(current_user):
         "gender": socio.genero,
         "address": socio.direccion,
         "phone": socio.telefono,
+        "first_name": usuario.first_name,
+        "last_name": usuario.last_name,
     }
     usuario_data = jsonify(user_data)
     return usuario_data
@@ -173,11 +175,11 @@ def get_user_info(current_user):
 @cross_origin
 @api_blueprint.get("/statistics/inscripcionesPorDisciplina")
 @token_required
-def get_statics_inscripcionesPorDisciplina(current_user):
+def get_statistics_inscripcionesPorDisciplina(current_user):
     """
     Devuelve las disciplinas y sus inscriptos
     """
-    disciplinas = board.list_disciplinas()
+    disciplinas = board.list_all_disciplinas_activas()
     data = []
     for disciplina in disciplinas:
         d = {
@@ -185,4 +187,29 @@ def get_statics_inscripcionesPorDisciplina(current_user):
             'num_socios': len(disciplina.socio)
         }
         data.append(d)
+    return data
+
+
+@cross_origin
+@api_blueprint.get("/statistics/concurrencia")
+#@token_requiredcurrent_user
+def get_statistics_concurrencia():
+    """
+    Retorna la cantidad de personas que asisten al club por hora
+    """
+    horas = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+    hora_data = []
+    cantidad = []
+    for hora in horas:
+        hora_data.append(hora)
+        disciplinas = board.get_disciplinas_time(hora)
+        c = 0
+        for disciplina in disciplinas:
+            c = c +len(disciplina.socio)
+        cantidad.append(c)
+    data = {
+        "hora": hora_data,
+        "personas": cantidad,
+    }
+
     return data

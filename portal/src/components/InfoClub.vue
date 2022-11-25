@@ -38,7 +38,8 @@
                 <span class="card-title">Estadisticas de nuestro club</span>
                 </div>
                 <div class="card-action grey">
-                <router-link to="/statistics/sociosPorDisciplina"><button>Inscriptos por disciplina</button></router-link>
+                    <router-link to="/statistics/sociosPorDisciplina"><button>Inscriptos por disciplina</button></router-link>
+                    <router-link to="/statistics/concurrencia"><button>Concurrencia</button></router-link>
                 </div>
             </div>
             </div>
@@ -57,7 +58,7 @@ import { apiService } from "../apiService";
         };
     },
     created() {
-        let url = "http://127.0.0.1:5000/api/club/info";
+        let url = "club/info";
 
         apiService
             .get(url)

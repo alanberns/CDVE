@@ -5,7 +5,9 @@
             <thead>
                 <tr>
                     <th>N° SOCIO</th>
+                    <th>NOMBRE DE USUARIO</th>
                     <th>NOMBRE</th>
+                    <th>APELLIDO</th>
                     <th>EMAIL</th>
                     <th>TIPO DOCUMENTO</th>
                     <th>N° DOCUMENTO</th>
@@ -17,6 +19,8 @@
             <tbody>
                 <tr>
                     <td>{{user_info.number}}</td>
+                    <td>{{usern_info.first_name}}</td>
+                    <td>{{user_info.last_name}}</td>
                     <td>{{ user_info.user }}</td>
                     <td>{{ user_info.email }}</td>
                     <td>{{user_info.document_type}}</td>
