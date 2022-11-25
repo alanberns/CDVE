@@ -1,6 +1,6 @@
 <template>
   <div>
-    <br /><br />
+    <br />
     <table class="responsive-table centered highlight">
       <thead>
         <tr>
@@ -32,6 +32,7 @@
 
 <script>
 import { apiService } from "../apiService";
+
 export default {
   name: "ListPagos",
   data() {
@@ -60,7 +61,6 @@ export default {
           this.pagos = response.data.payments;
           this.pages = response.data.pages;
           this.current_page = response.data.current_page;
-          console.log(response.data);
         })
         .catch((error) => console.log(error));
     },

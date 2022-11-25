@@ -180,7 +180,6 @@ def list_configuracion():
     return Configuracion.query.first()
 
 
-
 def list_disciplinas_activas(page):
     """
     Retorna las disciplinas activas
@@ -201,6 +200,16 @@ def get_disciplinas_time(hora):
     retorna las disciplinas que comienzan a la hora indicada
     """
     return Disciplina.query.filter(Disciplina.hora.ilike(hora + "%")).all()
+
+    
+def get_disciplinas_by_user_id(socio_id):
+    """
+    Retorna las disciplinas dado el id de un socio
+    """
+    return Disciplina.query.join(Inscripcion).join(Socio).filter(
+        Disciplina.estado == "Activo",
+        Socio.id == socio_id
+    )
 
 
 def list_disciplinas():
@@ -546,6 +555,13 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
     Retorna las cuotas para un socio dado su id
     """
     return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
+
+
+def get_cuotas_adeudadas_by_inscripcion_id(inscripcion_id):
+    """
+    Retorna las cuotas para un socio dado su id
+    """
+    return Cuota.query.filter_by(inscripcion_id=inscripcion_id).filter_by(estado_pago=False).all()
 
 
 def pay_cuotas_by_ids(cuota_ids):

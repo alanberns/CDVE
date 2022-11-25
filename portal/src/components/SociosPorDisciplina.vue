@@ -8,26 +8,41 @@
   </Section>
   <br>
   <div>
-      <Bar
-    :chart-options="chartOptions"
-    :chart-data="chartData"
-    :chart-id="chartId"
-    :dataset-id-key="datasetIdKey"
-    :plugins="plugins"
-    :css-classes="cssClasses"
-    :styles="styles"
-    :width="width"
-    :height="height"
-  />
-</div>
+    <Bar
+      :chart-options="chartOptions"
+      :chart-data="chartData"
+      :chart-id="chartId"
+      :dataset-id-key="datasetIdKey"
+      :plugins="plugins"
+      :css-classes="cssClasses"
+      :styles="styles"
+      :width="width"
+      :height="height"
+    />
+  </div>
 </template>
 
 <script>
 import { apiService } from "../apiService";
-import { Bar } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Bar } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+);
 
 export default {
   name: "SociosPorDisciplina",
@@ -54,21 +69,21 @@ export default {
     }
   },
   mounted() {
-    let data = []
+    let data = [];
     apiService
-        .get("statistics/inscripcionesPorDisciplina", {
+      .get("statistics/inscripcionesPorDisciplina", {
         headers: {
           Authorization: `${localStorage.getItem("token")}`,
         },
       })
-        .then(response => response.data.forEach(element => {
-            this.chartData.labels.push(element.nombre);
-            data.push(element.num_socios);
-            })
-        )
-        this.chartData.datasets[0].data=data;
-        this.loaded = true;
-  }
-
-}
+      .then((response) =>
+        response.data.forEach((element) => {
+          this.chartData.labels.push(element.nombre);
+          data.push(element.num_socios);
+        })
+      );
+    this.chartData.datasets[0].data = data;
+    this.loaded = true;
+  },
+};
 </script>

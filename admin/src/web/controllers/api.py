@@ -8,9 +8,12 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
+from werkzeug.utils import secure_filename
+from src.web.helpers.uploads_path import getComprobantePath
 
-api_blueprint = Blueprint("api", __name__, url_prefix="/api")
+api_blueprint = Blueprint(
+    "api", __name__, url_prefix="/api")
 
 
 def token_required(f):
@@ -57,7 +60,7 @@ def login():
     return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
 
 
-@cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
+# @cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
@@ -141,10 +144,10 @@ def get_disciplines():
         }
         disciplinas.append(disc)
     data = {
-            "pages": disciplines.pages,
-            "current_page": disciplines.page,
-            "data": disciplinas,
-        }
+        "pages": disciplines.pages,
+        "current_page": disciplines.page,
+        "data": disciplinas,
+    }
     return data
 
 
@@ -172,7 +175,7 @@ def get_user_info(current_user):
     return usuario_data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/statistics/inscripcionesPorDisciplina")
 @token_required
 def get_statistics_inscripcionesPorDisciplina(current_user):
@@ -217,8 +220,8 @@ def get_statistics_concurrencia(current_user):
 
 @cross_origin
 @api_blueprint.get("/statistics/genero")
-#@token_required current_user
-def get_statistics_genero():
+@token_required
+def get_statistics_genero(current_user):
     """
     Retorna la cantidad de socios por genero
     """
@@ -239,3 +242,61 @@ def get_statistics_genero():
         'cantidad': cantidades,
     }
     return data
+  # Sin esto no permite hacer la peticion localmente desde el front
+
+
+# @cross_origin
+@api_blueprint.post("/me/comprobante")
+@token_required
+def comprobante(current_user):
+    """
+    Funcion que recibe y guarda el comprobante enviado desde el frontend.
+    """
+    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    if 'file' not in request.files:
+        return jsonify({"message": "Archivo no encontrado en la peticion"}), 400
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    filepath = getComprobantePath(filename)
+    file.save(filepath)
+    return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
+
+
+# @cross_origin
+@api_blueprint.get("/me/disciplines")
+@token_required
+def me_get_disciplines(current_user):
+    """
+    Devuelve las disciplinas activas  del usuario
+    """
+    disciplines = board.get_disciplinas_by_user_id(current_user.id)
+    disciplinas = []
+    for discipline in disciplines:
+        disc = {
+            "name": discipline.nombre,
+            "categoria": discipline.categoria,
+            "teacher": discipline.entrenador,
+            "days": discipline.dia,
+            "time": discipline.hora,
+            "costo_mensual": discipline.costo_mensual,
+        }
+        disciplinas.append(disc)
+    data = {
+        "data": disciplinas,
+    }
+    return data
+
+
+# @cross_origin
+@api_blueprint.get("/me/cuotas")
+@token_required
+def me_get_cuotas(current_user):
+    """
+    Devuelve las disciplinas activas  del usuario
+    """
+    disciplina = request.args.get("disciplina")
+    disciplina = board.find_disciplina_by_name(disciplina)
+    inscripcion = board.get_inscripcion_by_socio_and_disciplina(
+        current_user.socio[0], disciplina)
+    cuotas = board.get_cuotas_adeudadas_by_inscripcion_id(inscripcion.id)
+    return jsonify(cuotas=[cuota.serialize for cuota in cuotas])
