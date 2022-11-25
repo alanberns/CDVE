@@ -1,11 +1,22 @@
 <template>
-  <div class="container center-align">
+  <div class="container">
+    <p
+      class="center-align flow-text token-expired-message"
+      v-if="loginStore.tokenExpired"
+    >
+      Token expirado, por favor inicie sesion nuevamente
+    </p>
     <div class="row">
-      <form @submit.prevent="login" class="col s12 center-align">
-        <div class="row center-align">
-          <div class="input-field col s6 center-align">
+      <form
+        @submit.prevent="login"
+        class="col s12 m8 l8 offset-l2 offset-m4 m4 offset-s3 s6"
+      >
+        <div class="row">
+          <h3>Iniciar Sesion</h3>
+        </div>
+        <div class="row">
+          <div class="input-field">
             <input
-              placeholder="Placeholder"
               id="first_name"
               type="text"
               class="validate center-align"
@@ -14,34 +25,42 @@
             <label for="first_name">Email</label>
           </div>
         </div>
-        <div class="row center-align">
-          <div class="input-field col s6 center-align">
+        <div class="row">
+          <div class="input-field">
             <input
               id="password"
               type="password"
               class="validate center-align"
               v-model="password"
             />
-            <label for="password">Password</label>
+            <label for="password">Contraseña</label>
           </div>
         </div>
-        <button
-          class="btn waves-effect waves-light"
-          type="submit"
-          name="action"
-        >
-          Submit
-          <i class="material-icons right">send</i>
-        </button>
+        <div class="row">
+          <button
+            class="btn waves-effect waves-light"
+            type="submit"
+            name="action"
+          >
+            Iniciar Sesion
+          </button>
+        </div>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import router from "@/router";
+import { apiService } from "../apiService";
+import { useLoginStore } from "../stores/LoginStore.js";
+
 export default {
   name: "Login",
+  setup() {
+    const loginStore = useLoginStore();
+    return { loginStore };
+  },
   data() {
     return {
       info: null,
@@ -51,9 +70,9 @@ export default {
   },
   methods: {
     async login() {
-      await axios
+      await apiService
         .post(
-          "http://127.0.0.1:5000/api/login",
+          "/login",
           {},
           {
             auth: {
@@ -62,13 +81,19 @@ export default {
             },
           }
         )
-        .then(
-          (response) => ((this.info = response.data), console.log(this.info))
-        )
+        .then((response) => {
+          localStorage.setItem("token", response.data.token);
+          this.loginStore.signIn(response.data.token);
+        })
         .catch((error) => console.log(error));
+      router.push("/pagos");
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+.token-expired-message {
+  color: #d50000;
+}
+</style>

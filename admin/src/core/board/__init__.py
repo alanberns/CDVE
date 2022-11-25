@@ -105,10 +105,10 @@ def filter_usuarios(email, activo, page=1, per_page=10):
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     else:
         if (activo != ""):
-            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.ilike(email +"%")).order_by(
+            usuarios = Usuario.query.filter(Usuario.activo == activo, Usuario.email.ilike(email + "%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
         else:
-            usuarios = Usuario.query.filter(Usuario.email.ilike(email +"%")).order_by(
+            usuarios = Usuario.query.filter(Usuario.email.ilike(email + "%")).order_by(
                 Usuario.last_name.asc()).paginate(page=page, per_page=per_page, error_out=False)
     return usuarios
 
@@ -143,6 +143,7 @@ def get_roles():
     """
     return Rol.query.all()
 
+
 def get_rol_socio():
     """
     Retorna el rol socio
@@ -152,16 +153,16 @@ def get_rol_socio():
         if rol.nombre == "Socio":
             return rol
 
+
 def usuario_has_rol(rol_name, usuario_id):
     """
-    Indica si el id del rol esta asignado al usuario
+    Indica si el rol esta asignado al usuario
     """
     usuario = get_usuario(usuario_id)
     for rol in usuario.roles:
         if rol.nombre == rol_name:
             return True
-        else:
-            return False
+    return False
 
 
 def find_user_by_email(email):
@@ -177,6 +178,38 @@ def list_configuracion():
     Lista los datos de la configuracion, devuelve una sola tupla
     """
     return Configuracion.query.first()
+
+
+def list_disciplinas_activas(page):
+    """
+    Retorna las disciplinas activas
+    """
+    per_page = get_elements_per_page()
+    return Disciplina.query.filter_by(estado="Activo").paginate(page=page, per_page=per_page)
+
+
+def list_all_disciplinas_activas():
+    """
+    Retorna las disciplinas activas
+    """
+    return Disciplina.query.filter_by(estado="Activo").all()
+
+
+def get_disciplinas_time(hora):
+    """
+    retorna las disciplinas que comienzan a la hora indicada
+    """
+    return Disciplina.query.filter(Disciplina.hora.ilike(hora + "%")).all()
+
+    
+def get_disciplinas_by_user_id(socio_id):
+    """
+    Retorna las disciplinas dado el id de un socio
+    """
+    return Disciplina.query.join(Inscripcion).join(Socio).filter(
+        Disciplina.estado == "Activo",
+        Socio.id == socio_id
+    )
 
 
 def list_disciplinas():
@@ -297,6 +330,13 @@ def list_socios():
         .all()
     )
     return socios
+
+
+def list_socios_all():
+    """
+    Devuelve todos los socios activos
+    """
+    return Socio.query.filter_by(activo=True).all()
 
 
 def find_socio_by_id_usuario(usuario_id):
@@ -517,6 +557,13 @@ def get_cuotas_by_inscripcion_id(inscripcion_id):
     return Cuota.query.filter_by(inscripcion_id=inscripcion_id).all()
 
 
+def get_cuotas_adeudadas_by_inscripcion_id(inscripcion_id):
+    """
+    Retorna las cuotas para un socio dado su id
+    """
+    return Cuota.query.filter_by(inscripcion_id=inscripcion_id).filter_by(estado_pago=False).all()
+
+
 def pay_cuotas_by_ids(cuota_ids):
     """
     Paga multiples cuotas, pasadas como una lista de ids de cuotas
@@ -686,8 +733,9 @@ def update_valor_cuotas(new_value_cuota):
     return cuotas
 
 
-def get_pagos_by_socio_id(socio_id):
-    return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == socio_id).distinct()
+def get_pagos_by_socio_id(socio_id, page):
+    per_page = get_elements_per_page()
+    return Pago.query.join(Cuota.pago).join(Inscripcion).join(Socio).filter(Socio.id == socio_id).distinct().paginate(page=page, per_page=per_page)
 
 
 def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):

@@ -8,8 +8,12 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
+# from flask_cors import cross_origin
+from werkzeug.utils import secure_filename
+from src.web.helpers.uploads_path import getComprobantePath
 
-api_blueprint = Blueprint("api", __name__, url_prefix="/api")
+api_blueprint = Blueprint(
+    "api", __name__, url_prefix="/api")
 
 
 def token_required(f):
@@ -20,8 +24,8 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "x-access-token" in request.headers:
-            token = request.headers["x-access-token"]
+        if "Authorization" in request.headers:
+            token = request.headers["Authorization"]
         if not token:
             return jsonify({"message": "El token es invalido"}), 401
         try:
@@ -34,6 +38,7 @@ def token_required(f):
     return decorated
 
 
+# @cross_origin
 @api_blueprint.post("/login")
 def login():
     """
@@ -56,19 +61,28 @@ def login():
     return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
 
 
+# @cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
     """
     Funcion que devuelve el listado de pagos del usuario actual.
     """
+    page = request.args.get("page", default=1, type=int)
     try:
-        pagos = board.get_pagos_by_socio_id(current_user.socio[0].id)
+        pagos = board.get_pagos_by_socio_id(current_user.socio[0].id, page)
     except KeyError:
         return jsonify({"message": "EL usuario actual no es un socio"}), 401
-    return jsonify(payments=[pago.serialize for pago in pagos])
+
+    payments = {
+        "pages": pagos.pages,
+        "current_page": pagos.page,
+        "payments": [pago.serialize for pago in pagos.items]
+    }
+    return jsonify(payments)
 
 
+# @cross_origin
 @api_blueprint.post("/me/payments")
 @token_required
 def pay(current_user):
@@ -104,6 +118,7 @@ def pay(current_user):
     return jsonify(payments=pago.serialize)
 
 
+# @cross_origin
 @api_blueprint.get("/club/info")
 def info_club():
     """
@@ -113,14 +128,16 @@ def info_club():
     return jsonify(info=config.serialize_info_club)
 
 
+# @cross_origin
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
     """
-    Devuelve las disciplinas del club
+    Devuelve las disciplinas activas del club
     """
-    disciplines = board.list_disciplinas()
+    page = request.args.get("page", default=1, type=int)
+    disciplines = board.list_disciplinas_activas(page)
     disciplinas = []
-    for discipline in disciplines:
+    for discipline in disciplines.items:
         disc = {
             "name": discipline.nombre,
             "categoria": discipline.categoria,
@@ -130,10 +147,15 @@ def get_disciplines():
             "costo_mensual": discipline.costo_mensual,
         }
         disciplinas.append(disc)
-    disciplinas = jsonify(disciplinas)
-    return disciplinas
+    data = {
+        "pages": disciplines.pages,
+        "current_page": disciplines.page,
+        "data": disciplinas,
+    }
+    return data
 
 
+# @cross_origin
 @api_blueprint.get("/me/profile")
 @token_required
 def get_user_info(current_user):
@@ -151,6 +173,135 @@ def get_user_info(current_user):
         "gender": socio.genero,
         "address": socio.direccion,
         "phone": socio.telefono,
+        "first_name": usuario.first_name,
+        "last_name": usuario.last_name,
     }
     usuario_data = jsonify(user_data)
     return usuario_data
+
+
+# @cross_origin
+@api_blueprint.get("/statistics/inscripcionesPorDisciplina")
+@token_required
+def get_statistics_inscripcionesPorDisciplina(current_user):
+    """
+    Devuelve las disciplinas y sus inscriptos
+    """
+    disciplinas = board.list_all_disciplinas_activas()
+    data = []
+    for disciplina in disciplinas:
+        d = {
+            'nombre': disciplina.nombre + " " + disciplina.categoria,
+            'num_socios': len(disciplina.socio)
+        }
+        data.append(d)
+    return data
+
+
+# @cross_origin
+@api_blueprint.get("/statistics/concurrencia")
+@token_required
+def get_statistics_concurrencia(current_user):
+    """
+    Retorna la cantidad de personas que asisten al club por hora
+    """
+    horas = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+    hora_data = []
+    cantidad = []
+    for hora in horas:
+        hora_data.append(hora)
+        disciplinas = board.get_disciplinas_time(hora)
+        c = 0
+        for disciplina in disciplinas:
+            c = c +len(disciplina.socio)
+        cantidad.append(c)
+    data = {
+        "hora": hora_data,
+        "personas": cantidad,
+    }
+
+    return data
+
+
+# @cross_origin
+@api_blueprint.get("/statistics/genero")
+@token_required
+def get_statistics_genero(current_user):
+    """
+    Retorna la cantidad de socios por genero
+    """
+    generos = []
+    valores = {}
+    socios = board.list_socios_all()
+    for socio in socios:
+        if socio.genero not in generos:
+            generos.append(socio.genero)
+            valores[socio.genero] = 1
+        else: 
+            valores[socio.genero] = valores[socio.genero] + 1
+    cantidades = []
+    for genero in generos:
+        cantidades.append(valores[genero])
+    data = {
+        'genero': generos,
+        'cantidad': cantidades,
+    }
+    return data
+
+    
+# Sin esto no permite hacer la peticion localmente desde el front
+# @cross_origin
+@api_blueprint.post("/me/comprobante")
+@token_required
+def comprobante(current_user):
+    """
+    Funcion que recibe y guarda el comprobante enviado desde el frontend.
+    """
+    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    if 'file' not in request.files:
+        return jsonify({"message": "Archivo no encontrado en la peticion"}), 400
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    filepath = getComprobantePath(filename)
+    file.save(filepath)
+    return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
+
+
+# @cross_origin
+@api_blueprint.get("/me/disciplines")
+@token_required
+def me_get_disciplines(current_user):
+    """
+    Devuelve las disciplinas activas  del usuario
+    """
+    disciplines = board.get_disciplinas_by_user_id(current_user.id)
+    disciplinas = []
+    for discipline in disciplines:
+        disc = {
+            "name": discipline.nombre,
+            "categoria": discipline.categoria,
+            "teacher": discipline.entrenador,
+            "days": discipline.dia,
+            "time": discipline.hora,
+            "costo_mensual": discipline.costo_mensual,
+        }
+        disciplinas.append(disc)
+    data = {
+        "data": disciplinas,
+    }
+    return data
+
+
+@cross_origin
+@api_blueprint.get("/me/cuotas")
+@token_required
+def me_get_cuotas(current_user):
+    """
+    Devuelve las disciplinas activas  del usuario
+    """
+    disciplina = request.args.get("disciplina")
+    disciplina = board.find_disciplina_by_name(disciplina)
+    inscripcion = board.get_inscripcion_by_socio_and_disciplina(
+        current_user.socio[0], disciplina)
+    cuotas = board.get_cuotas_adeudadas_by_inscripcion_id(inscripcion.id)
+    return jsonify(cuotas=[cuota.serialize for cuota in cuotas])

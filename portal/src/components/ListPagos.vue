@@ -1,25 +1,17 @@
 <template>
-  <h1>Nuestras disciplinas</h1>
   <div>
-    <table class="striped centered highlight">
+    <br />
+    <table class="responsive-table centered highlight">
       <thead>
         <tr>
-          <th>NOMBRE</th>
-          <th>CATEGORIA</th>
-          <th>DIA</th>
-          <th>HORA</th>
-          <th>VALOR</th>
-          <th>PROFESOR</th>
+          <th>Monto</th>
+          <th>Fecha</th>
         </tr>
       </thead>
       <tbody>
-          <tr v-for="disciplina in disciplinas" :key="disciplina.id">
-            <td>{{ disciplina.name }}</td>
-            <td>{{ disciplina.categoria }}</td>
-            <td>{{disciplina.days}}</td>
-            <td>{{disciplina.time}}</td>
-            <td>{{disciplina.costo_mensual}}</td>
-            <td>{{disciplina.teacher}}</td>
+        <tr v-for="pago in pagos" :key="pago.id">
+          <td>{{ pago.monto }}</td>
+          <td>{{ pago.fecha }}</td>
         </tr>
       </tbody>
     </table>
@@ -40,11 +32,12 @@
 
 <script>
 import { apiService } from "../apiService";
+
 export default {
-  name: "Disciplinas",
+  name: "ListPagos",
   data() {
     return {
-      disciplinas: [],
+      pagos: [],
       current_page: 1,
       pages: 1,
     };
@@ -54,24 +47,25 @@ export default {
   },
   methods: {
     async nextPage(page) {
-      let url = "club/disciplines";
       page = page || this.current_page;
       apiService
-        .get(url, {
-        params: {
+        .get("/me/payments", {
+          params: {
             page: page,
           },
-        })    
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        })
         .then((response) => {
-          this.disciplinas = response.data.data
+          this.pagos = response.data.payments;
           this.pages = response.data.pages;
           this.current_page = response.data.current_page;
         })
         .catch((error) => console.log(error));
     },
-  }
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>
