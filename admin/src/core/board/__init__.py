@@ -180,13 +180,22 @@ def list_configuracion():
     return Configuracion.query.first()
 
 
-
 def list_disciplinas_activas(page):
     """
     Retorna las disciplinas activas
     """
     per_page = get_elements_per_page()
     return Disciplina.query.filter_by(estado="Activo").paginate(page=page, per_page=per_page)
+
+
+def get_disciplinas_by_user_id(socio_id):
+    """
+    Retorna las disciplinas dado el id de un socio
+    """
+    return Disciplina.query.join(Inscripcion).join(Socio).filter(
+        Disciplina.estado == "Activo",
+        Socio.id == socio_id
+    )
 
 
 def list_disciplinas():

@@ -209,3 +209,28 @@ def comprobante(current_user):
     filepath = getComprobantePath(filename)
     file.save(filepath)
     return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
+
+
+@cross_origin
+@api_blueprint.get("/me/disciplines")
+@token_required
+def me_get_disciplines(current_user):
+    """
+    Devuelve las disciplinas activas  del usuario
+    """
+    disciplines = board.get_disciplinas_by_user_id(current_user.id)
+    disciplinas = []
+    for discipline in disciplines:
+        disc = {
+            "name": discipline.nombre,
+            "categoria": discipline.categoria,
+            "teacher": discipline.entrenador,
+            "days": discipline.dia,
+            "time": discipline.hora,
+            "costo_mensual": discipline.costo_mensual,
+        }
+        disciplinas.append(disc)
+    data = {
+        "data": disciplinas,
+    }
+    return data
