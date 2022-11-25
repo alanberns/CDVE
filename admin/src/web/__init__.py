@@ -26,8 +26,8 @@ def create_app(env="development", static_folder="static"):
     app = Flask(__name__, instance_relative_config=True,
                 static_folder=static_folder)
     app.config.from_object(config[env])
-    # CORS(app)
-    # app.config['CORS_HEADERS'] = 'Content-Type'
+    #CORS(app)
+    #app.config['CORS_HEADERS'] = 'Content-Type'
     csrf = CSRFProtect()
     csrf.init_app(app)
     csrf.exempt(api_blueprint)
