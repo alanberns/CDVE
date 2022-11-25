@@ -8,8 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
-from flask_cors import cross_origin
-from flask import url_for
+# from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
 
@@ -61,7 +60,7 @@ def login():
     return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
 
 
-@cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
+# @cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
@@ -174,7 +173,7 @@ def get_user_info(current_user):
     return usuario_data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/statistics/inscripcionesPorDisciplina")
 @token_required
 def get_statics_inscripcionesPorDisciplina(current_user):
@@ -194,7 +193,7 @@ def get_statics_inscripcionesPorDisciplina(current_user):
   # Sin esto no permite hacer la peticion localmente desde el front
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.post("/me/comprobante")
 @token_required
 def comprobante(current_user):
@@ -211,7 +210,7 @@ def comprobante(current_user):
     return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/me/disciplines")
 @token_required
 def me_get_disciplines(current_user):
@@ -236,7 +235,7 @@ def me_get_disciplines(current_user):
     return data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/me/cuotas")
 @token_required
 def me_get_cuotas(current_user):
