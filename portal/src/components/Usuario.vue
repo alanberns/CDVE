@@ -19,7 +19,7 @@
             <tbody>
                 <tr>
                     <td>{{user_info.number}}</td>
-                    <td>{{usern_info.first_name}}</td>
+                    <td>{{user_info.first_name}}</td>
                     <td>{{user_info.last_name}}</td>
                     <td>{{ user_info.user }}</td>
                     <td>{{ user_info.email }}</td>

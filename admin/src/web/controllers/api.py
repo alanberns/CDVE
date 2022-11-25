@@ -192,8 +192,8 @@ def get_statistics_inscripcionesPorDisciplina(current_user):
 
 @cross_origin
 @api_blueprint.get("/statistics/concurrencia")
-#@token_requiredcurrent_user
-def get_statistics_concurrencia():
+@token_required
+def get_statistics_concurrencia(current_user):
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
@@ -212,4 +212,30 @@ def get_statistics_concurrencia():
         "personas": cantidad,
     }
 
+    return data
+
+
+@cross_origin
+@api_blueprint.get("/statistics/genero")
+#@token_required current_user
+def get_statistics_genero():
+    """
+    Retorna la cantidad de socios por genero
+    """
+    generos = []
+    valores = {}
+    socios = board.list_socios_all()
+    for socio in socios:
+        if socio.genero not in generos:
+            generos.append(socio.genero)
+            valores[socio.genero] = 1
+        else: 
+            valores[socio.genero] = valores[socio.genero] + 1
+    cantidades = []
+    for genero in generos:
+        cantidades.append(valores[genero])
+    data = {
+        'genero': generos,
+        'cantidad': cantidades,
+    }
     return data

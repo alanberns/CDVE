@@ -1,5 +1,12 @@
 <template>
   <br><br>
+  <Section> 
+    <h2>Concurrencia esperada de socios al club</h2>
+    <span>
+        Gráfico de linea que muestra la cantidad de socios estimados que asisten por hora al club semanalmente
+    </span>
+  </Section>
+  <br>
   <div>
       <Line
     :chart-options="chartOptions"

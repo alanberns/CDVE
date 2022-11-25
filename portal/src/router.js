@@ -8,6 +8,7 @@ import Login from "./components/Login.vue";
 import ListPagos from "./components/ListPagos.vue";
 import SociosPorDisciplina from "./components/SociosPorDisciplina.vue";
 import Concurrencia from "./components/Concurrencia.vue"
+import Genero from "./components/Genero.vue"
 
 // definir objeto rutas
 const routes = [
@@ -39,6 +40,10 @@ const routes = [
   {
     path: "/statistics/concurrencia",
     component: Concurrencia,
+  },
+  {
+    path: "/statistics/genero",
+    component: Genero,
   }
 ];
 

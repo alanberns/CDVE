@@ -1,5 +1,12 @@
 <template>
   <br><br>
+  <Section> 
+    <h2>Socios inscriptos por disciplina</h2>
+    <span>
+        Gráfico de barras en el que se refleja la cantidad de socios que hay inscriptos en cada una de nuestras disciplinas
+    </span>
+  </Section>
+  <br>
   <div>
       <Bar
     :chart-options="chartOptions"
@@ -34,7 +41,7 @@ export default {
         labels: [],
         datasets: [
             {
-                label: 'Numero de socios',
+                label: 'Numero de socios inscriptos',
                 backgroundColor:['#ea80fc','#e040fb', '#d500f9', '#aa00ff', '#f8bbd0', '#f06292'],              
                 data: [],                
             }

@@ -323,6 +323,13 @@ def list_socios():
     return socios
 
 
+def list_socios_all():
+    """
+    Devuelve todos los socios activos
+    """
+    return Socio.query.filter_by(activo=True).all()
+
+
 def find_socio_by_id_usuario(usuario_id):
     """
     Devuelve un socio por el id de usuario
