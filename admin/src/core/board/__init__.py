@@ -14,41 +14,47 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
-#Lista todas las disciplinas
+# Lista todas las disciplinas
 def list_disciplinas_paginadas(page=1, per_page=10):
-    return Disciplina.query.order_by(Disciplina.id.asc()).paginate(page=page,per_page=per_page,error_out=False)
+    return Disciplina.query.order_by(Disciplina.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+
 
 def listAll_disciplinas():
-  return Disciplina.query.all()
+    return Disciplina.query.all()
+
 
 @classmethod
 def get_disciplinas(self):
     disciplinas = Disciplina.query.all()
     for row in disciplinas:
-      disciplina=Disciplina(row[1], row[2], row[3])
-      disciplinas.append(disciplina)
+        disciplina = Disciplina(row[1], row[2], row[3])
+        disciplinas.append(disciplina)
     return disciplinas
-
 
 
 # Busca una disciplina por su ID y la devuelve
 def get_disciplina(id):
-   disciplina = Disciplina.query.filter(Disciplina.id == id).first()
-   return disciplina
+    disciplina = Disciplina.query.filter(Disciplina.id == id).first()
+    return disciplina
 
-#Cambia es estado de una disciplina
+# Cambia es estado de una disciplina
+
+
 def update_estado_disciplina(id):
-  disciplina = get_disciplina(id)
-  disciplina.estado = not (disciplina.estado)
-  db.session.commit()
-  return disciplina
+    disciplina = get_disciplina(id)
+    disciplina.estado = not (disciplina.estado)
+    db.session.commit()
+    return disciplina
 
-# Actualiza la informacion de una Disciplina  
+# Actualiza la informacion de una Disciplina
+
+
 def update_disciplina(id, **kwargs):
-  disciplina = get_disciplina(id)
-  disciplina.update(**kwargs)
-  db.session.commit()
-  return disciplina
+    disciplina = get_disciplina(id)
+    disciplina.update(**kwargs)
+    db.session.commit()
+    return disciplina
+
 
 def record_update(record):
     db.session.add(record)
@@ -238,7 +244,7 @@ def get_disciplinas_time(hora):
     """
     return Disciplina.query.filter(Disciplina.hora.ilike(hora + "%")).all()
 
-    
+
 def get_disciplinas_by_user_id(socio_id):
     """
     Retorna las disciplinas dado el id de un socio
@@ -561,7 +567,7 @@ def get_inscripciones(page):
     """
     per_page = get_elements_per_page()
     return Inscripcion.query.join(Disciplina).filter(
-        Disciplina.estado.ilike("activo%")
+        Disciplina.estado == True
     ).paginate(page=page, per_page=per_page)
 
 
@@ -572,7 +578,7 @@ def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     inscripcion = Inscripcion.query.filter_by(
         socio_id=socio.id, disciplina_id=disciplina.id
     ).join(Disciplina).filter(
-        Disciplina.estado.ilike("activo%")
+        Disciplina.estado == True
     ).first()
     return inscripcion
 
@@ -781,7 +787,7 @@ def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):
         inscripcion_id=inscripcion_id,
         nro_cuota=nro_cuota
     ).join(Inscripcion).join(Disciplina).filter(
-        Disciplina.estado.ilike("activo%")
+        Disciplina.estado == True
     ).first()
 
 
@@ -793,6 +799,7 @@ def create_carnet(**kwargs):
     db.session.add(carnet)
     db.session.commit()
     return carnet
+
 
 def get_carnet(socio_id):
     """
@@ -806,9 +813,10 @@ def es_moroso(socio_id):
     """
     Devuelve un boolean indicando si el socio dado es moroso.
     """
-    cuotas = Cuota.query.join(Inscripcion).filter(Inscripcion.socio_id == socio_id).all()
+    cuotas = Cuota.query.join(Inscripcion).filter(
+        Inscripcion.socio_id == socio_id).all()
     for cuota in cuotas:
-        print (cuota.id)
+        print(cuota.id)
         if (cuota.fecha_vencimiento < datetime.today() and (not cuota.estado_pago)):
             return True
     return False
