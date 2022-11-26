@@ -265,7 +265,7 @@ def list_disciplinas_not_socio(socio_id):
     )
     return Disciplina.query.filter(
         ~Disciplina.id.in_(
-            disciplinas_inscripto), Disciplina.estado == "Activo"
+            disciplinas_inscripto), Disciplina.estado == True
     ).all()
 
 
