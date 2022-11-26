@@ -1,6 +1,6 @@
 <template>
   <br />
-  <div class="container">
+  <div class="container modal-vue">
     <div class="row valign-wrapper">
       <div class="col l6">
         <p class="flow-text">Seleccione la disciplina que desea pagar</p>
@@ -20,8 +20,8 @@
       </p>
       <ListCuotas v-else-if="has_cuotas" :cuotas="cuotas"></ListCuotas>
     </div>
-
-    <SubirArchivo v-if="selected"></SubirArchivo>
+    <ModalPago v-if="has_cuotas"></ModalPago>
+    <SubirArchivo v-if="!selected"></SubirArchivo>
   </div>
 </template>
 
@@ -30,6 +30,7 @@ import SubirArchivo from "./SubirArchivo.vue";
 import ListCuotas from "./ListCuotas.vue";
 import { apiService } from "../apiService";
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
+import ModalPago from "./ModalPago.vue";
 
 export default {
   name: "ImportarPago",
@@ -51,6 +52,7 @@ export default {
   components: {
     SubirArchivo,
     ListCuotas,
+    ModalPago,
   },
   methods: {
     mySelectEvent(e) {
