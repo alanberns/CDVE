@@ -18,6 +18,7 @@
       <p v-if="!has_cuotas && has_cuotas != null" class="flow-text">
         No hay cuotas para pagar
       </p>
+      <ListCuotas v-else-if="has_cuotas" :cuotas="cuotas"></ListCuotas>
     </div>
 
     <SubirArchivo v-if="selected"></SubirArchivo>
@@ -26,6 +27,7 @@
 
 <script>
 import SubirArchivo from "./SubirArchivo.vue";
+import ListCuotas from "./ListCuotas.vue";
 import { apiService } from "../apiService";
 
 export default {
@@ -43,6 +45,7 @@ export default {
   },
   components: {
     SubirArchivo,
+    ListCuotas,
   },
   methods: {
     mySelectEvent(e) {
@@ -62,6 +65,7 @@ export default {
         .then((response) => {
           this.cuotas = [];
           const data = response.data.cuotas;
+          console.log(data);
           Object.values(data).forEach((item) => this.cuotas.push(item));
           this.has_cuotas = this.cuotas.length > 0 ? true : false;
         })
