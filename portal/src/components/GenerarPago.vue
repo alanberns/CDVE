@@ -14,6 +14,11 @@
         />
       </div>
     </div>
+    <div class="row valign-wrapper">
+      <p v-if="!has_cuotas && has_cuotas != null" class="flow-text">
+        No hay cuotas para pagar
+      </p>
+    </div>
 
     <SubirArchivo v-if="selected"></SubirArchivo>
   </div>
@@ -29,6 +34,8 @@ export default {
     return {
       myOptions: [],
       selected: null,
+      cuotas: [],
+      has_cuotas: null,
     };
   },
   mounted() {
@@ -40,6 +47,25 @@ export default {
   methods: {
     mySelectEvent(e) {
       this.selected = e.text;
+      this.getCuotas();
+    },
+    async getCuotas() {
+      await apiService
+        .get("/me/cuotas", {
+          params: {
+            disciplina: this.selected,
+          },
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          this.cuotas = [];
+          const data = response.data.cuotas;
+          Object.values(data).forEach((item) => this.cuotas.push(item));
+          this.has_cuotas = this.cuotas.length > 0 ? true : false;
+        })
+        .catch((error) => console.log(error));
     },
     async getDisciplinas() {
       await apiService
