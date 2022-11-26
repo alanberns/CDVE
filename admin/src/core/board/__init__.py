@@ -228,14 +228,14 @@ def list_disciplinas_activas(page):
     Retorna las disciplinas activas
     """
     per_page = get_elements_per_page()
-    return Disciplina.query.filter_by(estado="Activo").paginate(page=page, per_page=per_page)
+    return Disciplina.query.filter_by(estado=True).paginate(page=page, per_page=per_page)
 
 
 def list_all_disciplinas_activas():
     """
     Retorna las disciplinas activas
     """
-    return Disciplina.query.filter_by(estado="Activo").all()
+    return Disciplina.query.filter_by(estado=True).all()
 
 
 def get_disciplinas_time(hora):
