@@ -8,7 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
-# from flask_cors import cross_origin
+from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
 
@@ -38,7 +38,7 @@ def token_required(f):
     return decorated
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.post("/login")
 def login():
     """
@@ -61,7 +61,7 @@ def login():
     return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
 
 
-# @cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
+@cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
@@ -82,7 +82,7 @@ def list_payments(current_user):
     return jsonify(payments)
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.post("/me/payments")
 @token_required
 def pay(current_user):
@@ -118,7 +118,7 @@ def pay(current_user):
     return jsonify(payments=pago.serialize)
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.get("/club/info")
 def info_club():
     """
@@ -128,7 +128,7 @@ def info_club():
     return jsonify(info=config.serialize_info_club)
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
     """
@@ -155,7 +155,7 @@ def get_disciplines():
     return data
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.get("/me/profile")
 @token_required
 def get_user_info(current_user):
@@ -198,7 +198,7 @@ def get_statistics_inscripcionesPorDisciplina(current_user):
     return data
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.get("/statistics/concurrencia")
 @token_required
 def get_statistics_concurrencia(current_user):
@@ -223,7 +223,7 @@ def get_statistics_concurrencia(current_user):
     return data
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.get("/statistics/genero")
 @token_required
 def get_statistics_genero(current_user):
@@ -250,7 +250,7 @@ def get_statistics_genero(current_user):
 
     
 # Sin esto no permite hacer la peticion localmente desde el front
-# @cross_origin
+@cross_origin
 @api_blueprint.post("/me/comprobante")
 @token_required
 def comprobante(current_user):
@@ -267,7 +267,7 @@ def comprobante(current_user):
     return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
 
 
-# @cross_origin
+@cross_origin
 @api_blueprint.get("/me/disciplines")
 @token_required
 def me_get_disciplines(current_user):
