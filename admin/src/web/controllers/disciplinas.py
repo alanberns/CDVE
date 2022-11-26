@@ -25,7 +25,7 @@ disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplin
 def disciplina_index():
    elem_pagina = board.get_elementos_pagina()
    page = int(request.args.get('page', 1))
-   disciplinas_pag = board.list_disciplinas(page, elem_pagina)
+   disciplinas_pag = board.list_disciplinas_paginadas(page, elem_pagina)
    return render_template('disciplinas/disciplinas.html', disciplinas_pag= disciplinas_pag)
 
 #Creacion de una nueva disciplina
@@ -91,7 +91,7 @@ def modify_state(id):
 @classmethod
 @login_required
 def get_disciplinas():
-    disciplinas = Disciplina.list_disciplinas()
+    disciplinas = Disciplina.list_disciplinas_paginadas()
     for row in disciplinas:
       disciplina=Disciplina(row[1], row[2], row[3])
       disciplinas.append(disciplina)
