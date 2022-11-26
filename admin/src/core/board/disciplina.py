@@ -13,6 +13,7 @@ class Disciplina(db.Model):
      hora = db.Column(db.String(50))
      costo_mensual = (db.Column(db.Integer))
      estado = (db.Column(db.Boolean))
+     socio = db.relationship("Inscripcion", back_populates="disciplina")
 
      def __init__(self, nombre, categoria, entrenador, dia, hora, costo_mensual,estado):
           self.nombre = nombre
@@ -22,16 +23,4 @@ class Disciplina(db.Model):
           self.hora = hora
           self.costo_mensual = costo_mensual
           self.estado = estado
-
-
-  
-
-
-
-
-
-
-
-
-
 

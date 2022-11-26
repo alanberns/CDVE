@@ -1,0 +1,61 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block subnav %}
+<ul class="nav justify-content-start">
+  <li class="nav-item">
+    <a
+      class="nav-link btn btn-link"
+      href="{{ url_for('pagos.inscripciones_index') }}"
+      >Volver a Inscripciones
+    </a>
+  </li>
+</ul>
+{% endblock %} {% block content %}
+<div class="container">
+  <h2>Pagar cuotas</h2>
+  {%if form.items%}
+  <p class="text-muted h5">
+    Para Realizar un pago, por favor seleccione las cuotas a pagar
+  </p>
+  <form action="{{ url_for('pagos.pago') }}" method="POST">
+    {{ form.hidden_tag() }}
+    <table class="table table-bordered border-primary table-responsive">
+      <thead>
+        <tr class="table-dark">
+          <th>Vencimiento</th>
+          <th>Valor Cuota</th>
+          <th>estado_pago</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for cuota in form.items%}
+        <tr class="table-secondary">
+          {{cuota.hidden_tag()}}
+          <th>{{cuota.data.fecha_vencimiento.strftime('%Y-%m-%d')}}</th>
+          <th>{{cuota.data.valor_cuota}}</th>
+          <th>{{ 'Impaga' if not cuota.data.estado_pago else 'Pagada' }}</th>
+          <th>
+            <div class="form-check">
+              {%if not cuota.data.estado_pago%}
+              {{cuota.check(class_="form-check-input", readonly="readonly")}}
+              {%else%}
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDisabled"
+                disabled
+              />
+              {%endif%}
+            </div>
+          </th>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+    {{form.pagar(class="btn btn-success")}}
+  </form>
+</div>
+{%else%}
+<p class="h1 text-muted">No hay contenido para Mostrar</p>
+{%endif%} {% endblock %}

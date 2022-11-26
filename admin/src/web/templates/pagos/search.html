@@ -1,0 +1,100 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block subnav
+%}
+<ul class="nav justify-content-end">
+  <li class="nav-item">
+    <a
+      class="nav-link btn btn-link"
+      href="{{ url_for('pagos.inscripciones_index') }}"
+      >Ver Inscripciones
+    </a>
+  </li>
+</ul>
+{% endblock %} {% block content %}
+
+<div class="container">
+  <div class="col">
+    <div class="row">
+      <h2>Pagos</h2>
+    </div>
+    <div class="row">
+      <div class="h5">Resultados de la busqueda:</div>
+    </div>
+    <div class="row justify-content-center">
+      <a
+        class="btn btn-outline-danger text-center"
+        href="{{ url_for('pagos.pagos_index',filter = filtro) }}"
+        >Limpiar busqueda</a
+      >
+    </div>
+    <br />
+    <div class="row">
+      <table class="table table-bordered border-primary table-responsive">
+        <thead>
+          <tr class="table-dark">
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Monto</th>
+            <th>Nro_socio</th>
+            <th>Apellido</th>
+            <th>Recibo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for pago in pagos.items%}
+          <tr class="table-secondary">
+            <th class="text-center align-middle">
+              {{pago.fecha.strftime('%Y-%m-%d')}}
+            </th>
+            <th class="text-center align-middle">
+              {{pago.fecha.strftime('%H:%M:%S')}}
+            </th>
+            <th class="text-center align-middle">{{pago.monto}}</th>
+            <th class="text-center align-middle">
+              {{pago.cuotas[0].inscripcion.socio.id}}
+            </th>
+            <th class="text-center align-middle">
+              {{pago.cuotas[0].inscripcion.socio.usuario.last_name}}
+            </th>
+            <th class="text-center align-middle">
+              <a
+                class="btn btn-link"
+                href="{{ url_for('pagos.recibo',pago_id = pago.id) }}"
+                target="_blank"
+                >Ver Recibo
+              </a>
+            </th>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          {% for page_num in pagos.iter_pages(left_edge=1, right_edge=1,
+          left_current = 1, right_current=2 ) %} {% if page_num %} {% if
+          page_num == pagos.page %}
+          <li class="page-item active">
+            <a
+              class="page-link"
+              href="{{url_for('pagos.pagos_search', page=page_num, filtro=filtro, busqueda=busqueda)}}"
+            >
+              {{page_num}}
+            </a>
+          </li>
+          {%else%}
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="{{url_for('pagos.pagos_search', page=page_num, filtro=filtro, busqueda=busqueda)}}"
+            >
+              {{page_num}}
+            </a>
+          </li>
+
+          {% endif %} {% else %} ... {% endif %} {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

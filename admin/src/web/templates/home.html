@@ -1,22 +1,19 @@
-<!DOCTYPE html>
-<html lang=""en">
- <head>
-     {% block head %} 
-     <link
-       rel="stylesheet"
-       href="{{url_for('static', filename='style.css') }}"
-     />
-     <title>{% block title %}{% endblock %}</title>  
-     {% endblock %}
-  </head>
-  <body>
-    <div id="navbar">{% block navbar %} {% endblock %} </div>
-    <div id="main">{% block content %}
-      <h1>Inicio</h1>
-      <p>Pagina de inicio de la aplicacion</p>
-      {% endblock %} 
-    </div>
-    <div id="footer">{% block footer %} {% endblock %} </div>
-    href="{{url_for('static', filename='disciplinas.html') }}"
-  </body>
-</html>
+{% extends "layout.html" %} {% block title %}Home{% endblock %} {% block head %}
+{{ super() }} {% endblock %} {% block content %}
+<div class="card border-dark mb-3 align-items-center" style="max-width: 32rem">
+  <div class="card-header border-dark home_card_header">
+    <strong class="h3">Club Deportivo Villa Elisa</strong>
+  </div>
+  <div class="card-body text-dark">
+    <h5 class="card-title"><strong>Aplicacion Privada</strong></h5>
+    <p class="card-text">
+      Bienvenido al home de la aplicacion privada del Club Deportivo Villa Elisa
+    </p>
+  </div>
+  <img
+    src="{{ url_for('static', filename='club_logo.png') }}"
+    class="card-img-bottom home_image"
+    alt="Logo del Club"
+  />
+</div>
+{% endblock %}
