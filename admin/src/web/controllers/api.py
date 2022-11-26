@@ -8,7 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
-# from flask_cors import cross_origin
+from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
 
@@ -229,7 +229,7 @@ def get_socio_state(current_user):
     usuario_data = jsonify(user_data)
     return usuario_data
 
-        
+
 # @cross_origin
 @api_blueprint.get("/statistics/concurrencia")
 @token_required
@@ -237,7 +237,8 @@ def get_statistics_concurrencia(current_user):
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
-    horas = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+    horas = ["06", "07", "08", "09", "10", "11", "12", "13", "14",
+             "15", "16", "17", "18", "19", "20", "21", "22", "23"]
     hora_data = []
     cantidad = []
     for hora in horas:
@@ -245,7 +246,7 @@ def get_statistics_concurrencia(current_user):
         disciplinas = board.get_disciplinas_time(hora)
         c = 0
         for disciplina in disciplinas:
-            c = c +len(disciplina.socio)
+            c = c + len(disciplina.socio)
         cantidad.append(c)
     data = {
         "hora": hora_data,
@@ -269,7 +270,7 @@ def get_statistics_genero(current_user):
         if socio.genero not in generos:
             generos.append(socio.genero)
             valores[socio.genero] = 1
-        else: 
+        else:
             valores[socio.genero] = valores[socio.genero] + 1
     cantidades = []
     for genero in generos:
@@ -280,7 +281,7 @@ def get_statistics_genero(current_user):
     }
     return data
 
-    
+
 # Sin esto no permite hacer la peticion localmente desde el front
 # @cross_origin
 @api_blueprint.post("/me/comprobante")
