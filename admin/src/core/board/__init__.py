@@ -250,7 +250,7 @@ def get_disciplinas_by_user_id(socio_id):
     Retorna las disciplinas dado el id de un socio
     """
     return Disciplina.query.join(Inscripcion).join(Socio).filter(
-        Disciplina.estado == "Activo",
+        Disciplina.estado == True,
         Socio.id == socio_id
     )
 
