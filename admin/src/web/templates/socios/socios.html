@@ -43,6 +43,7 @@
           <th>Estado</th>
           <th></th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -71,6 +72,15 @@
             <a href="{{ url_for('socios.inscribir_socio', socio_id=socio[0].id) }}"> Inscribir </a>
           </th>
           {% endif %}
+          {% if socio[2] %}
+          <th>
+            <a href="{{url_for('socios.ver_carnet', socio_id=socio[0].id)}}">Ver Carnet</a>
+          </th>
+          {% else %}
+          <th>
+            <a href="{{url_for('socios.alta_carnet', socio_id=socio[0].id)}}">Generar Carnet</a>
+          </th>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
@@ -84,7 +94,7 @@
                   <strong>{{ page }}</strong>
               {% endif %}
           {% else %}
-              <span class=ellipsis>…</span>
+              <span class=ellipsis>â€¦</span>
           {% endif %}
       {%- endfor %}
     </div>

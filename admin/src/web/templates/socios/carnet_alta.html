@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Alta Carnet{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <h1>Generar carnet para {{nombre}} {{apellido}}</h1>
+  </div>
+  <h4>Por favor, adjunte una imagen del asociado.</h4>
+  <div class="row">
+    <form method="POST" enctype="multipart/form-data" action="">
+      {{ form.csrf_token }} 
+      {{ form.hidden_tag() }}
+      <fieldset class="form-group">
+          {{ form.image(class="form-control") }}
+      </fieldset>
+      <br>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+  </div>
+  <div class="row">
+    <a href="{{url_for('socios.socios_index')}}"> Volver</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+<div style="border: 0.35rem solid black; padding: 0.5rem">
+
+    <h2><strong>Club Deportivo Villa Elisa</strong></h2>
+    <div style="margin: 0; padding: 0">
+        <img
+            src="{{ imagen }}"
+            alt="imagen_socio"
+            style="width:100px;height:100px;"
+        />
+        <div>
+            {{socio.nombre}} {{socio.apellido}}
+        </div>
+        <div>
+            {{socio.tipo_documento}}: {{socio.numero_documento}}
+        </div>
+        <div>
+            <strong>Estado:</strong>
+            {% if socio.habilitado %}
+            Habilitado
+            {%else%}
+            No habilitado
+            {%endif%}
+        </div>
+        <div>
+            <strong>Fecha de alta:</strong>
+            {{socio.fecha_alta.strftime('%Y-%m-%d')}}
+        </div>
+        <img
+            src="{{ qr }}"
+            alt="qr_socio"
+            style="width:150px;height:150px;"
+        />
+    </div>
+</div>
