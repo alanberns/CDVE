@@ -3,7 +3,7 @@
     <h2><strong>Club Deportivo Villa Elisa</strong></h2>
     <div style="margin: 0; padding: 0">
         <img
-            src="http://localhost:5000/public/{{ imagen }}"
+            src="{{ imagen }}"
             alt="imagen_socio"
             style="width:100px;height:100px;"
         />
@@ -26,7 +26,7 @@
             {{socio.fecha_alta.strftime('%Y-%m-%d')}}
         </div>
         <img
-            src="http://localhost:5000/public/{{ qr }}""
+            src="{{ qr }}"
             alt="qr_socio"
             style="width:150px;height:150px;"
         />

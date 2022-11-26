@@ -13,12 +13,12 @@
                 <h6 class="card-subtitle text-muted">{{socio.tipo_documento}}: {{socio.numero_documento}}</h6>
                 <div>
                     <img
-                    src="{{ url_for('static', filename=imagen) }}"
+                    src="{{url_for('static', filename=imagen)}}"
                     alt="imagen_socio"
                     style="width:125px;height:125px;"
                     />
                     <img
-                    src="{{ url_for('static', filename=qr) }}"
+                    src="{{url_for('static', filename=qr)}}"
                     alt="qr_socio"
                     style="width:150px;height:150px;"
                     />

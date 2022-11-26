@@ -4,6 +4,7 @@ from flask import request, redirect, url_for, flash
 from flask import make_response
 from src.core.forms.socio_form import SocioForm, DocumentoForm, CarnetUpload, CarnetExport
 from src.web.helpers.auth import login_required
+from src.web.helpers.uploads_path import getUploadsPath
 from src.core import board
 import pdfkit
 import csv
@@ -223,14 +224,12 @@ def inscribir_socio_disciplina(socio_id, disciplina_id):
     return redirect(url_for("socios.ver_socio", socio_id=socio_id))
 
 
-@socio_blueprint.route("/verCarnet", methods=["get", "post"])
+@socio_blueprint.route("/<int:socio_id>/ver_carnet", methods=["get", "post"])
 @login_required
 @socio_show_req
-def ver_carnet():
-    socio_id = request.args.get('socio_id')
+def ver_carnet(socio_id):
     socio = board.find_socio_by_id(socio_id)
     usuario = board.get_usuario(socio.id_usuario)
-    data = "http://localhost:5000/socios/verCarnet?socio_id="+str(socio.id)
 
     socio_info = {
         'nombre': usuario.first_name,
@@ -258,7 +257,11 @@ def ver_carnet():
             "Content-Disposition"
         ] = "attachment; filename=carnet_socio.pdf"
         return response
-    return render_template("socios/carnet.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado, form=form)
+    temp = carnet.url_imagen.split('/')
+    imagen = temp[len(temp)-2]+"/"+temp[len(temp)-1]
+    temp = carnet.url_qr.split('/')
+    qr = temp[len(temp)-2]+"/"+temp[len(temp)-1]
+    return render_template("socios/carnet.html", socio=socio_info, imagen=imagen, qr=qr, estado=estado, form=form)
 
 
 @socio_blueprint.route('/<int:socio_id>/carnet', methods=['POST', 'GET'])
@@ -272,17 +275,17 @@ def alta_carnet(socio_id):
         form = CarnetUpload()
         if form.validate_on_submit():
             datenow = datetime.now()
-            nameimg = f"uploads/{datenow}img.jpg"
-            nameqr = f"uploads/{datenow}qr.jpg"
-            form.image.data.save("public/"+nameimg)
-            data = "http://localhost:5000/socios/verCarnet?socio_id="+str(socio_id)
+            nameimg = getUploadsPath(f"{datenow}img.jpg")
+            nameqr = getUploadsPath(f"{datenow}qr.jpg")
+            form.image.data.save(nameimg)
+            data = f"{request.host_url[:-1]}{url_for('socios.ver_carnet', socio_id=socio_id)}"
             qr = QRCode(version = 1,
                 box_size = 10,
                 border = 5)
             qr.add_data(data)
             qr.make(fit = True)
             img = qr.make_image(fill_color = 'black',back_color = 'white').convert('RGB')
-            img.save("public/"+nameqr)
+            img.save(nameqr)
             kwargs = {
                 "id_socio": socio_id,
                 "url_imagen": nameimg,
