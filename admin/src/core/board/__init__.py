@@ -5,6 +5,7 @@ from src.core.board.rol import Rol
 from src.core.board.permiso import Permiso
 from src.core.board.disciplina import Disciplina
 from src.core.board.socio import Socio
+from src.core.board.carnet import Carnet
 from src.core.board.cuota import Cuota
 from src.core.board.pago import Pago
 from src.core.board.inscripcion import Inscripcion
@@ -353,10 +354,11 @@ def list_socios_join_users(page=1, per_page=10):
     Devuelve la lista de socios activos (sin borrado lógico)
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True)
         .outerjoin(Usuario, full=True)
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
@@ -745,3 +747,32 @@ def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):
     ).join(Inscripcion).join(Disciplina).filter(
         Disciplina.estado.ilike("activo%")
     ).first()
+
+
+def create_carnet(**kwargs):
+    """
+    Crea un carnet y lo agrega en la BD.
+    """
+    carnet = Carnet(**kwargs)
+    db.session.add(carnet)
+    db.session.commit()
+    return carnet
+
+def get_carnet(socio_id):
+    """
+    Devuelve un carnet según un id de socio.
+    """
+    carnet = Carnet.query.filter(Carnet.id_socio == socio_id).first()
+    return carnet
+
+
+def es_moroso(socio_id):
+    """
+    Devuelve un boolean indicando si el socio dado es moroso.
+    """
+    cuotas = Cuota.query.join(Inscripcion).filter(Inscripcion.socio_id == socio_id).all()
+    for cuota in cuotas:
+        print (cuota.id)
+        if (cuota.fecha_vencimiento < datetime.today() and (not cuota.estado_pago)):
+            return True
+    return False

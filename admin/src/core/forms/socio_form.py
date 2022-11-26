@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, SelectField
+from wtforms import StringField, SubmitField, BooleanField, SelectField, FileField
 from wtforms.validators import DataRequired, Length
+from flask_wtf.file import FileField, FileRequired
 
 
 class SocioForm(FlaskForm):
@@ -35,3 +36,11 @@ class DocumentoForm(FlaskForm):
     submit = SubmitField(label="Buscar")
     exportpdf = SubmitField(label="Exportar pdf")
     exportcsv = SubmitField(label="Exportar csv")
+
+
+class CarnetUpload(FlaskForm):
+    image = FileField(validators=[FileRequired()])
+    submit = SubmitField("Upload")
+
+class CarnetExport(FlaskForm):
+    submit = SubmitField("Export")
