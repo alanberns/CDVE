@@ -245,7 +245,7 @@ def ver_carnet(socio_id):
     form = CarnetExport()
     if request.method == 'POST':
         rendered = render_template(
-            "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, estado=estado
+            "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado
         )
         options = {
             "enable-local-file-access": None
@@ -279,17 +279,17 @@ def alta_carnet(socio_id):
             nameqr = getUploadsPath(f"{datenow}qr.jpg")
             form.image.data.save(nameimg)
             data = f"{request.host_url[:-1]}{url_for('socios.ver_carnet', socio_id=socio_id)}"
-            #qr = QRCode(version = 1,
-            #    box_size = 10,
-            #    border = 5)
-            #qr.add_data(data)
-            #qr.make(fit = True)
-            #img = qr.make_image(fill_color = 'black',back_color = 'white').convert('RGB')
-            #img.save(nameqr)
+            qr = QRCode(version = 1,
+                box_size = 10,
+                border = 5)
+            qr.add_data(data)
+            qr.make(fit = True)
+            img = qr.make_image(fill_color = 'black',back_color = 'white').convert('RGB')
+            img.save(nameqr)
             kwargs = {
                 "id_socio": socio_id,
                 "url_imagen": nameimg,
-                "url_qr": "nameqr",
+                "url_qr": nameqr,
             }
             board.create_carnet(**kwargs)
             return redirect(url_for("socios.ver_carnet", socio_id=socio_id))
