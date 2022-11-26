@@ -245,7 +245,7 @@ def ver_carnet(socio_id):
     form = CarnetExport()
     if request.method == 'POST':
         rendered = render_template(
-            "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado
+            "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, estado=estado
         )
         options = {
             "enable-local-file-access": None
