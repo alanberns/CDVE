@@ -29,6 +29,7 @@
 import SubirArchivo from "./SubirArchivo.vue";
 import ListCuotas from "./ListCuotas.vue";
 import { apiService } from "../apiService";
+import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 
 export default {
   name: "ImportarPago",
@@ -40,6 +41,10 @@ export default {
       has_cuotas: null,
     };
   },
+  setup() {
+    const cuotaPickedStore = useCuotaPickedStore();
+    return { cuotaPickedStore };
+  },
   mounted() {
     this.getDisciplinas();
   },
@@ -49,6 +54,7 @@ export default {
   },
   methods: {
     mySelectEvent(e) {
+      this.cuotaPickedStore.resetCuotasSelected();
       this.selected = e.text;
       this.getCuotas();
     },
