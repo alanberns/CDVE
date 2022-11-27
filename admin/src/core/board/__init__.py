@@ -228,14 +228,14 @@ def list_disciplinas_activas(page):
     Retorna las disciplinas activas
     """
     per_page = get_elements_per_page()
-    return Disciplina.query.filter_by(estado="Activo").paginate(page=page, per_page=per_page)
+    return Disciplina.query.filter_by(estado=True).paginate(page=page, per_page=per_page)
 
 
 def list_all_disciplinas_activas():
     """
     Retorna las disciplinas activas
     """
-    return Disciplina.query.filter_by(estado="Activo").all()
+    return Disciplina.query.filter_by(estado=True).all()
 
 
 def get_disciplinas_time(hora):
@@ -250,7 +250,7 @@ def get_disciplinas_by_user_id(socio_id):
     Retorna las disciplinas dado el id de un socio
     """
     return Disciplina.query.join(Inscripcion).join(Socio).filter(
-        Disciplina.estado == "Activo",
+        Disciplina.estado == True,
         Socio.id == socio_id
     )
 
@@ -265,7 +265,7 @@ def list_disciplinas_not_socio(socio_id):
     )
     return Disciplina.query.filter(
         ~Disciplina.id.in_(
-            disciplinas_inscripto), Disciplina.estado == "Activo"
+            disciplinas_inscripto), Disciplina.estado == True
     ).all()
 
 
