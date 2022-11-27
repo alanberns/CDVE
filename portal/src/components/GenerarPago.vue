@@ -2,6 +2,9 @@
   <br />
   <div class="container modal-vue">
     <h2>Pago de Disciplinas</h2>
+    <div v-if="loading" class="progress">
+      <div class="indeterminate"></div>
+    </div>
     <div class="row valign-wrapper">
       <div class="col l6">
         <p class="flow-text">Seleccione la disciplina que desea pagar</p>
@@ -39,6 +42,7 @@ export default {
       selected: null,
       cuotas: [],
       has_cuotas: null,
+      loading: true,
     };
   },
   setup() {
@@ -77,8 +81,12 @@ export default {
           const data = response.data.cuotas;
           Object.values(data).forEach((item) => this.cuotas.push(item));
           this.has_cuotas = this.cuotas.length > 0 ? true : false;
+          this.loading = false;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        });
     },
     async getDisciplinas() {
       await apiService
@@ -90,8 +98,12 @@ export default {
         .then((response) => {
           const data = response.data.data;
           Object.values(data).forEach((item) => this.myOptions.push(item.name));
+          this.loading = false;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        });
     },
   },
 };
