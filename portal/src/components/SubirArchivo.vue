@@ -24,6 +24,7 @@
 <script>
 import { apiService } from "../apiService";
 import { useLoginStore } from "../stores/LoginStore";
+import { useComprobanteStore } from "../stores/ComprobanteStore";
 export default {
   name: "SubirArchivo",
   data() {
@@ -33,8 +34,9 @@ export default {
     };
   },
   setup() {
+    const comprobanteStore = useComprobanteStore();
     const loginStore = useLoginStore();
-    return { loginStore };
+    return { loginStore, comprobanteStore };
   },
   methods: {
     uploadFile(e) {
@@ -48,6 +50,7 @@ export default {
       ] = `${this.loginStore.getToken}`;
       const formData = new FormData();
       formData.append("file", this.images);
+      formData.append("id", this.comprobanteStore.idComprobante);
       const headers = {
         "Content-Type": "multipart/form-data",
       };

@@ -286,7 +286,15 @@ def get_statistics_genero(current_user):
     return data
 
 
+def _allowed_file(filename):
+    """
+    Verifica que el archivo sea pdf, jpg o png
+    """
+    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 # Sin esto no permite hacer la peticion localmente desde el front
+
+
 @cross_origin
 @api_blueprint.post("/me/comprobante")
 @token_required
@@ -294,13 +302,16 @@ def comprobante(current_user):
     """
     Funcion que recibe y guarda el comprobante enviado desde el frontend.
     """
-    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    pago_id = request.form["id"]
     if 'file' not in request.files:
         return jsonify({"message": "Archivo no encontrado en la peticion"}), 400
     file = request.files['file']
     filename = secure_filename(file.filename)
+    if not _allowed_file(filename):
+        return jsonify({"message": "El archivo debe ser jpg, png o pdf"}), 400
     filepath = getComprobantePath(filename)
     file.save(filepath)
+    board.set_comprobante_by_pago_id(pago_id, filename)
     return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
 
 

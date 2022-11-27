@@ -21,12 +21,10 @@
       <ListCuotas v-else-if="has_cuotas" :cuotas="cuotas"></ListCuotas>
     </div>
     <ModalPago v-if="has_cuotas"></ModalPago>
-    <SubirArchivo v-if="!selected"></SubirArchivo>
   </div>
 </template>
 
 <script>
-import SubirArchivo from "./SubirArchivo.vue";
 import ListCuotas from "./ListCuotas.vue";
 import { apiService } from "../apiService";
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
@@ -53,7 +51,6 @@ export default {
   //   this.cuotaPickedStore.resetDisciplina();
   // },
   components: {
-    SubirArchivo,
     ListCuotas,
     ModalPago,
   },
