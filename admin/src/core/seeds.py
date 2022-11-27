@@ -512,6 +512,34 @@ def run():
         ],
     )
 
+    # Permisos disciplinas
+    disciplina_index = board.create_permiso(nombre="disciplina_index")
+    disciplina_create = board.create_permiso(nombre="disciplina_create")
+    disciplina_delete = board.create_permiso(nombre="disciplina_delete")
+    disciplina_update = board.create_permiso(nombre="disciplina_update")
+    disciplina_show = board.create_permiso(nombre="disciplina_show")
+    board.rol_assign_permiso(
+        rol_administrador,
+        [
+            disciplina_index,
+            disciplina_create,
+            disciplina_show,
+            disciplina_delete,
+            disciplina_update,
+        ],
+    )
+
+    board.rol_assign_permiso(
+        rol_operador,
+        [
+            disciplina_index,
+            disciplina_create,
+            disciplina_show,
+            disciplina_delete,
+            disciplina_update,
+        ],
+    )
+
     socio1 = board.create_socio(
         id_usuario=1,
         tipo_documento="DNI",

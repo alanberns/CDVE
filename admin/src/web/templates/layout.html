@@ -16,8 +16,10 @@
           >
           {%endif%}
 
+          {%if has_permission("user_index",session)%}
           <a class="nav-link" href="{{ url_for('disciplinas.disciplina_index') }}">Disciplinas</a>
-          
+          {%endif%}
+
           {%if has_permission("socio_index",session)%}
           <a class="nav-link" href="{{ url_for('socios.socios_index') }}">Socios</a>
           {%endif%}
