@@ -79,9 +79,9 @@
     {%- for page in usuarios_pag.iter_pages() %}
         {% if page %}
             {% if page != usuarios_pag.page %}
-                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button class="btn btn-secondary">{{ page }}</button></a>
+                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button class="btn btn-outline-primary">{{ page }}</button></a>
             {% else %}
-                <strong class="btn btn-light">{{ page }}</strong>
+                <strong class="btn btn-primary">{{ page }}</strong>
             {% endif %}
         {% else %}
             <span class=ellipsis>…</span>

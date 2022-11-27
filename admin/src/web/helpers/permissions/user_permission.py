@@ -134,3 +134,53 @@ def socio_delete_req(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+
+def disciplina_index_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("disciplina_index", session):
+            abort(403)
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def disciplina_update_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("disciplina_update", session):
+            abort(403)
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def disciplina_show_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("disciplina_show", session):
+            abort(403)
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def disciplina_create_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("disciplina_create", session):
+            abort(403)
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def disciplina_delete_req(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not has_permission("disciplina_delete", session):
+            abort(403)
+        return f(*args, **kwargs)
+
+    return decorated_function

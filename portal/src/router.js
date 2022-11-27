@@ -9,8 +9,9 @@ import ListPagos from "./components/ListPagos.vue";
 import SociosPorDisciplina from "./components/SociosPorDisciplina.vue";
 import Genero from "./components/Genero.vue";
 import Concurrencia from "./components/Concurrencia.vue";
-import GenerarPago from "./components/GenerarPago";
 import SubirComprobante from "./components/SubirComprobante";
+import GenerarPago from "./components/GenerarPago.vue";
+
 // definir objeto rutas
 const routes = [
   {

@@ -89,9 +89,9 @@
       {%- for page in socios_pag.iter_pages() %}
           {% if page %}
               {% if page != socios_pag.page %}
-                  <a href="{{ url_for('socios.socios_index', page=page ) }}"><button>{{ page }}</button></a>
+                  <a href="{{ url_for('socios.socios_index', page=page ) }}"><button button class="btn btn-outline-primary">{{ page }}</button></a>
               {% else %}
-                  <strong>{{ page }}</strong>
+                  <strong class="btn btn-primary">{{ page }}</strong>
               {% endif %}
           {% else %}
               <span class=ellipsis>â€¦</span>

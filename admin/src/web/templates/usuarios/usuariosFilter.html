@@ -4,6 +4,7 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
+
 <div class="d-flex flex-column align-items-center">
   <h1 class="mx-5">Usuarios </h1>
 
@@ -74,13 +75,15 @@
                   {{ form.csrf_token }}
                   <input type="hidden" value="{{email}}" name="email">
                   <input type="hidden" value="{{activo}}" name="estado">
-                  <button class="btn btn-secondary">{{ page }}</button>
+                  <button class="btn btn-outline-primary">{{ page }}</button>
                 </form>
             {% else %}
-                <strong class="btn btn-light">{{ page }}</strong>
+                <strong class="btn btn-primary">{{ page }}</strong>
             {% endif %}
         {% else %}
             <span class=ellipsis>…</span>
         {% endif %}
     {%- endfor %}
+  </div>
+</div>
 {% endblock %}

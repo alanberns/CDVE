@@ -1,36 +1,130 @@
 from flask import Blueprint
 from flask import render_template
+from pathlib import Path
+from flask import redirect
+from flask import url_for
+from flask import flash
 from flask import request
+from flask import make_response
+from flask import jsonify
+from src.core.forms.disciplinas_form import DisciplinaNewForm
+from src.core.board import disciplina
 from src.core import board
 from src.core.board.disciplina import Disciplina
+import pdfkit
+from src.web.helpers.auth import login_required
+from src.core.database import db
+from src.web.helpers.permissions.user_permission import (
+    disciplina_create_req,
+    disciplina_index_req,
+    disciplina_delete_req,
+    disciplina_update_req,
+    disciplina_show_req,
+)
 
-# from src.web.helpers.auth import login_required
 
 
 disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplinas")
 
-
-@disciplina_blueprint.get("/")
-@disciplina_blueprint.get("/disciplinas")
-# @login_required
+#Paginacion del listado de Disciplinas 
+@disciplina_blueprint.get ("/")
+@login_required
+@disciplina_show_req
 def disciplina_index():
-    # page = request.args.get('page', 1, type=int)
-    # disciplinas = Disciplina.query.paginate(page=page, per_page=5)
-    disciplinas = board.list_disciplinas()
-    return render_template("disciplinas.html", disciplinas=disciplinas)
+   elem_pagina = board.get_elementos_pagina()
+   page = int(request.args.get('page', 1))
+   disciplinas_pag = board.list_disciplinas_paginadas(page, elem_pagina)
+   return render_template('disciplinas/disciplinas.html', disciplinas_pag= disciplinas_pag)
+
+#Creacion de una nueva disciplina
+@disciplina_blueprint.post("/")
+@login_required
+@disciplina_create_req
+def newdcp():
+   form = DisciplinaNewForm(request.form)
+   if not form.validate:
+      flash("No se puede hacer el ingreso de nueva disciplina")
+   else:
+       disciplina = board.create_disciplina(
+       nombre= form.nombre.data,
+       categoria= form.categoria.data,
+       entrenador= form.entrenador.data,
+       dia = form.dia.data,
+       hora = form.hora.data,
+       costo_mensual = form.costo_mensual.data,
+       estado = True,
+      )
+   flash ("Se agrego una nueva Disciplina", "success")
+   return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id))
+  
+       
+   
+# Actualiza la informacion de una Disciplina
+@disciplina_blueprint.get("/editdiscip/<int:id>")
+@login_required
+@disciplina_update_req
+def edit_discip(id):
+   disciplina = board.get_disciplina(id)
+   return render_template('disciplinas/editDisciplina.html', disciplina=disciplina)
 
 
 @disciplina_blueprint.post("/")
-def newdcp():
-    kwargs = {
-        "nombre": request.form.get("nombre"),
-        "categoria": request.form.get("categoria"),
-        "entrenador": request.form.get("entrenador"),
-        "dia": request.form.get("dia"),
-        "hora": request.form.get("hora"),
-        "costo_mensual": request.form.get("costo_mensual"),
-        "estado": "Activa",
-    }
-    board.create_disciplina(**kwargs)
-    disciplinas = board.list_disciplinas()
-    return render_template("disciplinas.html", disciplina=disciplinas)
+@login_required
+@disciplina_update_req
+def updatedsp(id):
+   form = DisciplinaNewForm(request.form)
+   if not form.validate:
+      flash("No se puede actualizar la  disciplina")
+   else:
+      kwargs = {
+           "id": Disciplina.id,
+           "nombre": form.nombre.data,
+           "categoria": form.categoria.data,
+           "entranador": form.entrenador.data,
+           "dia": form.dia.data,
+           "hora": form.hora.data,
+           "costo_mensual": form.costo_mensual.data,
+       }
+      board.update_disciplina(id, **kwargs)
+      return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id))
+
+
+# Modifica el estado Activo o Inactivo de una disciplina
+@disciplina_blueprint.get("/modifyState/<int:id>")
+@login_required
+@disciplina_update_req
+def modify_state(id):
+   board.update_estado_disciplina(id)
+   flash ("Se cambio de Estado la Disciplina", "success")
+   return redirect(url_for('disciplinas.disciplina_index', id=id))
+   
+
+# Retorna la lista de todas las disciplinas
+@classmethod
+@login_required
+@disciplina_show_req
+def get_disciplinas():
+    disciplinas = Disciplina.list_disciplinas_paginadas()
+    for row in disciplinas:
+      disciplina=Disciplina(row[1], row[2], row[3])
+      disciplinas.append(disciplina)
+    return disciplinas
+
+
+#Exportacion a PDF del listado de Disciplinas
+@disciplina_blueprint.get("/")
+@login_required
+@disciplina_show_req
+def export_discip():
+   disciplina_pag = board.listAll_disciplinas()
+   rendered = render_template("disciplinas/exportDisciplina.html",disciplina_pag = disciplina_pag)
+   pdf = pdfkit.from_string(rendered,False)
+   response = make_response(pdf)
+   response.headers['Content-Type'] = 'application/pdf'
+   response.headers['Content-Disposition'] = 'attachment; filename=Reporte_Disciplinas.pdf'
+   flash("Se exporto el achivo con exito")
+   return response
+
+
+
+

@@ -1,8 +1,9 @@
 <template>
-  <br />
+  <h2>Subir un comprobante de pago</h2>
   <div class="container">
     <SubirArchivo></SubirArchivo>
   </div>
+  <br>
 </template>
 
 <script>
