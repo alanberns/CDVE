@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+{% block title %}Disciplina{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<head>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body> 
+   <nav class="navbar navbar-dark bg-dark"></nav>  
+   <nav class="navbar navbar-dark bg-dark"></nav>
+   <nav class="navbar navbar-dark bg-dark"></nav>
+   <div class="container my-3">
+   <a href="{{url_for('home')}}"> Volver al inicio </a>
+   <div class="row">
+      <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
+         <h2> Registrar nueva disciplina </h2> 
+         <form action = "{{url_for('disciplinas.newdcp')}}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <div class="ms-3">
+             <label for="Nombre" class="form-label">* Nombre</label>
+             <select class="form-select" id="nombre" name="nombre" required="">
+               <option value="">--Seleccionar--</option>
+               <option selected="" value="Futbol">Futbol</option>
+               <option value="Tenis">Tenis</option>
+               <option value="Boxeo">Boxeo</option>
+               <option value="Basquet">Basquet</option>
+               <option value="Voley">Voley</option>
+               <option value="Natacion">Natacion</option>
+               <option value="Padel">Padel</option>
+               <option value="Yoga">Yoga</option>
+               <option value="Karate">Karate</option>
+               <option value="Taekwondo">Taekwondo</option>
+             </select>
+           </div>
+           <div class="ms-3">
+             <label for="Categoria" class="form-label">* Categoria</label>
+             <select class="form-select" id="categoria" name="categoria" required="">
+               <option value="">--Seleccionar--</option>
+               <option selected="" value="Mini(2-6)">Mini (2 a 6 Años)</option>
+               <option value="Chicos(6-12)">Chicos (6 a 12 Años)</option>
+               <option value="Jovenes(13-17)">Jovenes (13 a 17 Años)</option>
+               <option value="Adultos(18-40)">Adultos (18 a 40 Años)</option>
+               <option value="Mayores(+40)">Mayores (Mas 40 Años)</option>
+             </select>
+           </div>
+            <div class="ms-3">
+              <label for="Instructor" class="form-label">* Instructor</label>
+              <input type="text" class="form-control" id="entrenador" name = "entrenador" placeholder="entrenador" required="1">
+            </div>
+            <div class="ms-3">
+              <label for="dia" class="form-label">* Dia</label>
+              <select class="form-select" id="dia" name="dia" required="">
+                 <option value="">--Seleccionar--</option>
+                 <option selected="" value="Lunes">Lunes</option>
+                 <option value="Martes">Martes</option>
+                 <option value="Miercoles">Miercoles</option>
+                 <option value="Jueves">Jueves</option>
+                 <option value="Viernes">Viernes</option>
+                 <option value="Sabado">Sabado</option>
+              </select>
+            </div>
+            <div class="ms-3">
+              <label for="Hora" class="form-label">* Hora</label>
+              <select class="form-select" id="hora" name="hora" required="">
+                   <option value="">--Seleccionar--</option>
+                   <option selected="" value="9 Hs">9 Hs</option>
+                   <option value="10 Hs">10 Hs</option>
+                   <option value="11 Hs">11 Hs</option>
+                   <option value="12 Hs">12 Hs</option>
+                   <option value="13 Hs">13 Hs</option>
+                   <option value="14 Hs">14 Hs</option>
+                   <option value="15 Hs">15 Hs</option>
+                   <option value="16 Hs">16 Hs</option>
+                   <option value="17 Hs">17 Hs</option>
+                   <option value="18 Hs">18 Hs</option>
+                   <option value="19 Hs">19 Hs</option>
+                   <option value="20 Hs">20 Hs</option>
+                </select>
+            </div>
+            <div class="ms-3">
+              <label for="Costo Precio" class="form-label">* Costo / Precio</label>
+              <input type="number" class="form-control" id="costo_mensual" name = "costo_mensual" placeholder="costo_mensual" required="1">
+            </div>
+            <div class="d-grid gap-2">
+              <label for="Activo" class="form-label">(* ) Campos obligatorios</label>
+              <button class="btn btn-success">Ingrese nueva Disciplina</button>
+              <button class="btn btn-primary">Guardar</button>
+              <th><a href="{{url_for('disciplinas.export_discip')}}"><button class="btn btn-primary">Exportar Pdf </button></a></th> 
+            </div>
+         </form>
+       </div>
+       <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
+         <h3> Disciplinas </h3> 
+         <table class="table table-striped">
+            <thead>
+               <tr class="table-dark">
+                  <th>Nombre</th>
+                  <th>Categoria</th>
+                  <th>Instructor</th>
+                  <th>Dia</th>
+                  <th>Hora</th>
+                  <th>Precio </th>
+                  <th>Activa</th>
+                  <th></th>
+                  <th>Editar</th>
+                  <th>Estado</th>
+                </tr>
+               </thead>
+               <tbody>
+                    {% for disciplina in disciplinas_pag.items %}
+                     <tr>
+                        <th>{{disciplina.nombre}}</th>
+                        <th>{{disciplina.categoria}}</th>
+                        <th>{{disciplina.entrenador}}</th>
+                        <th>{{disciplina.dia}}</th>
+                        <th>{{disciplina.hora}}</th>
+                        <th>{{disciplina.costo_mensual}}</th>
+                        <th>{{disciplina.estado}}</th>
+                        <td width="30">
+                          <th><a href="{{url_for('disciplinas.edit_discip',id=disciplina.id)}}"><button class="btn btn-primary">Editar</button></a></th>
+                          <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button class="btn btn-primary">Cambiar</button></a></th>
+                        </td>
+                     </tr>
+                    {% endfor %} 
+                    </tbody>          
+                </thead>
+               </table>
+               <div class=pagination>
+                  {% for page in disciplinas_pag.iter_pages() %} 
+                      {% if page %}  
+                        {% if page != disciplinas_pag.page %} 
+                          <a href="{{ url_for('disciplinas.disciplina_index',page=page) }}"><button class="btn btn-secondary">{{ page }}</button></a>
+                        {% endif %} 
+                      {% endif %} 
+                  {% endfor %} 
+               </div>
+          </div>
+      </div>
+     </div>  
+</body>
+</html>
+{% endblock %}
+
+
+         

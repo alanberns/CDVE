@@ -14,6 +14,48 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
+# Lista todas las disciplinas
+def list_disciplinas_paginadas(page=1, per_page=10):
+    return Disciplina.query.order_by(Disciplina.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+
+
+def listAll_disciplinas():
+    return Disciplina.query.all()
+
+
+@classmethod
+def get_disciplinas(self):
+    disciplinas = Disciplina.query.all()
+    for row in disciplinas:
+        disciplina = Disciplina(row[1], row[2], row[3])
+        disciplinas.append(disciplina)
+    return disciplinas
+
+
+# Busca una disciplina por su ID y la devuelve
+def get_disciplina(id):
+    disciplina = Disciplina.query.filter(Disciplina.id == id).first()
+    return disciplina
+
+# Cambia es estado de una disciplina
+
+
+def update_estado_disciplina(id):
+    disciplina = get_disciplina(id)
+    disciplina.estado = not (disciplina.estado)
+    db.session.commit()
+    return disciplina
+
+# Actualiza la informacion de una Disciplina
+
+
+def update_disciplina(id, **kwargs):
+    disciplina = get_disciplina(id)
+    disciplina.update(**kwargs)
+    db.session.commit()
+    return disciplina
+
+
 def record_update(record):
     db.session.add(record)
     db.session.commit()
@@ -186,14 +228,14 @@ def list_disciplinas_activas(page):
     Retorna las disciplinas activas
     """
     per_page = get_elements_per_page()
-    return Disciplina.query.filter_by(estado="Activo").paginate(page=page, per_page=per_page)
+    return Disciplina.query.filter_by(estado=True).paginate(page=page, per_page=per_page)
 
 
 def list_all_disciplinas_activas():
     """
     Retorna las disciplinas activas
     """
-    return Disciplina.query.filter_by(estado="Activo").all()
+    return Disciplina.query.filter_by(estado=True).all()
 
 
 def get_disciplinas_time(hora):
@@ -208,7 +250,7 @@ def get_disciplinas_by_user_id(socio_id):
     Retorna las disciplinas dado el id de un socio
     """
     return Disciplina.query.join(Inscripcion).join(Socio).filter(
-        Disciplina.estado == "Activo",
+        Disciplina.estado == True,
         Socio.id == socio_id
     )
 
@@ -223,7 +265,7 @@ def list_disciplinas_not_socio(socio_id):
     )
     return Disciplina.query.filter(
         ~Disciplina.id.in_(
-            disciplinas_inscripto), Disciplina.estado == "Activo"
+            disciplinas_inscripto), Disciplina.estado == True
     ).all()
 
 
@@ -369,10 +411,11 @@ def list_socios_habilitado(habilitado, page=1, per_page=10):
     Devuelve la lista de socios activos habilitados o deshabilitados
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True, habilitado=habilitado)
         .outerjoin(Usuario, full=True)
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
@@ -383,11 +426,12 @@ def find_socio_by_apellido(last_name, page=1, per_page=10):
     Devuelve los socios activos dado un apellido
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True)
         .outerjoin(Usuario, full=True)
         .filter(Usuario.last_name.ilike(f"{last_name}%"))
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
@@ -398,11 +442,12 @@ def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10
     Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True, habilitado=habilitado)
         .outerjoin(Usuario, full=True)
         .filter(Usuario.last_name.ilike(f"{last_name}%"))
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
@@ -525,7 +570,7 @@ def get_inscripciones(page):
     """
     per_page = get_elements_per_page()
     return Inscripcion.query.join(Disciplina).filter(
-        Disciplina.estado.ilike("activo%")
+        Disciplina.estado == True
     ).paginate(page=page, per_page=per_page)
 
 
@@ -536,7 +581,7 @@ def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     inscripcion = Inscripcion.query.filter_by(
         socio_id=socio.id, disciplina_id=disciplina.id
     ).join(Disciplina).filter(
-        Disciplina.estado.ilike("activo%")
+        Disciplina.estado == True
     ).first()
     return inscripcion
 
@@ -745,7 +790,7 @@ def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):
         inscripcion_id=inscripcion_id,
         nro_cuota=nro_cuota
     ).join(Inscripcion).join(Disciplina).filter(
-        Disciplina.estado.ilike("activo%")
+        Disciplina.estado == True
     ).first()
 
 
@@ -779,6 +824,12 @@ def es_moroso(socio_id):
             return True
     return False
 
+def delete_carnet(socio_id):
+    """
+    Elimina el carnet de un socio.
+    """
+    db.session.query(Carnet).filter(Carnet.id_socio == socio_id).delete()
+    db.session.commit()
 
 def set_comprobante_by_pago_id(pago_id, filename):
     """

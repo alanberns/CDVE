@@ -1,0 +1,15 @@
+<div style="border: 0.35rem solid black; padding: 0.5rem">
+    <h2><strong>Disciplinas</strong></h2>
+    <ul style="list-style-type: none; margin: 0; padding: 0">
+      {%for disciplina in disciplinas_pag.items%}
+         <li style="font-size: 1.2rem">
+            <div> <strong>Nombre:</strong>{{ disciplina.nombre }}</div>
+            <div> <strong>Categoria</strong>{{ disciplina.categoria }}</div>
+            <div> <strong>Instructor:</strong> {{ disciplina.entrenador }} </div>
+            <div> <strong>Dia:</strong> {{ disciplina.dia }} </div>
+            <div> <strong>Hora:</strong> {{ disciplina.hora }} </div>
+            <div> <strong>Estado:</strong> {{ disciplina.estado }} </div>
+         </li>
+       {%endfor%}
+    </ul>
+</div>
