@@ -39,12 +39,12 @@ export default {
     cuota: Object,
   },
   methods: {
-    check(e) {
+    check() {
       this.$nextTick(() => {
         if (this.checkedCuotas) {
-          this.cuotaPickedStore.addCuota(e.target.value);
+          this.cuotaPickedStore.addCuota(this.cuota);
         } else {
-          this.cuotaPickedStore.removeCuota(e.target.value);
+          this.cuotaPickedStore.removeCuota(this.cuota);
         }
       });
     },

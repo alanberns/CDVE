@@ -15,7 +15,7 @@
     <p class="flow-text">Desea realizar un pago por el monto total de:</p>
     <div class="row valign-wrapper div-monto">
       <i class="material-icons">attach_money</i>
-      <p class="flow-text center-align">1000</p>
+      <p class="flow-text center-align">{{ cuotaPickedStore.getMontoTotal }}</p>
     </div>
 
     <div class="row">
@@ -40,10 +40,15 @@
 </template>
 
 <script>
+import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 export default {
   name: "ModalPago",
   data() {
     return { showModal: false };
+  },
+  setup() {
+    const cuotaPickedStore = useCuotaPickedStore();
+    return { cuotaPickedStore };
   },
 };
 </script>
