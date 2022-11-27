@@ -202,7 +202,7 @@ def get_disciplinas_time(hora):
     """
     return Disciplina.query.filter(Disciplina.hora.ilike(hora + "%")).all()
 
-    
+
 def get_disciplinas_by_user_id(socio_id):
     """
     Retorna las disciplinas dado el id de un socio
@@ -758,6 +758,7 @@ def create_carnet(**kwargs):
     db.session.commit()
     return carnet
 
+
 def get_carnet(socio_id):
     """
     Devuelve un carnet según un id de socio.
@@ -770,9 +771,21 @@ def es_moroso(socio_id):
     """
     Devuelve un boolean indicando si el socio dado es moroso.
     """
-    cuotas = Cuota.query.join(Inscripcion).filter(Inscripcion.socio_id == socio_id).all()
+    cuotas = Cuota.query.join(Inscripcion).filter(
+        Inscripcion.socio_id == socio_id).all()
     for cuota in cuotas:
-        print (cuota.id)
+        print(cuota.id)
         if (cuota.fecha_vencimiento < datetime.today() and (not cuota.estado_pago)):
             return True
     return False
+
+
+def set_comprobante_by_pago_id(pago_id, filename):
+    """
+    Dada una id de pago y un nombre de archivo, guarda el nombre del arcivo guardado,
+    el cual se ubicara por defector en la carpeta public/comprobantes
+    """
+    pago = get_pago_by_id(pago_id)
+    pago.comprobante = filename
+    record_update(pago)
+    return pago
