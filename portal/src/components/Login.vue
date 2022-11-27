@@ -86,7 +86,7 @@ export default {
           this.loginStore.signIn(response.data.token);
         })
         .catch((error) => console.log(error));
-      router.push("/pagos");
+      router.push("/");
     },
   },
 };

@@ -4,6 +4,7 @@ export const useCuotaPickedStore = defineStore("cuotaPickedStore", {
   state: () => ({
     cuotas: [],
     disciplina: null,
+    pagoIsConfirmed: null,
   }),
   actions: {
     addCuota(cuota) {
