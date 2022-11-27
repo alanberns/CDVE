@@ -20,9 +20,9 @@
           <td>{{ pago.monto }}</td>
           <td>{{ pago.fecha }}</td>
           <td v-if="pago.comprobante">
-            <button class="btn waves-effect green darken-4">
-              Ver <i class="material-icons right">photo_library</i>
-            </button>
+            <div class="container comprobante-done">
+              <i class="material-icons right check-icon">done_all</i>
+            </div>
           </td>
           <td v-else>
             <button
@@ -106,5 +106,12 @@ export default {
 <style>
 .pago-confirm-message {
   color: #2e7d32;
+}
+.check-icon {
+  color: #2e7d32;
+}
+.comprobante-done {
+  display: flex;
+  justify-content: center;
 }
 </style>
