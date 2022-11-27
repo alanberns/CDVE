@@ -411,10 +411,11 @@ def list_socios_habilitado(habilitado, page=1, per_page=10):
     Devuelve la lista de socios activos habilitados o deshabilitados
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True, habilitado=habilitado)
         .outerjoin(Usuario, full=True)
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
@@ -425,11 +426,12 @@ def find_socio_by_apellido(last_name, page=1, per_page=10):
     Devuelve los socios activos dado un apellido
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True)
         .outerjoin(Usuario, full=True)
         .filter(Usuario.last_name.ilike(f"{last_name}%"))
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
@@ -440,11 +442,12 @@ def find_socio_habilitado_by_apellido(last_name, habilitado, page=1, per_page=10
     Devuelve una lista de socios activos dado un apellido y un estado de "habilitado".
     """
     socios = (
-        db.session.query(Socio, Usuario)
+        db.session.query(Socio, Usuario, Carnet)
         .filter_by(activo=True, habilitado=habilitado)
         .outerjoin(Usuario, full=True)
         .filter(Usuario.last_name.ilike(f"{last_name}%"))
         .order_by(Usuario.last_name)
+        .outerjoin(Carnet, full=True)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
     return socios
