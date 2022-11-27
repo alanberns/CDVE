@@ -1,34 +1,40 @@
-<div style="border: 0.35rem solid black; padding: 0.5rem">
 
-    <h2><strong>Club Deportivo Villa Elisa</strong></h2>
-    <div style="margin: 0; padding: 0">
-        <img
-            src="{{ imagen }}"
-            alt="imagen_socio"
-            style="width:100px;height:100px;"
-        />
-        <div>
-            {{socio.nombre}} {{socio.apellido}}
-        </div>
-        <div>
-            {{socio.tipo_documento}}: {{socio.numero_documento}}
-        </div>
-        <div>
-            <strong>Estado:</strong>
-            {% if socio.habilitado %}
-            Habilitado
-            {%else%}
-            No habilitado
-            {%endif%}
-        </div>
-        <div>
-            <strong>Fecha de alta:</strong>
-            {{socio.fecha_alta.strftime('%Y-%m-%d')}}
-        </div>
-        <img
-            src="{{ qr }}"
-            alt="qr_socio"
-            style="width:150px;height:150px;"
-        />
+    <div style="text-align: center;width:40rem;height:4rem; border: 0.10rem solid black;margin: 0 auto">
+        <h2><strong>Club Deportivo Villa Elisa</strong></h2>
     </div>
-</div>
+    <div style="width:40rem;height:18rem;border: 0.10rem solid black;margin: 0 auto">
+        <div style="margin: 1rem; padding: 1rem">
+            <div position="relative">
+                <img
+                    src="{{ imagen }}"
+                    alt="imagen_socio"
+                    style="width:125px;height:125px;"
+                />
+                <img
+                src="{{ qr }}"
+                alt="qr_socio"
+                style="width:125px;height:125px;"
+                />
+            </div>
+            <div>
+                {{socio.nombre}} {{socio.apellido}}
+            </div>
+            <div>
+                {{socio.tipo_documento}}: {{socio.numero_documento}}
+            </div>
+            <div>
+                <strong>Estado:</strong>
+                {% if estado %}
+                Al dia.
+                {%else%}
+                Moroso.
+                {%endif%}
+            </div>
+            <div>
+                <strong>Fecha de alta:</strong>
+                {{socio.fecha_alta.strftime('%Y-%m-%d')}}
+            </div>
+
+        </div>
+    </div>
+
