@@ -2,23 +2,25 @@ import { defineStore } from "pinia";
 
 export const useCuotaPickedStore = defineStore("cuotaPickedStore", {
   state: () => ({
-    cuotasSelected: [],
+    cuotas: [],
   }),
   actions: {
-    addCuota(nro_cuota) {
-      this.cuotasSelected.push(nro_cuota);
+    addCuota(cuota) {
+      this.cuotas.push(cuota);
     },
-    removeCuota(nro_cuota) {
-      const index = this.cuotasSelected.indexOf(nro_cuota);
+    removeCuota(cuota) {
+      const index = this.cuotas.indexOf(cuota);
       if (index > -1) {
-        this.cuotasSelected.splice(index, 1); // 2nd parameter means remove one item only
+        this.cuotas.splice(index, 1); // 2nd parameter means remove one item only
       }
     },
     resetCuotasSelected() {
-      this.cuotasSelected = [];
+      this.cuotas = [];
     },
   },
   getters: {
-    getCuotas: (state) => state.cuotasSelected,
+    getCuotas: (state) => state.cuotas,
+    getMontoTotal: (state) =>
+      state.cuotas.reduce((acc, cuota) => acc + cuota.monto, 0),
   },
 });
