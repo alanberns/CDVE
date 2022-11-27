@@ -1,10 +1,11 @@
 <!-- app -->
 <template>
   <!-- button show -->
-  <button class="btn waves-effect red accent-4" @click="showModal = true">
-    Pagar <i class="material-icons right">attach_money</i>
-  </button>
-
+  <div class="row center">
+    <button class="btn waves-effect red accent-4" @click="showModal = true">
+      Pagar <i class="material-icons right">attach_money</i>
+    </button>
+  </div>
   <!-- overlay -->
   <div class="overlay" v-if="showModal" @click="showModal = false"></div>
 

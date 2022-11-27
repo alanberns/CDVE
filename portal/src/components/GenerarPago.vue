@@ -1,6 +1,7 @@
 <template>
   <br />
   <div class="container modal-vue">
+    <h2>Pago de Disciplinas</h2>
     <div class="row valign-wrapper">
       <div class="col l6">
         <p class="flow-text">Seleccione la disciplina que desea pagar</p>
@@ -96,4 +97,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.modal-vue {
+  margin-bottom: 1rem;
+}
+</style>
