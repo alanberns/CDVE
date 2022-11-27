@@ -823,3 +823,10 @@ def es_moroso(socio_id):
         if (cuota.fecha_vencimiento < datetime.today() and (not cuota.estado_pago)):
             return True
     return False
+
+def delete_carnet(socio_id):
+    """
+    Elimina el carnet de un socio.
+    """
+    db.session.query(Carnet).filter(Carnet.id_socio == socio_id).delete()
+    db.session.commit()
