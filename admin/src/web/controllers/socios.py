@@ -97,6 +97,7 @@ def soft_delete_socio(socio_id):
     Eliminado lógico.
     """
     board.soft_delete_socio(socio_id)
+    board.delete_carnet(socio_id)
     return redirect(url_for("socios.socios_index"))
 
 

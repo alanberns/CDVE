@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block title %}EditarDisciplina{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  </head>
+  <body>
+    <div id="container bg-white">
+      <div class="d-flex justify-content-center m-3 mx-5">
+         <div class="d-flex justify-content-center p-2" id="main">
+           <div class="form-group" style="width: 40rem;">
+             <h2> Editar Disciplina </h2>
+             <form action = "{{url_for('disciplinas.updatedsp')}}" method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="ms-3">
+                  <label for="Nombre" class="form-label">* Nombre</label>
+                  <select class="form-select" id="nombre" name="nombre" required="">
+                     <option value="">--Seleccionar--</option>
+                     <option selected="" value="Futbol">Futbol</option>
+                     <option value="Tenis">Tenis</option>
+                     <option value="Boxeo">Boxeo</option>
+                     <option value="Basquet">Basquet</option>
+                     <option value="Voley">Voley</option>
+                     <option value="Natacion">Natacion</option>
+                     <option value="Padel">Padel</option>
+                     <option value="Yoga">Yoga</option>
+                     <option value="Karate">Karate</option>
+                     <option value="Taekwondo">Taekwondo</option>
+                  </select>
+              </div>
+              <div class="ms-3">
+                <label for="Categoria" class="form-label">* Categoria</label>
+                <select class="form-select" id="categoria" name="categoria" required="">
+                   <option value="">--Seleccionar--</option>
+                   <option selected="" value="Mini (2-6 Años)">Mini (2-6 Años)</option>
+                   <option value="Chicos (6-12 Años)">Chicos (6-12 Años)</option>
+                   <option value="Jovenes (13-17 Años)">Jovenes (13-17 Años)</option>
+                   <option value="Adultos (18-40 Años)">Adultos (18-40 Años)</option>
+                   <option value="Mayores (+ 40 Años)">Mayores (+ 40 Años)</option>
+                 </select>
+              </div>
+              <div class="ms-3">
+                <label for="Instructor" class="form-label">* Instructor</label>
+                <input type="text" class="form-control" id="entrenador" name = "entrenador" placeholder= "{{ disciplina.entrenador }}" required="1">
+              </div>
+              <div class="ms-3">
+                <label for="dia" class="form-label">* Dia</label>
+                <select class="form-select" id="dia" name="dia" required="">
+                     <option value="">--Seleccionar--</option>
+                      <option selected="" value="Lunes">Lunes</option>
+                      <option value="Martes">Martes</option>
+                      <option value="Miercoles">Miercoles</option>
+                      <option value="Jueves">Jueves</option>
+                      <option value="Viernes">Viernes</option>
+                      <option value="Sabado">Sabado</option>
+                </select>
+              </div>
+              <div class="ms-3">
+                <label for="Hora" class="form-label">* Hora</label>
+                <select class="form-select" id="hora" name="hora" required="">
+                     <option value="">--Seleccionar--</option>
+                     <option selected="" value="9 Hs">9 Hs</option>
+                     <option value="09:00 Hs">09:00 Hs</option>
+                     <option value="10:00 Hs">10:00 Hs</option>
+                     <option value="11:00 Hs">11:00 Hs</option>
+                     <option value="12:00 Hs">12:00 Hs</option>
+                     <option value="13:00 Hs">13:00 Hs</option>
+                     <option value="14:00 Hs">14:00 Hs</option>
+                     <option value="15:00 Hs">15:00 Hs</option>
+                     <option value="16:00 Hs">16:00 Hs</option>
+                     <option value="17:00 Hs">17:00 Hs</option>
+                     <option value="18:00 Hs">18:00 Hs</option>
+                     <option value="19:00 Hs">19:00 Hs</option>
+                     <option value="20:00 Hs">20:00 Hs</option>
+                  </select>
+              </div>
+              <div class="ms-3">
+                <label for="Costo Precio" class="form-label">* Costo / Precio</label>
+                <input type="number" class="form-control" id="costo_mensual" name = "costo_mensual" placeholder= "{{ disciplina.costo_mensual }}" required="1">
+              </div>
+              <div class="d-grid gap-2">
+                <label for="Activo" class="form-label">(* ) Campos obligatorios</label>
+                <button class="btn btn-primary">Guardar</button>
+              </div>
+           </form>
+           </div>
+          </div> 
+      </div>
+     </div> 
+  </body>
+</html>
+{% endblock content %}

@@ -8,7 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
-# from flask_cors import cross_origin
+# from flask_cors import#  cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
 
@@ -91,30 +91,34 @@ def pay(current_user):
     quiere pagar.
     Si el monto no es correcto devuelve un mensaje indicando el monto necesario.
     """
-    nro_cuota = request.json[0]["month"]
-    amount = request.json[0]["amount"]
-    disciplina = request.json[0]["disciplina"]
-    try:
-        amount = int(amount)
-    except ValueError:
-        return jsonify({"message": "El monto debe ser un numero"}), 401
-    if not nro_cuota or not amount or not disciplina:
-        return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
-    try:
-        disciplina = board.find_disciplina_by_name(disciplina)
-        inscripcion = board.get_inscripcion_by_socio_and_disciplina(
-            current_user.socio[0], disciplina)
-        cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
-            inscripcion.id, nro_cuota)
-    except AttributeError:
-        return jsonify({"message": "La disciplina que intenta pagar esta inactiva"}), 401
-    except KeyError:
-        return jsonify({"message": "El usuario actual no es un socio"}), 401
-    if cuota.estado_pago:
-        return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
-    if not cuota.valor_cuota == amount:
-        return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
-    pago = board.generate_payment([cuota.id])
+    cuotas = request.json["cuotas"]
+    disciplina_nombre = request.json["disciplina"]
+    cuotas_ids = []
+    for c in cuotas:
+        nro_cuota = c["month"]
+        amount = c["amount"]
+        try:
+            amount = int(amount)
+        except ValueError:
+            return jsonify({"message": "El monto debe ser un numero"}), 401
+        if not nro_cuota or not amount or not disciplina_nombre:
+            return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
+        try:
+            disciplina = board.find_disciplina_by_name(disciplina_nombre)
+            inscripcion = board.get_inscripcion_by_socio_and_disciplina(
+                current_user.socio[0], disciplina)
+            cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
+                inscripcion.id, nro_cuota)
+        except AttributeError:
+            return jsonify({"message": "La disciplina que intenta pagar esta inactiva"}), 401
+        except KeyError:
+            return jsonify({"message": "El usuario actual no es un socio"}), 401
+        if cuota.estado_pago:
+            return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
+        if not cuota.valor_cuota == amount:
+            return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
+        cuotas_ids.append(cuota.id)
+    pago = board.generate_payment(cuotas_ids)
     return jsonify(payments=pago.serialize)
 
 
@@ -229,7 +233,7 @@ def get_socio_state(current_user):
     usuario_data = jsonify(user_data)
     return usuario_data
 
-        
+
 # @cross_origin
 @api_blueprint.get("/statistics/concurrencia")
 @token_required
@@ -282,7 +286,14 @@ def get_statistics_genero(current_user):
     return data
 
 
-# Sin esto no permite hacer la peticion localmente desde el front
+def _allowed_file(filename):
+    """
+    Verifica que el archivo sea pdf, jpg o png
+    """
+    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 # @cross_origin
 @api_blueprint.post("/me/comprobante")
 @token_required
@@ -290,13 +301,16 @@ def comprobante(current_user):
     """
     Funcion que recibe y guarda el comprobante enviado desde el frontend.
     """
-    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
+    pago_id = request.form["id"]
     if 'file' not in request.files:
         return jsonify({"message": "Archivo no encontrado en la peticion"}), 400
     file = request.files['file']
     filename = secure_filename(file.filename)
+    if not _allowed_file(filename):
+        return jsonify({"message": "El archivo debe ser jpg, png o pdf"}), 400
     filepath = getComprobantePath(filename)
     file.save(filepath)
+    board.set_comprobante_by_pago_id(pago_id, filename)
     return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
 
 

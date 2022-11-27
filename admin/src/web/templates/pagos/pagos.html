@@ -1,18 +1,15 @@
 {% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block subnav
 %}
-<ul class="nav justify-content-end">
-  <li class="nav-item">
-    <a
-      class="nav-link btn btn-link"
-      href="{{ url_for('pagos.inscripciones_index') }}"
-      >Ver Inscripciones
-    </a>
-  </li>
-</ul>
+
 {% endblock %} {% block content %}
 
 <div class="container">
   <h2>Pagos</h2>
+  <a
+  class="nav-link btn btn-link"
+  href="{{ url_for('pagos.inscripciones_index') }}"
+  ><button>Ver Inscripciones</button>
+  </a>
   {% if error and error == 1 %}
   <p class="fs-6 text-danger">
     Por favor asegurese de introducir un numero de socio valido
