@@ -830,3 +830,13 @@ def delete_carnet(socio_id):
     """
     db.session.query(Carnet).filter(Carnet.id_socio == socio_id).delete()
     db.session.commit()
+
+def set_comprobante_by_pago_id(pago_id, filename):
+    """
+    Dada una id de pago y un nombre de archivo, guarda el nombre del arcivo guardado,
+    el cual se ubicara por defector en la carpeta public/comprobantes
+    """
+    pago = get_pago_by_id(pago_id)
+    pago.comprobante = filename
+    record_update(pago)
+    return pago

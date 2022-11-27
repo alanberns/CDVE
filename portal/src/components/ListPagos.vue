@@ -12,12 +12,26 @@
         <tr>
           <th>Monto</th>
           <th>Fecha</th>
+          <th>Comprobante</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="pago in pagos" :key="pago.id">
           <td>{{ pago.monto }}</td>
           <td>{{ pago.fecha }}</td>
+          <td v-if="pago.comprobante">
+            <button class="btn waves-effect green darken-4">
+              Ver <i class="material-icons right">photo_library</i>
+            </button>
+          </td>
+          <td v-else>
+            <button
+              @click="uploadComprobante(pago.id)"
+              class="btn waves-effect red accent-4"
+            >
+              Subir<i class="material-icons right">cloud_upload</i>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -39,11 +53,15 @@
 <script>
 import { apiService } from "../apiService";
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
+import { useComprobanteStore } from "../stores/ComprobanteStore";
+import router from "@/router";
+
 export default {
   name: "ListPagos",
   setup() {
     const cuotaPickedStore = useCuotaPickedStore();
-    return { cuotaPickedStore };
+    const comprobanteStore = useComprobanteStore();
+    return { cuotaPickedStore, comprobanteStore };
   },
   data() {
     return {
@@ -59,6 +77,10 @@ export default {
     this.cuotaPickedStore.pagoIsConfirmed = false;
   },
   methods: {
+    uploadComprobante(idComprobante) {
+      this.comprobanteStore.idComprobante = idComprobante;
+      router.push("/comprobante");
+    },
     async nextPage(page) {
       page = page || this.current_page;
       apiService
