@@ -1,6 +1,6 @@
 <template>
     <div>
-        <br><br>
+        <h1>Mis datos</h1>
         <table class="responsive-table centered highlight ">
             <thead>
                 <tr>
@@ -32,6 +32,7 @@
             </tbody>
         </table>
     </div>
+    <br>
 </template>
 
 <script>

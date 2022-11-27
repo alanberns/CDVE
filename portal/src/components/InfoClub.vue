@@ -45,7 +45,7 @@
                     </div>
                     <div class="card-action grey">
                         <router-link to="/pagos"><p class="white-text">Mis pagos</p></router-link>
-                        <router-link to="/pagar"><p class="white-text">Subí tu comprobante de pago</p></router-link>
+                        <router-link to="/pagar"><p class="white-text">Realizar un pago</p></router-link>
                         <router-link to="/user"><p class="white-text">Mis datos</p></router-link>
                     </div>
                 </div>

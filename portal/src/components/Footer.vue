@@ -3,7 +3,7 @@
         <div class="footer-copyright">
             <div class="container">
                 <div class="text-footer">
-                    © 2014 Grupo 14
+                    © 2022 Grupo 14
                 </div>
             </div>
         </div>

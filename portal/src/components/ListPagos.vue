@@ -1,6 +1,6 @@
 <template>
   <div>
-    <br />
+    <h1>Mis pagos</h1>
     <p
       class="center-align flow-text pago-confirm-message"
       v-if="cuotaPickedStore.pagoIsConfirmed"
