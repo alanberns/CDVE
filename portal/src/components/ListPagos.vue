@@ -7,6 +7,9 @@
     >
       Su pago fue realizado con exito
     </p>
+    <div v-if="loading" class="progress">
+      <div class="indeterminate"></div>
+    </div>
     <table class="responsive-table centered highlight">
       <thead>
         <tr>
@@ -68,6 +71,7 @@ export default {
       pagos: [],
       current_page: 1,
       pages: 1,
+      loading: true,
     };
   },
   async mounted() {
@@ -96,8 +100,12 @@ export default {
           this.pagos = response.data.payments;
           this.pages = response.data.pages;
           this.current_page = response.data.current_page;
+          this.loading = false;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        });
     },
   },
 };
