@@ -49,6 +49,9 @@ export default {
   mounted() {
     this.getDisciplinas();
   },
+  // beforeUnmount() {
+  //   this.cuotaPickedStore.resetDisciplina();
+  // },
   components: {
     SubirArchivo,
     ListCuotas,
@@ -58,6 +61,7 @@ export default {
     mySelectEvent(e) {
       this.cuotaPickedStore.resetCuotasSelected();
       this.selected = e.text;
+      this.cuotaPickedStore.setDisciplina(this.selected);
       this.getCuotas();
     },
     async getCuotas() {
@@ -73,7 +77,6 @@ export default {
         .then((response) => {
           this.cuotas = [];
           const data = response.data.cuotas;
-          console.log(data);
           Object.values(data).forEach((item) => this.cuotas.push(item));
           this.has_cuotas = this.cuotas.length > 0 ? true : false;
         })

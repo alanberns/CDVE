@@ -91,30 +91,34 @@ def pay(current_user):
     quiere pagar.
     Si el monto no es correcto devuelve un mensaje indicando el monto necesario.
     """
-    nro_cuota = request.json[0]["month"]
-    amount = request.json[0]["amount"]
-    disciplina = request.json[0]["disciplina"]
-    try:
-        amount = int(amount)
-    except ValueError:
-        return jsonify({"message": "El monto debe ser un numero"}), 401
-    if not nro_cuota or not amount or not disciplina:
-        return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
-    try:
-        disciplina = board.find_disciplina_by_name(disciplina)
-        inscripcion = board.get_inscripcion_by_socio_and_disciplina(
-            current_user.socio[0], disciplina)
-        cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
-            inscripcion.id, nro_cuota)
-    except AttributeError:
-        return jsonify({"message": "La disciplina que intenta pagar esta inactiva"}), 401
-    except KeyError:
-        return jsonify({"message": "El usuario actual no es un socio"}), 401
-    if cuota.estado_pago:
-        return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
-    if not cuota.valor_cuota == amount:
-        return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
-    pago = board.generate_payment([cuota.id])
+    cuotas = request.json["cuotas"]
+    disciplina_nombre = request.json["disciplina"]
+    cuotas_ids = []
+    for c in cuotas:
+        nro_cuota = c["month"]
+        amount = c["amount"]
+        try:
+            amount = int(amount)
+        except ValueError:
+            return jsonify({"message": "El monto debe ser un numero"}), 401
+        if not nro_cuota or not amount or not disciplina_nombre:
+            return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
+        try:
+            disciplina = board.find_disciplina_by_name(disciplina_nombre)
+            inscripcion = board.get_inscripcion_by_socio_and_disciplina(
+                current_user.socio[0], disciplina)
+            cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
+                inscripcion.id, nro_cuota)
+        except AttributeError:
+            return jsonify({"message": "La disciplina que intenta pagar esta inactiva"}), 401
+        except KeyError:
+            return jsonify({"message": "El usuario actual no es un socio"}), 401
+        if cuota.estado_pago:
+            return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
+        if not cuota.valor_cuota == amount:
+            return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
+        cuotas_ids.append(cuota.id)
+    pago = board.generate_payment(cuotas_ids)
     return jsonify(payments=pago.serialize)
 
 
@@ -198,7 +202,6 @@ def get_statistics_inscripcionesPorDisciplina(current_user):
     return data
 
 
-
 @api_blueprint.get("/me/license")
 @token_required
 def get_socio_state(current_user):
@@ -230,7 +233,7 @@ def get_socio_state(current_user):
     usuario_data = jsonify(user_data)
     return usuario_data
 
-        
+
 # @cross_origin
 @api_blueprint.get("/statistics/concurrencia")
 @token_required
@@ -238,7 +241,8 @@ def get_statistics_concurrencia(current_user):
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
-    horas = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+    horas = ["06", "07", "08", "09", "10", "11", "12", "13", "14",
+             "15", "16", "17", "18", "19", "20", "21", "22", "23"]
     hora_data = []
     cantidad = []
     for hora in horas:
@@ -246,7 +250,7 @@ def get_statistics_concurrencia(current_user):
         disciplinas = board.get_disciplinas_time(hora)
         c = 0
         for disciplina in disciplinas:
-            c = c +len(disciplina.socio)
+            c = c + len(disciplina.socio)
         cantidad.append(c)
     data = {
         "hora": hora_data,
@@ -270,7 +274,7 @@ def get_statistics_genero(current_user):
         if socio.genero not in generos:
             generos.append(socio.genero)
             valores[socio.genero] = 1
-        else: 
+        else:
             valores[socio.genero] = valores[socio.genero] + 1
     cantidades = []
     for genero in generos:
@@ -281,7 +285,7 @@ def get_statistics_genero(current_user):
     }
     return data
 
-    
+
 # Sin esto no permite hacer la peticion localmente desde el front
 @cross_origin
 @api_blueprint.post("/me/comprobante")

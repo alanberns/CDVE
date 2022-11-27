@@ -10,7 +10,7 @@
 
   <!-- modal -->
   <div class="modal1" v-if="showModal">
-    <h3 class="center-align">Confimacion</h3>
+    <h3 class="center-align">Confimación</h3>
     <div class="divider"></div>
     <p class="flow-text">Desea realizar un pago por el monto total de:</p>
     <div class="row valign-wrapper div-monto">
@@ -28,12 +28,13 @@
         </button>
       </div>
       <div class="col s1 offset-s9">
-        <button
+        <a
+          href="javascript:;"
+          v-on:click="confirmPago()"
           class="btn waves-effect green darken-3 modal-button"
-          @click="showModal = false"
         >
           <i class="material-icons">check</i>
-        </button>
+        </a>
       </div>
     </div>
   </div>
@@ -41,6 +42,8 @@
 
 <script>
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
+import { useLoginStore } from "../stores/LoginStore";
+import { apiService } from "../apiService";
 export default {
   name: "ModalPago",
   data() {
@@ -48,7 +51,35 @@ export default {
   },
   setup() {
     const cuotaPickedStore = useCuotaPickedStore();
-    return { cuotaPickedStore };
+    const loginStore = useLoginStore();
+    return { cuotaPickedStore, loginStore };
+  },
+  methods: {
+    async confirmPago() {
+      if (confirm("¿Deseas confirmar el pago?")) {
+        let apiCuotas = [];
+        this.cuotaPickedStore.getCuotas.forEach((cuota) =>
+          apiCuotas.push({
+            month: cuota.nro_cuota,
+            amount: cuota.monto,
+          })
+        );
+        apiService.defaults.headers[
+          "Authorization"
+        ] = `${this.loginStore.getToken}`;
+        await apiService
+          .post("/me/payments", {
+            disciplina: this.cuotaPickedStore.disciplina,
+            cuotas: apiCuotas,
+          })
+          .then((response) => {
+            console.log(response);
+            console.log("exito");
+          })
+          .catch((error) => console.log(error));
+        this.showModal = false;
+      }
+    },
   },
 };
 </script>
