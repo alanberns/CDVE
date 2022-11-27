@@ -1,6 +1,12 @@
 <template>
   <div>
     <br />
+    <p
+      class="center-align flow-text pago-confirm-message"
+      v-if="cuotaPickedStore.pagoIsConfirmed"
+    >
+      Su pago fue realizado con exito
+    </p>
     <table class="responsive-table centered highlight">
       <thead>
         <tr>
@@ -32,9 +38,13 @@
 
 <script>
 import { apiService } from "../apiService";
-
+import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 export default {
   name: "ListPagos",
+  setup() {
+    const cuotaPickedStore = useCuotaPickedStore();
+    return { cuotaPickedStore };
+  },
   data() {
     return {
       pagos: [],
@@ -44,6 +54,9 @@ export default {
   },
   async mounted() {
     await this.nextPage();
+  },
+  beforeUnmount() {
+    this.cuotaPickedStore.pagoIsConfirmed = false;
   },
   methods: {
     async nextPage(page) {
@@ -68,4 +81,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.pago-confirm-message {
+  color: #2e7d32;
+}
+</style>

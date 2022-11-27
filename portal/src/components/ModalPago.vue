@@ -44,6 +44,7 @@
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 import { useLoginStore } from "../stores/LoginStore";
 import { apiService } from "../apiService";
+import router from "@/router";
 export default {
   name: "ModalPago",
   data() {
@@ -77,7 +78,9 @@ export default {
             console.log("exito");
           })
           .catch((error) => console.log(error));
+        this.cuotaPickedStore.pagoIsConfirmed = true;
         this.showModal = false;
+        router.push("/pagos");
       }
     },
   },
