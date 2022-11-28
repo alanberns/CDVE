@@ -1,6 +1,9 @@
 <template>
     <div>
         <h1>Mis datos</h1>
+        <div v-if="loading" class="progress">
+      <div class="indeterminate"></div>
+    </div>
         <table class="responsive-table centered highlight ">
             <thead>
                 <tr>
@@ -42,6 +45,7 @@ export default {
   data() {
     return {
       user_info: [],
+      loading: true,
     };
   },
   created() {
@@ -53,8 +57,14 @@ export default {
           Authorization: `${localStorage.getItem("token")}`,
         },
       })
-      .then((response) => (this.user_info = response.data))
-      .catch((error) => console.log(error));
+      .then((response) => {
+        this.user_info = response.data;
+        this.loading = false;
+      })
+      .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        });
   },
 };
 </script>
