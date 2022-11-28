@@ -117,7 +117,11 @@
                         <th>{{disciplina.dia}}</th>
                         <th>{{disciplina.hora}}</th>
                         <th>{{disciplina.costo_mensual}}</th>
-                        <th>{{disciplina.estado}}</th>
+                        {% if disciplina.estado  %}
+                        <th>si</th>
+                        {%else%}
+                        <th>no</th>
+                        {% endif%}                        
                         <td width="30">
                           <th><a href="{{url_for('disciplinas.edit_discip',id=disciplina.id)}}"><button class="btn btn-primary">Editar</button></a></th>
                           <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button class="btn btn-primary">Cambiar</button></a></th>
