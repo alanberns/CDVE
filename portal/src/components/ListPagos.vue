@@ -1,5 +1,8 @@
 <template>
   <div>
+    <p class="center-align flow-text" v-if="comprobanteStore.message">
+      {{ comprobanteStore.message }}
+    </p>
     <h1>Mis pagos</h1>
     <p
       class="center-align flow-text pago-confirm-message"
@@ -7,6 +10,7 @@
     >
       Su pago fue realizado con exito
     </p>
+
     <div v-if="loading" class="progress">
       <div class="indeterminate"></div>
     </div>
@@ -79,6 +83,7 @@ export default {
   },
   beforeUnmount() {
     this.cuotaPickedStore.pagoIsConfirmed = false;
+    this.comprobanteStore.message = null;
   },
   methods: {
     uploadComprobante(idComprobante) {
@@ -106,6 +111,7 @@ export default {
           console.log(error);
           this.loading = false;
         });
+      router.push("/pagos");
     },
   },
 };
