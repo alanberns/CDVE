@@ -447,7 +447,7 @@ def run():
         valor_base_cuota=1000,
         porcentaje_cuota=0.15,
         email_club="club@gmail.com",
-        numero_club="2214151861"
+        numero_club="2214151861",
     )
 
     # Roles
@@ -468,8 +468,7 @@ def run():
         [configuracion_all, pago_index, pago_show, pago_update, pago_delete],
     )
 
-    board.rol_assign_permiso(
-        rol_operador, [pago_index, pago_show, pago_update])
+    board.rol_assign_permiso(rol_operador, [pago_index, pago_show, pago_update])
 
     # Permisos modulo usuarios
     user_index = board.create_permiso(nombre="user_index")
@@ -480,8 +479,7 @@ def run():
     user_rol_update = board.create_permiso(nombre="user_rol_update")
     board.rol_assign_permiso(
         rol_administrador,
-        [user_index, user_create, user_show,
-            user_delete, user_rol_update, user_update],
+        [user_index, user_create, user_show, user_delete, user_rol_update, user_update],
     )
 
     # Permisos socios

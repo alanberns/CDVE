@@ -23,8 +23,7 @@ def configuracion_index():
     configuracion = board.list_configuracion()
     form = ConfigurationForm(request.form)
     form.set_from_config(configuracion)
-    form.porcentaje_cuota.data = float_to_percentage(
-        form.porcentaje_cuota.data)
+    form.porcentaje_cuota.data = float_to_percentage(form.porcentaje_cuota.data)
     return render_template("configuracion.html", form=form)
 
 

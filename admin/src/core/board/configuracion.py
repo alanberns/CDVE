@@ -23,7 +23,7 @@ class Configuracion(db.Model):
         valor_base_cuota,
         porcentaje_cuota,
         email_club,
-        numero_club
+        numero_club,
     ):
         self.elementos_pagina = elementos_pagina
         self.estado_pago = estado_pago
