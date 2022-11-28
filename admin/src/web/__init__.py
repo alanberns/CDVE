@@ -35,8 +35,8 @@ def create_app(env="development", static_folder="static"):
 
     @app.get("/")
     def entry():
-        database.reset_db()
-        seeds.run()
+        # database.reset_db()
+        # seeds.run()
         return redirect(url_for("auth.login"))
 
     @app.get("/home")

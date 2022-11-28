@@ -27,6 +27,10 @@ Si estan presentes estas palabras, seran reemplazadas segun corresponda con los 
 Al cambiar el valor base de la cuota, el valor de las cuotas no pagadas, que tengan fecha mayor al mes actual, cambiaran su valor.
 
 ## API
+Para acceder al login utilizar:
+
+**email:** test@test.com
+**contraseña**: 12345
 
 Cuando se envia el token a una api luego de haber iniciado sesion, este se utiliza para identificar al usuario.
 
