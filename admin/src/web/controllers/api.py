@@ -8,12 +8,12 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
+
 # from flask_cors import#  cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
 
-api_blueprint = Blueprint(
-    "api", __name__, url_prefix="/api")
+api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
 def token_required(f):
@@ -21,6 +21,7 @@ def token_required(f):
     Esta funcion se utiliza como wrapper, y exije que la peticion realizada envie el token jwt
     Si el token caduco o no es valido, se envia el mensaje correspondiente.
     """
+
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -30,11 +31,13 @@ def token_required(f):
             return jsonify({"message": "El token es invalido"}), 401
         try:
             data = jwt.decode(
-                token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
+                token, current_app.config["SECRET_KEY"], algorithms=["HS256"]
+            )
             user = board.get_usuario(data["id"])
         except:
             return jsonify({"message": "El token es invalido"}), 401
         return f(user, *args, **kwargs)
+
     return decorated
 
 
@@ -47,18 +50,28 @@ def login():
     """
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
-        return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
+        return make_response(
+            "Could not verify",
+            401,
+            {"WWW-Authenticate": "Basic Realm='Login Required!"},
+        )
     user = board.find_user_by_email(auth.username)
     if not user:
-        return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
+        return make_response(
+            "Could not verify",
+            401,
+            {"WWW-Authenticate": "Basic Realm='Login Required!"},
+        )
     if user.verify_password(auth.password):
         token = jwt.encode(
             {"id": user.id, "exp": datetime.utcnow() + timedelta(minutes=30)},
             current_app.config["SECRET_KEY"],
-            algorithm="HS256"
+            algorithm="HS256",
         )
         return jsonify({"token": token})
-    return make_response("Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"})
+    return make_response(
+        "Could not verify", 401, {"WWW-Authenticate": "Basic Realm='Login Required!"}
+    )
 
 
 # @cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
@@ -77,7 +90,7 @@ def list_payments(current_user):
     payments = {
         "pages": pagos.pages,
         "current_page": pagos.page,
-        "payments": [pago.serialize for pago in pagos.items]
+        "payments": [pago.serialize for pago in pagos.items],
     }
     return jsonify(payments)
 
@@ -102,21 +115,36 @@ def pay(current_user):
         except ValueError:
             return jsonify({"message": "El monto debe ser un numero"}), 401
         if not nro_cuota or not amount or not disciplina_nombre:
-            return jsonify({"message": "Los datos proporcionados no son correctos"}), 401
+            return (
+                jsonify({"message": "Los datos proporcionados no son correctos"}),
+                401,
+            )
         try:
             disciplina = board.find_disciplina_by_name(disciplina_nombre)
             inscripcion = board.get_inscripcion_by_socio_and_disciplina(
-                current_user.socio[0], disciplina)
+                current_user.socio[0], disciplina
+            )
             cuota = board.get_cuota_by_inscripcion_id_and_nro_cuota(
-                inscripcion.id, nro_cuota)
+                inscripcion.id, nro_cuota
+            )
         except AttributeError:
-            return jsonify({"message": "La disciplina que intenta pagar esta inactiva"}), 401
+            return (
+                jsonify({"message": "La disciplina que intenta pagar esta inactiva"}),
+                401,
+            )
         except KeyError:
             return jsonify({"message": "El usuario actual no es un socio"}), 401
         if cuota.estado_pago:
             return jsonify({"message": f"Esta cuota ya se encuentra pagada."}), 401
         if not cuota.valor_cuota == amount:
-            return jsonify({"message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"}), 401
+            return (
+                jsonify(
+                    {
+                        "message": f"Para realizar el pago necesita un monto de {cuota.valor_cuota}"
+                    }
+                ),
+                401,
+            )
         cuotas_ids.append(cuota.id)
     pago = board.generate_payment(cuotas_ids)
     return jsonify(payments=pago.serialize)
@@ -195,8 +223,8 @@ def get_statistics_inscripcionesPorDisciplina(current_user):
     data = []
     for disciplina in disciplinas:
         d = {
-            'nombre': disciplina.nombre + " " + disciplina.categoria,
-            'num_socios': len(disciplina.socio)
+            "nombre": disciplina.nombre + " " + disciplina.categoria,
+            "num_socios": len(disciplina.socio),
         }
         data.append(d)
     return data
@@ -222,9 +250,9 @@ def get_socio_state(current_user):
             "gender": socio.genero,
             "address": socio.direccion,
             "phone": socio.telefono,
-        }
+        },
     }
-    if (not board.es_moroso(socio.id)):
+    if not board.es_moroso(socio.id):
         user_data["description"] = "El socio no registra deuda ni sanción."
         user_data["status"] = "OK"
     else:
@@ -241,8 +269,26 @@ def get_statistics_concurrencia(current_user):
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
-    horas = ["06", "07", "08", "09", "10", "11", "12", "13", "14",
-             "15", "16", "17", "18", "19", "20", "21", "22", "23"]
+    horas = [
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+    ]
     hora_data = []
     cantidad = []
     for hora in horas:
@@ -280,8 +326,8 @@ def get_statistics_genero(current_user):
     for genero in generos:
         cantidades.append(valores[genero])
     data = {
-        'genero': generos,
-        'cantidad': cantidades,
+        "genero": generos,
+        "cantidad": cantidades,
     }
     return data
 
@@ -290,8 +336,8 @@ def _allowed_file(filename):
     """
     Verifica que el archivo sea pdf, jpg o png
     """
-    ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg'])
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    ALLOWED_EXTENSIONS = set(["pdf", "png", "jpg"])
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # @cross_origin
@@ -302,9 +348,9 @@ def comprobante(current_user):
     Funcion que recibe y guarda el comprobante enviado desde el frontend.
     """
     pago_id = request.form["id"]
-    if 'file' not in request.files:
+    if "file" not in request.files:
         return jsonify({"message": "Archivo no encontrado en la peticion"}), 400
-    file = request.files['file']
+    file = request.files["file"]
     filename = secure_filename(file.filename)
     if not _allowed_file(filename):
         return jsonify({"message": "El archivo debe ser jpg, png o pdf"}), 400
@@ -349,6 +395,7 @@ def me_get_cuotas(current_user):
     disciplina = request.args.get("disciplina")
     disciplina = board.find_disciplina_by_name(disciplina)
     inscripcion = board.get_inscripcion_by_socio_and_disciplina(
-        current_user.socio[0], disciplina)
+        current_user.socio[0], disciplina
+    )
     cuotas = board.get_cuotas_adeudadas_by_inscripcion_id(inscripcion.id)
     return jsonify(cuotas=[cuota.serialize for cuota in cuotas])

@@ -42,5 +42,6 @@ class CarnetUpload(FlaskForm):
     image = FileField(validators=[FileRequired()])
     submit = SubmitField("Upload")
 
+
 class CarnetExport(FlaskForm):
     submit = SubmitField("Export")
