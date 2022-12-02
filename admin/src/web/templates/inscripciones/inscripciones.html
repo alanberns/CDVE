@@ -10,7 +10,9 @@ content %}
         <th>Nro Socio</th>
         <th>Apellido</th>
         <th>Disciplina</th>
-        <th>Cuotas</th>
+        <th>Categoria</th>
+        <th>Instructor</th>
+        <th>Valor base</th>
       </tr>
     </thead>
     <tbody>
@@ -24,11 +26,13 @@ content %}
           {{inscripcion.disciplina.nombre}}
         </th>
         <th class="text-center align-middle">
-          <a
-            class="btn btn-primary"
-            href="{{ url_for('pagos.cuotas_index', inscripcion_id = inscripcion.id,) }}"
-            >Ver
-          </a>
+          {{inscripcion.disciplina.categoria}}
+        </th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.entrenador}}
+        </th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.costo_mensual}}
         </th>
       </tr>
       {%endfor%}
