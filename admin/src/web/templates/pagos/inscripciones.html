@@ -1,12 +1,12 @@
 {% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
-%} {{ super() }} {% endblock %} {% block subnav %}
-
-{% endblock %} {% block content %}
+%} {{ super() }} {% endblock %} {% block subnav %} {% endblock %} {% block
+content %}
 <div class="container">
   <h2>Inscripciones</h2>
   <a class="nav-link btn btn-link" href="{{ url_for('pagos.pagos_index') }}"
-  ><button>Volver a Pagos</button>
+    ><button>Volver a Pagos</button>
   </a>
+  {% if inscripciones.items %}
   <table class="table table-bordered border-primary table-responsive">
     <thead>
       <tr class="table-dark">
@@ -37,6 +37,10 @@
       {%endfor%}
     </tbody>
   </table>
+  {% else %}
+  <h1>No existen datos para mostrar</h1>
+  {% endif %}
+
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       {% for page_num in inscripciones.iter_pages(left_edge=1, right_edge=1,

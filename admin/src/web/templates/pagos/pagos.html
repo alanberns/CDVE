@@ -1,14 +1,12 @@
 {% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block subnav
-%}
-
-{% endblock %} {% block content %}
+%} {% endblock %} {% block content %}
 
 <div class="container">
   <h2>Pagos</h2>
   <a
-  class="nav-link btn btn-link"
-  href="{{ url_for('pagos.inscripciones_index') }}"
-  ><button>Ver Inscripciones</button>
+    class="nav-link btn btn-link"
+    href="{{ url_for('pagos.inscripciones_index') }}"
+    ><button type="button" class="btn btn-success">Realizar Pago</button>
   </a>
   {% if error and error == 1 %}
   <p class="fs-6 text-danger">
@@ -29,6 +27,7 @@
     </fieldset>
   </form>
   <br />
+  {% if pagos.items %}
   <table class="table table-bordered border-primary table-responsive">
     <thead>
       <tr class="table-dark">
@@ -68,6 +67,10 @@
       {%endfor%}
     </tbody>
   </table>
+  {% else %}
+  <h1>No existen datos para mostrar</h1>
+  {% endif %}
+
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       {% for page_num in pagos.iter_pages(left_edge=1, right_edge=1,
