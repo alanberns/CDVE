@@ -6,6 +6,7 @@ from flask import redirect
 from flask import url_for
 from flask import flash
 from datetime import datetime
+import re
 
 from src.core.forms.usuarios_form import UsuarioNuevoForm
 from src.core.forms.usuarios_form import ModificarUsuarioForm
@@ -101,6 +102,11 @@ def add_usuario():
             flash("El username ingresado ya está registrado", "danger")
             return redirect(url_for("usuarios.add_usuario_view"))
 
+        # Validar email
+        if not validate_email(form.email.data):
+            flash("Ingrese un email con un formato válido", "danger")
+            return redirect(url_for("usuarios.add_usuario_view"))
+
         # Validar nombre, apellido y username
         if not validate_only_letters(form.username.data):
             flash("el nombre de usuario solo debe contener letras", "danger")
@@ -168,7 +174,12 @@ def update_usuario(id):
         if board.exist_username(form.username.data):
             flash("el username ingresado ya está registrado", "danger")
             return redirect(url_for("usuarios.view_usuario", id=id))
-    
+
+    # Validar email
+    if not validate_email(form.email.data):
+        flash("Ingrese un email con un formato válido", "danger")
+        return redirect(url_for("usuarios.view_usuario", id=id))
+
     # Validar nombre, apellido y username
     if not validate_only_letters(form.username.data):
         flash("el nombre de usuario solo debe contener letras", "danger")
@@ -308,3 +319,11 @@ def validate_only_letters(string):
         if char not in valid_chars:
             return False
     return True
+
+
+def validate_email(email):
+    """
+    verifica que el email ingresado tenga un formato valido
+    """
+    expresion_regular = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
+    return re.match(expresion_regular, email) is not None
