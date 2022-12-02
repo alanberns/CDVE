@@ -25,7 +25,9 @@
             >Socios</a
           >
           {%endif%} {%if has_permission("inscripcion_index",session)%}
-          <a class="nav-link" href="{{ url_for('pagos.inscripciones_index') }}"
+          <a
+            class="nav-link"
+            href="{{ url_for('inscripciones.inscripciones_index') }}"
             >Inscripciones</a
           >
           {%endif%} {%if has_permission("pago_index",session)%}

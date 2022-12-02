@@ -16,6 +16,7 @@ from src.web.controllers.pagos import pago_blueprint
 from src.web.controllers.perfil import perfil_blueprint
 from src.web.controllers.disciplinas import disciplina_blueprint
 from src.web.controllers.api import api_blueprint
+from src.web.controllers.inscripciones import inscripciones_blueprint
 from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS
 from src.web.helpers.auth import login_required
@@ -52,6 +53,7 @@ def create_app(env="development", static_folder="static"):
     app.register_blueprint(perfil_blueprint)
     app.register_blueprint(disciplina_blueprint)
     app.register_blueprint(api_blueprint)
+    app.register_blueprint(inscripciones_blueprint)
     app.register_error_handler(404, handlers.not_found_error)
     app.register_error_handler(401, handlers.unauthorized)
     app.register_error_handler(500, handlers.internal_server_error)
