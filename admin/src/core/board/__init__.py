@@ -42,8 +42,10 @@ def update_estado_disciplina(id):
 
 #Cantidad de elementos de pagina, establecidos en configuracion
 def get_elementos_pagina():
-  configuracion = Configuracion.query.first()
-  return configuracion.elementos_pagina
+  #configuracion = Configuracion.query.first()
+  #return configuracion.elementos_pagina
+  elementos_pagina = 10
+  return elementos_pagina
   
 # Actualiza la informacion de una Disciplina  
 def update_disciplina(id, **kwargs):

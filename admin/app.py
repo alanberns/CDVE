@@ -1,9 +1,11 @@
 from src.web import create_app
 from pathlib import Path
 from flask import Flask
+from flask import jsonify
 from src.core import board
 from src.core.board.disciplina import Disciplina
-from flask import Blueprint
+#from flask import pytest
+#from src import app
 
 
 
@@ -16,4 +18,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
