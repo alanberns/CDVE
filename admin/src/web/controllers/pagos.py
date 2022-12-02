@@ -21,6 +21,11 @@ pago_blueprint = Blueprint("pagos", __name__, url_prefix="/pagos")
 @login_required
 @pago_index_req
 def pagos_index():
+    """
+    Controlador del index de pagos, devuelve los pagos de forma paginada, por defecto la pagina es 1.
+    Ademas setea el filtro, que por defecto esta en 0.
+    filtro 0  se filtra por nro_socio, filtro 1 se filtra por apellido.
+    """
     form = PagoSearchForm()
     page = request.args.get("page", default=1, type=int)
     filter = request.args.get("filter", default=0, type=int)
@@ -51,7 +56,8 @@ def pagos_searching():
         except ValueError:
             return redirect(url_for("pagos.pagos_index", filtro=filtro, error=1))
     return redirect(
-        url_for("pagos.pagos_search", page=page, filtro=filtro, busqueda=busqueda)
+        url_for("pagos.pagos_search", page=page,
+                filtro=filtro, busqueda=busqueda)
     )
 
 
@@ -59,6 +65,11 @@ def pagos_searching():
 @login_required
 @pago_index_req
 def pagos_search():
+    """
+    Controlador de la busqueda de pagos, recibe el filtro, la pagina(por defecto 1) y el texto buscado
+    y los setea, antes de devolver el template, paginado y filtrado segun corresponda.
+    filtro 0  se filtra por nro_socio, filtro 1 se filtra por apellido.
+    """
     page = request.args.get("page", default=1, type=int)
     filtro = request.args.get("filtro", type=int)
     busqueda = request.args.get("busqueda", type=str)
@@ -72,6 +83,11 @@ def pagos_search():
 @login_required
 @pago_index_req
 def pagos_busqueda_index():
+    """
+    Controlador para el index de pagos, en caso de que se haya realizado una busqueda.
+    Valida el formulario y setea la pagina, el texto, y el filtro.
+    Devuelve los resultados paginados
+    """
     form = PagoSearchForm()
     if not form.validate:
         abort(400)
@@ -86,6 +102,10 @@ def pagos_busqueda_index():
 @login_required
 @pago_index_req
 def inscripciones_index():
+    """
+    Controlador del index de inscripciones, muestra el listado de inscripciones para disciplinas activas
+    y las devuelve en forma paginada.
+    """
     page = request.args.get("page", default=1, type=int)
     inscripciones = board.get_inscripciones(page)
     return render_template("pagos/inscripciones.html", inscripciones=inscripciones)
@@ -95,6 +115,10 @@ def inscripciones_index():
 @login_required
 @pago_show_req
 def cuotas_index(inscripcion_id):
+    """
+    Controlador del index de cuotas, recibe por url la id de una inscripcion de una disciplina valida
+    y devuelve el listado de cuotas paginadas.
+    """
     board.set_nro_cuota_by_inscripcion(inscripcion_id)
     cuotas = board.get_cuotas_by_inscripcion_id(inscripcion_id)
     form = EditForm(data={"items": cuotas})
@@ -104,6 +128,10 @@ def cuotas_index(inscripcion_id):
 @pago_blueprint.post("/pago")
 @login_required
 def pago():
+    """
+    Controlador de la accion de pagar. Recibe un formulario con una o multiples cuotas, una vez
+    validado muestra el monto, la fecha y el numero de la cuota, ademas del total a a pagar.
+    """
     form = EditForm(request.form)
     if not form.validate_on_submit():
         flash("Hubo un error al seleccionar las cuotas", "danger")
@@ -118,6 +146,10 @@ def pago():
 @login_required
 @pago_index_req
 def recibo():
+    """
+    Controlador del comprobante de pago, recibe la id de un pago, si se valida, devuelve un pdf
+    con un resumen de las cuotas pagadas, el monto y datos del usuario.
+    """
     pago_id = request.args.get("pago_id", type=int)
     if not pago_id:
         abort(400)
@@ -137,6 +169,11 @@ def recibo():
 @login_required
 @pago_index_req
 def confirm_pago():
+    """
+    Controlador que valida que el pago se haya realizado correctamente. Si fue exitoso
+    devuelve el mensaje de que el pago se realizo correctamente, si falla envia mensaje de error.
+    En ambos casos se redirige al index de pagos.
+    """
     args_dict = request.args.to_dict(flat=False)
     if not request.args.to_dict(flat=False):
         abort(400)
