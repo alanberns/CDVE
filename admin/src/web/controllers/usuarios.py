@@ -67,7 +67,7 @@ def busqueda_filtrada():
         }
         estado_choice = estado_choices[estado]
 
-        return render_template("usuarios/usuariosFilter.html",
+        return render_template("usuarios/usuarios.html",
                            usuarios_pag=usuarios_pag, email=email, estado=estado_choice, form=form)
     else:
         flash("No se pudo realizar la busqueda","danger")
