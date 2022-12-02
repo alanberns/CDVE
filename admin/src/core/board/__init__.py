@@ -516,7 +516,8 @@ def exist_socio_documento_id(documento, id):
     Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
     """
     return (
-        Socio.query.filter(Socio.numero_documento == documento, Socio.id != id).first()
+        Socio.query.filter(Socio.numero_documento ==
+                           documento, Socio.id != id).first()
         == None
     )
 
@@ -600,12 +601,25 @@ def get_inscripciones(page):
     )
 
 
+def get_inscripcion_by_id(inscripcion_id):
+    """
+    Retorna una inscripcion, dada su id
+    """
+    return (
+        Inscripcion.query.filter(
+            Inscripcion.id == inscripcion_id).join(Disciplina)
+        .filter(Disciplina.estado == True)
+        .first()
+    )
+
+
 def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     """
     Retorna una inscripcion, dado un socio y una disciplina
     """
     inscripcion = (
-        Inscripcion.query.filter_by(socio_id=socio.id, disciplina_id=disciplina.id)
+        Inscripcion.query.filter_by(
+            socio_id=socio.id, disciplina_id=disciplina.id)
         .join(Disciplina)
         .filter(Disciplina.estado == True)
         .first()
@@ -681,8 +695,10 @@ def user_get_permisos(usuario_id):
     """
     Obtiene los permisos dada la id de un usuario
     """
-    roles = Rol.query.join(Usuario_tiene_rol).filter_by(usuario_id=usuario_id).all()
-    permisos = list({permiso.nombre for rol in roles for permiso in rol.permisos})
+    roles = Rol.query.join(Usuario_tiene_rol).filter_by(
+        usuario_id=usuario_id).all()
+    permisos = list(
+        {permiso.nombre for rol in roles for permiso in rol.permisos})
     return permisos
 
 
@@ -836,7 +852,8 @@ def get_pagos_by_socio_id(socio_id, page):
 
 def get_cuota_by_inscripcion_id_and_nro_cuota(inscripcion_id, nro_cuota):
     return (
-        Cuota.query.filter_by(inscripcion_id=inscripcion_id, nro_cuota=nro_cuota)
+        Cuota.query.filter_by(
+            inscripcion_id=inscripcion_id, nro_cuota=nro_cuota)
         .join(Inscripcion)
         .join(Disciplina)
         .filter(Disciplina.estado == True)
@@ -867,7 +884,8 @@ def es_moroso(socio_id):
     Devuelve un boolean indicando si el socio dado es moroso.
     """
     cuotas = (
-        Cuota.query.join(Inscripcion).filter(Inscripcion.socio_id == socio_id).all()
+        Cuota.query.join(Inscripcion).filter(
+            Inscripcion.socio_id == socio_id).all()
     )
     for cuota in cuotas:
         print(cuota.id)

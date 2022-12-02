@@ -1,19 +1,36 @@
 {% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
 %} {{ super() }} {% endblock %} {% block subnav %} {% endblock %} {% block
 content %}
-<div class="container">
-  <h2>Pagar cuotas</h2>
-  <a
-    class="nav-link btn btn-link"
-    href="{{ url_for('pagos.inscripciones_index') }}"
-    ><button type="button" class="btn btn-outline-danger">
-      Volver a Inscripciones
-    </button>
-  </a>
+<div class="container-fluid">
+  <div class="row">
+    <h2>Generar Pago</h2>
+  </div>
+
   {%if form.items%}
   <p class="text-muted h5">
     Para Realizar un pago, por favor seleccione las cuotas a pagar
   </p>
+
+  <div class="card border-dark mb-3">
+    <div class="card-header">
+      Usuario:
+      <strong
+        >{{inscripcion.socio.usuario.first_name}}
+        {{inscripcion.socio.usuario.last_name}}
+      </strong>
+    </div>
+    <div class="card-body text-dark">
+      <h5 class="card-title">
+        <strong>{{inscripcion.disciplina.nombre}}</strong>
+      </h5>
+      <p class="card-text">
+        Dictado por <strong>{{inscripcion.disciplina.entrenador}}</strong> en la
+        categoria de
+        <strong>{{inscripcion.disciplina.categoria}}</strong>
+      </p>
+    </div>
+  </div>
+
   <form action="{{ url_for('pagos.pago') }}" method="POST">
     {{ form.hidden_tag() }}
     <table class="table table-bordered border-primary table-responsive">
@@ -51,8 +68,17 @@ content %}
         {%endfor%}
       </tbody>
     </table>
-    {{form.pagar(class="btn btn-success")}}
+    <div class="row">{{form.pagar(class="btn btn-success")}}</div>
   </form>
+  <div class="row">
+    <a
+      class="nav-link btn btn-link"
+      href="{{ url_for('pagos.inscripciones_index') }}"
+      ><button type="button" class="btn btn-outline-danger">
+        Volver atras
+      </button>
+    </a>
+  </div>
 </div>
 {%else%}
 <p class="h1 text-muted">No hay contenido para Mostrar</p>

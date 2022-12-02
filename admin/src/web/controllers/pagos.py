@@ -122,7 +122,8 @@ def cuotas_index(inscripcion_id):
     board.set_nro_cuota_by_inscripcion(inscripcion_id)
     cuotas = board.get_cuotas_by_inscripcion_id(inscripcion_id)
     form = EditForm(data={"items": cuotas})
-    return render_template("pagos/cuotas.html", cuotas=cuotas, form=form)
+    inscripcion = board.get_inscripcion_by_id(inscripcion_id)
+    return render_template("pagos/cuotas.html", cuotas=cuotas, form=form, inscripcion=inscripcion)
 
 
 @pago_blueprint.post("/pago")
