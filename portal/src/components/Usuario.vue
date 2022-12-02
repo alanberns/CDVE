@@ -11,6 +11,7 @@
           <li class="collection-item"><strong>Género:</strong> {{ user_info.gender }}</li>
           <li class="collection-item"><strong>Teléfono:</strong> {{ user_info.phone }}</li>
           <li class="collection-item"><strong>Dirección:</strong> {{ user_info.address }}</li>
+          <li class="collection-item"><strong>Fecha de alta:</strong> {{ user_info.created_at }}</li>
           <li class="collection-item"><strong>Estado:</strong> {{ estado }}</li>
         </ul>
     </div>

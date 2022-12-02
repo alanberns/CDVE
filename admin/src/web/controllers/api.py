@@ -224,6 +224,7 @@ def get_socio_state(current_user):
             "phone": socio.telefono,
             "first_name": usuario.first_name,
             "last_name": usuario.last_name,
+            "created_at": usuario.created_at.strftime("%d / %m / %Y"),
         }
     }
     if (not board.es_moroso(socio.id)):
