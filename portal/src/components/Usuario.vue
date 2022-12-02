@@ -1,36 +1,18 @@
 <template>
     <div>
-        <h1>Mis datos</h1>
-        <table class="responsive-table centered highlight ">
-            <thead>
-                <tr>
-                    <th>N° SOCIO</th>
-                    <th>NOMBRE DE USUARIO</th>
-                    <th>NOMBRE</th>
-                    <th>APELLIDO</th>
-                    <th>EMAIL</th>
-                    <th>TIPO DOCUMENTO</th>
-                    <th>N° DOCUMENTO</th>
-                    <th>GENERO</th>
-                    <th>TELEFONO</th>
-                    <th>DIRECCIÓN</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ user_info.number }}</td>
-                    <td>{{ user_info.first_name }}</td>
-                    <td>{{ user_info.last_name }}</td>
-                    <td>{{ user_info.user }}</td>
-                    <td>{{ user_info.email }}</td>
-                    <td>{{ user_info.document_type }}</td>
-                    <td>{{ user_info.document_number }}</td>
-                    <td>{{ user_info.gender }}</td>
-                    <td>{{ user_info.phone }}</td>
-                    <td>{{ user_info.address }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <h1>Mis datos</h1>    
+        <ul class="collection">
+          <li class="collection-item"><strong>Numero de socio:</strong> {{ user_info.number }}</li>
+          <li class="collection-item"><strong>Nombre:</strong> {{user_info.first_name}} {{ user_info.last_name }}</li>
+          <li class="collection-item"><strong>Nombre de usuario:</strong> {{ user_info.user }}</li>
+          <li class="collection-item"><strong>Email:</strong> {{ user_info.email }}</li>
+          <li class="collection-item"><strong>Tipo de documento:</strong> {{ user_info.document_type }}</li>
+          <li class="collection-item"><strong>Numero de documento:</strong> {{ user_info.document_number }}</li>
+          <li class="collection-item"><strong>Género:</strong> {{ user_info.gender }}</li>
+          <li class="collection-item"><strong>Teléfono:</strong> {{ user_info.phone }}</li>
+          <li class="collection-item"><strong>Dirección:</strong> {{ user_info.address }}</li>
+          <li class="collection-item"><strong>Estado:</strong> {{ estado }}</li>
+        </ul>
     </div>
     <br>
 </template>
@@ -42,10 +24,11 @@ export default {
   data() {
     return {
       user_info: [],
+      estado: "",
     };
   },
   created() {
-    let url = "me/profile";
+    let url = "me/license";
 
     apiService
       .get(url, {
@@ -53,7 +36,10 @@ export default {
           Authorization: `${localStorage.getItem("token")}`,
         },
       })
-      .then((response) => (this.user_info = response.data))
+      .then((response) => {
+        this.user_info = response.data.profile;
+        this.estado = response.data.description
+      })
       .catch((error) => console.log(error));
   },
 };
