@@ -27,9 +27,12 @@
           <td>{{ pago.monto }}</td>
           <td>{{ formatDate(pago.fecha) }}</td>
           <td v-if="pago.comprobante">
-            <div class="container comprobante-done">
-              <i class="material-icons right check-icon">done_all</i>
-            </div>
+            <button
+              @click="showComprobante(pago.id)"
+              class="btn waves-effect green accent-4"
+            >
+              ver comprobante
+            </button>
           </td>
           <td v-else>
             <button
@@ -93,6 +96,10 @@ export default {
     uploadComprobante(idComprobante) {
       this.comprobanteStore.idComprobante = idComprobante;
       router.push("/comprobante");
+    },
+    showComprobante(idComprobante) {
+      this.comprobanteStore.idComprobante = idComprobante;
+      router.push("/comprobante/show");
     },
     async nextPage(page) {
       page = page || this.current_page;

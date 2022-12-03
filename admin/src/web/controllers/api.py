@@ -11,7 +11,8 @@ from functools import wraps
 from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
-
+from flask import send_file
+import io
 api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
@@ -408,3 +409,22 @@ def me_get_cuotas(current_user):
     )
     cuotas = board.get_cuotas_adeudadas_by_inscripcion_id(inscripcion.id)
     return jsonify(cuotas=[cuota.serialize for cuota in cuotas])
+
+
+@cross_origin
+@api_blueprint.get("/me/comprobante")
+@token_required
+def get_comprobante(current_user):
+    """
+    Funcion que recibe y guarda el comprobante enviado desde el frontend.
+    """
+    pago_id = request.args["id"]
+    pago = board.get_pago_by_id(pago_id)
+    filepath = getComprobantePath(pago.comprobante)
+    with open(filepath, 'rb') as bites:
+        return send_file(
+            io.BytesIO(bites.read()),
+            download_name=pago.comprobante,
+            mimetype='image/jpg',
+            as_attachment=True
+        )
