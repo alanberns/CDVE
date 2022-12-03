@@ -1,6 +1,7 @@
 from parser import issuite
 from src.core.board.disciplina import Disciplina
 from src.core.database import db
+from sqlalchemy import and_, or_, not_
 
 
 #Lista todas las disciplinas
@@ -27,11 +28,17 @@ def get_disciplinas(self):
     return disciplinas
 
 
-
 # Busca una disciplina por su ID y la devuelve
 def get_disciplina(id):
    disciplina = Disciplina.query.filter(Disciplina.id == id).first()
    return disciplina
+
+
+# Verifica si una disciplina a crear, ya existe.
+def find_same_discipline(nombre, categoria, entrenador, dia, hora):
+   checkDiscipline = Disciplina.query.filter_by(nombre=nombre, categoria=categoria, entrenador = entrenador, dia=dia, hora=hora,).first()
+   return (checkDiscipline)
+
 
 #Cambia es estado de una disciplina
 def update_estado_disciplina(id):
@@ -53,5 +60,6 @@ def update_disciplina(id, **kwargs):
   disciplina.update(**kwargs)
   db.session.commit()
   return disciplina
+
 
 

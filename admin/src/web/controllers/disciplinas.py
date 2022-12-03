@@ -28,26 +28,31 @@ def disciplina_index():
    disciplinas_pag = board.list_disciplinas(page, elem_pagina)
    return render_template('disciplinas/disciplinas.html', disciplinas_pag= disciplinas_pag)
 
+
 #Creacion de una nueva disciplina
 @disciplina_blueprint.post("/")
 #@login_required
 def newdcp():
-   form = DisciplinaNewForm(request.form)
-   if not form.validate:
-      flash("No se puede hacer el ingreso de nueva disciplina")
-   else:
-       disciplina = board.create_disciplina(
-       nombre= form.nombre.data,
-       categoria= form.categoria.data,
-       entrenador= form.entrenador.data,
-       dia = form.dia.data,
-       hora = form.hora.data,
-       costo_mensual = form.costo_mensual.data,
-       estado = True,
-      )
-   flash ("Se agrego una nueva Disciplina", "success")
-   return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id))
-  
+     form = DisciplinaNewForm(request.form)
+     checkDiscipline = board.find_same_discipline(form.nombre.data, form.categoria.data, form.entrenador.data,  form.dia.data, form.hora.data)
+     if not form.validate:
+        flash("No se puede hacer el ingreso de nueva disciplina")
+     if (not checkDiscipline):
+         disciplina = board.create_disciplina(
+         nombre= form.nombre.data,
+         categoria= form.categoria.data,
+         entrenador= form.entrenador.data,
+         dia = form.dia.data,
+         hora = form.hora.data,
+         costo_mensual = form.costo_mensual.data,
+         estado = True,
+       )
+         flash ("Se creo una nueva Disciplina", "success")
+         return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id)) 
+     flash ("Error: Disciplina Existente") 
+     return redirect(url_for('disciplinas.disciplina_index'))
+   
+    
        
    
 # Actualiza la informacion de una Disciplina
@@ -57,6 +62,11 @@ def edit_discip(id):
    disciplina = board.get_disciplina(id)
    return render_template('disciplinas/editDisciplina.html', disciplina=disciplina)
 
+# Crea una nueva Disciplina
+@disciplina_blueprint.get("/inscribirDisciplina")
+#@login_required
+def inscribir_Disciplina():
+    return render_template('disciplinas/inscribirDisciplina.html')
 
 @disciplina_blueprint.post("/")
 #@login_required
