@@ -2,7 +2,12 @@ from flask import Blueprint
 from flask import render_template
 from flask import request, redirect, url_for, flash
 from flask import make_response
-from src.core.forms.socio_form import SocioForm, DocumentoForm, CarnetUpload, CarnetExport
+from src.core.forms.socio_form import (
+    SocioForm,
+    DocumentoForm,
+    CarnetUpload,
+    CarnetExport,
+)
 from src.web.helpers.auth import login_required
 from src.web.helpers.uploads_path import getUploadsPath
 from src.core import board
@@ -43,8 +48,7 @@ def socios_index():
                     apellido, page, elementos_pagina
                 )
             else:
-                socios_pag = board.list_socios_join_users(
-                    page, elementos_pagina)
+                socios_pag = board.list_socios_join_users(page, elementos_pagina)
         else:
             if habilitado == 1:
                 activo = True
@@ -71,12 +75,17 @@ def socios_index():
             return response
         if form.exportcsv.data:
             output = io.StringIO()
-            csvdata = ['Apellido', 'Nombre', 'Documento', 'Genero', 'Email']
+            csvdata = ["Apellido", "Nombre", "Documento", "Genero", "Email"]
             writer = csv.writer(output)
             writer.writerow(csvdata)
             for socio in socios_pag.items:
-                csvdata = ([socio[1].last_name, socio[1].first_name,
-                           socio[0].numero_documento, socio[0].genero, socio[1].email])
+                csvdata = [
+                    socio[1].last_name,
+                    socio[1].first_name,
+                    socio[0].numero_documento,
+                    socio[0].genero,
+                    socio[1].email,
+                ]
                 writer.writerow(csvdata)
             response = make_response(output.getvalue())
             response.headers["Content-Type"] = "application/csv"
@@ -129,7 +138,9 @@ def add_socio(usuario_id):
                     rol_socio = rol
                     board.asignar_rol(rol_socio.id, usuario_id)
                     flash(
-                        "Se asignó el rol al usuario y se creo el perfil de socio", "success")
+                        "Se asignó el rol al usuario y se creo el perfil de socio",
+                        "success",
+                    )
 
             return redirect(url_for("usuarios.view_usuario", id=usuario_id))
         else:
@@ -233,24 +244,26 @@ def ver_carnet(socio_id):
     usuario = board.get_usuario(socio.id_usuario)
 
     socio_info = {
-        'nombre': usuario.first_name,
-        'apellido': usuario.last_name,
-        'numero': socio.id,
-        'numero_documento': socio.numero_documento,
-        'tipo_documento': socio.tipo_documento,
-        'fecha_alta': usuario.created_at,
-        'estado': socio.habilitado,
+        "nombre": usuario.first_name,
+        "apellido": usuario.last_name,
+        "numero": socio.id,
+        "numero_documento": socio.numero_documento,
+        "tipo_documento": socio.tipo_documento,
+        "fecha_alta": usuario.created_at,
+        "estado": socio.habilitado,
     }
     carnet = board.get_carnet(socio_id)
     estado = not board.es_moroso(socio_id)
     form = CarnetExport()
-    if request.method == 'POST':
+    if request.method == "POST":
         rendered = render_template(
-            "socios/carnet_export.html", socio=socio_info, imagen=carnet.url_imagen, qr=carnet.url_qr, estado=estado
+            "socios/carnet_export.html",
+            socio=socio_info,
+            imagen=carnet.url_imagen,
+            qr=carnet.url_qr,
+            estado=estado,
         )
-        options = {
-            "enable-local-file-access": None
-        }
+        options = {"enable-local-file-access": None}
         pdf = pdfkit.from_string(rendered, False, options=options)
         response = make_response(pdf)
         response.headers["Content-Type"] = "application/pdf"
@@ -258,21 +271,28 @@ def ver_carnet(socio_id):
             "Content-Disposition"
         ] = "attachment; filename=carnet_socio.pdf"
         return response
-    temp = carnet.url_imagen.split('/')
-    imagen = temp[len(temp)-2]+"/"+temp[len(temp)-1]
-    temp = carnet.url_qr.split('/')
-    qr = temp[len(temp)-2]+"/"+temp[len(temp)-1]
-    return render_template("socios/carnet.html", socio=socio_info, imagen=imagen, qr=qr, estado=estado, form=form)
+    temp = carnet.url_imagen.split("/")
+    imagen = temp[len(temp) - 2] + "/" + temp[len(temp) - 1]
+    temp = carnet.url_qr.split("/")
+    qr = temp[len(temp) - 2] + "/" + temp[len(temp) - 1]
+    return render_template(
+        "socios/carnet.html",
+        socio=socio_info,
+        imagen=imagen,
+        qr=qr,
+        estado=estado,
+        form=form,
+    )
 
 
-@socio_blueprint.route('/<int:socio_id>/carnet', methods=['POST', 'GET'])
+@socio_blueprint.route("/<int:socio_id>/carnet", methods=["POST", "GET"])
 @login_required
 @socio_create_req
 def alta_carnet(socio_id):
     """
     Genera el carnet para un socio.
     """
-    if (not board.get_carnet(socio_id)):
+    if not board.get_carnet(socio_id):
         form = CarnetUpload()
         if form.validate_on_submit():
             datenow = datetime.now()
@@ -280,12 +300,10 @@ def alta_carnet(socio_id):
             nameqr = getUploadsPath(f"{datenow}qr.jpg")
             form.image.data.save(nameimg)
             data = f"{request.host_url[:-1]}{url_for('socios.ver_carnet', socio_id=socio_id)}"
-            qr = QRCode(version = 1,
-                box_size = 10,
-                border = 5)
+            qr = QRCode(version=1, box_size=10, border=5)
             qr.add_data(data)
-            qr.make(fit = True)
-            img = qr.make_image(fill_color = 'black',back_color = 'white').convert('RGB')
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
             img.save(nameqr)
             kwargs = {
                 "id_socio": socio_id,
@@ -298,5 +316,9 @@ def alta_carnet(socio_id):
         return redirect(url_for("socios.socios_index"))
     socio = board.find_socio_by_id(socio_id)
     usuario = board.get_usuario(socio.id_usuario)
-    return render_template('socios/carnet_alta.html', form=form, apellido=usuario.last_name, nombre=usuario.first_name)
-
+    return render_template(
+        "socios/carnet_alta.html",
+        form=form,
+        apellido=usuario.last_name,
+        nombre=usuario.first_name,
+    )

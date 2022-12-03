@@ -14,17 +14,23 @@
           <a class="nav-link" href="{{ url_for('usuarios.usuario_index')}}"
             >Usuarios</a
           >
-          {%endif%}
-
-          {%if has_permission("user_index",session)%}
-          <a class="nav-link" href="{{ url_for('disciplinas.disciplina_index') }}">Disciplinas</a>
-          {%endif%}
-
-          {%if has_permission("socio_index",session)%}
-          <a class="nav-link" href="{{ url_for('socios.socios_index') }}">Socios</a>
-          {%endif%}
-
-          {%if has_permission("pago_index",session)%}
+          {%endif%} {%if has_permission("disciplina_index",session)%}
+          <a
+            class="nav-link"
+            href="{{ url_for('disciplinas.disciplina_index') }}"
+            >Disciplinas</a
+          >
+          {%endif%} {%if has_permission("socio_index",session)%}
+          <a class="nav-link" href="{{ url_for('socios.socios_index') }}"
+            >Socios</a
+          >
+          {%endif%} {%if has_permission("inscripcion_index",session)%}
+          <a
+            class="nav-link"
+            href="{{ url_for('inscripciones.inscripciones_index') }}"
+            >Inscripciones</a
+          >
+          {%endif%} {%if has_permission("pago_index",session)%}
           <a class="nav-link" href="{{ url_for('pagos.pagos_index') }}"
             >Pagos</a
           >
@@ -58,7 +64,9 @@
               class="dropdown-menu dropdown-menu-end"
               aria-labelledby="dropdownMenuLink"
             >
-              <a class="dropdown-item" href="{{url_for('perfil.show_perfil')}}">Editar Perfil</a>
+              <a class="dropdown-item" href="{{url_for('perfil.show_perfil')}}"
+                >Editar Perfil</a
+              >
               <a
                 class="dropdown-item"
                 href="{{url_for('auth.logout')}}"
@@ -81,14 +89,4 @@
     ></div>
   </div>
 </nav>
-{% endif %} 
-{% endblock %}
-{% block footer %}
-<footer class="bg-dark text-center text-lg-start text-white" style= "width: 100%;">
-  <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-    © 2022 Grupo 14
-  </div>
-  <!-- Copyright -->
-</footer>
-{% endblock %}
+{% endif %} {% endblock %} {% block footer %} {{super()}}{% endblock %}

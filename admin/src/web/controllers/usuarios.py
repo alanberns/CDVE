@@ -60,10 +60,23 @@ def busqueda_filtrada():
         estado = form.estado.data
         email = form.email.data
 
-        return redirect(url_for('usuarios.usuario_index', email=email, estado=estado))
+        # Paginación
+        elementos_pagina = board.get_elementos_pagina()
+        page = int(request.args.get('page', 1))
+        usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
+
+        estado_choices = {
+            "": "Todos",
+            "true": "Activo",
+            "false": "Inactivo",
+        }
+        estado_choice = estado_choices[estado]
+
+        return render_template("usuarios/usuariosFilter.html",
+                           usuarios_pag=usuarios_pag, email=email, estado=estado_choice, form=form)
     else:
-        flash("No se pudo realizar la busqueda","danger")
-        return redirect(url_for('usuarios.usuario_index'))
+        flash("No se pudo realizar la busqueda", "danger")
+        return redirect(url_for("usuarios.usuario_index"))
 
 
 @usuario_blueprint.get("/nuevo")
@@ -165,12 +178,7 @@ def update_usuario(id):
         if board.exist_username(form.username.data):
             flash("el username ingresado ya está registrado", "danger")
             return redirect(url_for("usuarios.view_usuario", id=id))
-
-    # Validar email
-    if not validate_email(form.email.data):
-        flash("Ingrese un email con un formato válido", "danger")
-        return redirect(url_for("usuarios.view_usuario", id=id))
-
+    
     # Validar nombre, apellido y username
     if not validate_only_letters(form.username.data):
         flash("el nombre de usuario solo debe contener letras", "danger")
@@ -181,7 +189,6 @@ def update_usuario(id):
     if not validate_only_letters(form.last_name.data):
         flash("el apellido solo debe contener letras", "danger")
         return redirect(url_for("usuarios.view_usuario", id=id))
-    
 
     # Si no están en uso el email nuevo ni el username nuevo actualiza los datos en la BD
     kwargs = {
@@ -196,6 +203,7 @@ def update_usuario(id):
     flash("Se actualizaron los datos del usuario", "success")
     return redirect(url_for("usuarios.usuario_index"))
 
+
 @usuario_blueprint.post("/modifyActivo/<int:id>")
 @login_required
 @user_update_req
@@ -208,9 +216,9 @@ def modify_activo(id):
     """
     # Chequear que el usuario no sea administrador
     usuario = board.get_usuario(id)
-    if board.usuario_has_rol("Administrador",usuario.id):
+    if board.usuario_has_rol("Administrador", usuario.id):
         flash("No se puede inactivar a un administrador", "danger")
-        return redirect(url_for('usuarios.usuario_index'))
+        return redirect(url_for("usuarios.usuario_index"))
 
     # Chequear si se inactiva, a un usuario socio activo > inactivar socio
     if usuario.activo:
@@ -219,8 +227,11 @@ def modify_activo(id):
             if socio.activo:
                 board.update_activo_usuario(id)
                 board.soft_delete_socio(socio.id)
-                flash("Se actualizo el estado del usuario, y el socio fue eliminado", "success")
-                return redirect(url_for('usuarios.usuario_index'))
+                flash(
+                    "Se actualizo el estado del usuario, y el socio fue eliminado",
+                    "success",
+                )
+                return redirect(url_for("usuarios.usuario_index"))
 
     # Chequear si: se activa a un usuario socio > activar socio
     if not usuario.activo:
@@ -232,14 +243,16 @@ def modify_activo(id):
                     "activo": True,
                 }
                 board.update_socio(socio.id, **kwargs)
-                flash("Se actualizo el estado del usuario, y el socio fue activado", "success")
-                return redirect(url_for('usuarios.usuario_index'))
+                flash(
+                    "Se actualizo el estado del usuario, y el socio fue activado",
+                    "success",
+                )
+                return redirect(url_for("usuarios.usuario_index"))
 
-    
     # Cambiar estado usuario
     board.update_activo_usuario(id)
     flash("Se actualizo el estado del usuario", "success")
-    return redirect(url_for('usuarios.usuario_index'))
+    return redirect(url_for("usuarios.usuario_index"))
 
 
 @usuario_blueprint.post("/quitarRol")
@@ -262,8 +275,10 @@ def quitar_rol():
         if socio:
             if socio.activo:
                 board.soft_delete_socio(socio.id)
-                flash("Se quitó el rol exitosamente, y el socio fue eliminado", "success")
-                return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+                flash(
+                    "Se quitó el rol exitosamente, y el socio fue eliminado", "success"
+                )
+                return redirect(url_for("usuarios.view_usuario", id=usuario_id))
 
     flash("Se quitó el rol exitosamente", "success")
     return redirect(url_for("usuarios.view_usuario", id=usuario_id))
@@ -276,7 +291,7 @@ def asignar_rol():
     """
     Asignar un rol a un usuario
     Si el rol es 'Socio' se lo debe enviar a crear perfil de socio
-    """    
+    """
     rol_id = request.form.get("rol_id")
     usuario_id = request.form.get("usuario_id")
 
@@ -293,12 +308,12 @@ def asignar_rol():
                 board.update_socio(socio.id, **kwargs)
         # Si no tiene perfil de socio, debe crearse uno
         else:
-            return redirect(url_for('socios.add_socio', usuario_id=usuario_id))
-    
+            return redirect(url_for("socios.add_socio", usuario_id=usuario_id))
+
     # Asignar el rol
     board.asignar_rol(rol_id, usuario_id)
     flash("Se asignó el rol al usuario", "success")
-    return redirect(url_for('usuarios.view_usuario',id=usuario_id))
+    return redirect(url_for("usuarios.view_usuario", id=usuario_id))
 
 
 def validate_only_letters(string):
@@ -310,11 +325,3 @@ def validate_only_letters(string):
         if char not in valid_chars:
             return False
     return True
-
-
-def validate_email(email):
-    """
-    verifica que el email ingresado tenga un formato valido
-    """
-    expresion_regular = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
-    return re.match(expresion_regular, email) is not None

@@ -20,6 +20,10 @@ configuracion_blueprint = Blueprint(
 @login_required
 @config_all_req
 def configuracion_index():
+    """
+    Controlador del index de la configuracion, setea los datos de la configuracion dentro del formulario
+    wtforms llamado ConfigurationForm
+    """
     configuracion = board.list_configuracion()
     form = ConfigurationForm(request.form)
     form.set_from_config(configuracion)
@@ -32,6 +36,10 @@ def configuracion_index():
 @login_required
 @config_all_req
 def configuracion_update():
+    """
+    Controlador del index de configuracion, valida que los datos modificados del formulario
+    ConfigurationForm sean correctos, y realiza el update de los datos correspondientes
+    """
     form = ConfigurationForm(request.form)
     if not form.validate:
         flash("La configuracion no se pudo editar", "danger")

@@ -1,5 +1,8 @@
 <template>
   <h1>Nuestras disciplinas</h1>
+  <div v-if="loading" class="progress">
+      <div class="indeterminate"></div>
+    </div>
   <div>
     <table class="striped centered highlight">
       <thead>
@@ -47,6 +50,7 @@ export default {
       disciplinas: [],
       current_page: 1,
       pages: 1,
+      loading:true,
     };
   },
   async mounted() {
@@ -66,8 +70,12 @@ export default {
           this.disciplinas = response.data.data
           this.pages = response.data.pages;
           this.current_page = response.data.current_page;
+          this.loading = false;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+        });
     },
   }
 };
