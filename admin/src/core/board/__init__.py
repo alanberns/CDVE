@@ -499,25 +499,30 @@ def find_socio_join_usuario_by_id(socio_id):
     return socio
 
 
-def exist_socio_documento(documento):
+def exist_socio_documento(tipo, documento):
     """
     Verifica que el documento dado está disponible y no le pertenece a otro socio activo
     """
     return (
         Socio.query.filter(
-            Socio.numero_documento == documento, Socio.activo == True
+            Socio.tipo_documento == tipo,
+            Socio.numero_documento == documento, 
+            Socio.activo == True
         ).first()
         == None
     )
 
-
-def exist_socio_documento_id(documento, id):
+def exist_socio_documento_update(id, tipo, documento):
     """
-    Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
+    Verifica que el documento dado está disponible y no le pertenece a otro socio activo y no sea el mismo
     """
     return (
-        Socio.query.filter(Socio.numero_documento ==
-                           documento, Socio.id != id).first()
+        Socio.query.filter(
+            Socio.id != id,
+            Socio.tipo_documento == tipo,
+            Socio.numero_documento == documento, 
+            Socio.activo == True
+        ).first()
         == None
     )
 

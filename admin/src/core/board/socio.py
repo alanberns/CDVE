@@ -10,7 +10,7 @@ class Socio(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey("usuarios.id"))
     habilitado = db.Column(db.Boolean, default=True)
     tipo_documento = db.Column(db.String(255))
-    numero_documento = db.Column(db.Integer(), unique=True, nullable=False)
+    numero_documento = db.Column(db.Integer(), nullable=False)
     genero = db.Column(db.String(255), nullable=False)
     direccion = db.Column(db.String(255), nullable=False)
     telefono = db.Column(db.Integer(), nullable=False)
