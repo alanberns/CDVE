@@ -4,7 +4,13 @@
       class="center-align flow-text token-expired-message"
       v-if="loginStore.tokenExpired"
     >
-      Token expirado, por favor inicie sesion nuevamente
+      Token Expirado
+    </p>
+    <p
+      class="center-align flow-text token-expired-message"
+      v-if="error_message"
+    >
+      {{ error_message }}
     </p>
     <div class="row">
       <form
@@ -66,6 +72,7 @@ export default {
       info: null,
       user: "",
       password: "",
+      error_message: "",
     };
   },
   methods: {
@@ -84,9 +91,9 @@ export default {
         .then((response) => {
           localStorage.setItem("token", response.data.token);
           this.loginStore.signIn(response.data.token);
+          router.push("/");
         })
-        .catch((error) => console.log(error));
-      router.push("/");
+        .catch((error) => (this.error_message = error.response.data.message));
     },
   },
 };

@@ -50,16 +50,22 @@ def login():
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
         return make_response(
-            "Could not verify",
+            {"message": "Contraseña incorrecta"},
             401,
-            {"WWW-Authenticate": "Basic Realm='Login Required!"},
+            {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
         )
     user = board.find_user_by_email(auth.username)
     if not user:
         return make_response(
-            "Could not verify",
+            {"message": "El usuario no existe"},
             401,
-            {"WWW-Authenticate": "Basic Realm='Login Required!"},
+            {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
+        )
+    if not user.socio:
+        return make_response(
+            {"message": "El usuario no es un socio"},
+            401,
+            {'WWW-Authenticate': 'Basic realm ="User is not socio !!"'}
         )
     if user.verify_password(auth.password):
         token = jwt.encode(
@@ -69,8 +75,9 @@ def login():
         )
         return jsonify({"token": token})
     return make_response(
-        "Could not verify", 401, {
-            "WWW-Authenticate": "Basic Realm='Login Required!"}
+        {"message": "Contraseña incorrecta"},
+        401,
+        {"WWW-Authenticate": "Basic Realm='Login Required!"}
     )
 
 
@@ -368,7 +375,7 @@ def me_get_disciplines(current_user):
     """
     Devuelve las disciplinas activas  del usuario
     """
-    disciplines = board.get_disciplinas_by_user_id(current_user.id)
+    disciplines = board.get_disciplinas_by_user_id(current_user.socio[0].id)
     disciplinas = []
     for discipline in disciplines:
         disc = {

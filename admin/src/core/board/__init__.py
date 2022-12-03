@@ -618,8 +618,9 @@ def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     Retorna una inscripcion, dado un socio y una disciplina
     """
     inscripcion = (
-        Inscripcion.query.filter_by(
-            socio_id=socio.id, disciplina_id=disciplina.id)
+        Inscripcion.query.filter(
+            Inscripcion.socio_id == socio.id,
+            Inscripcion.disciplina_id == disciplina.id)
         .join(Disciplina)
         .filter(Disciplina.estado == True)
         .first()
