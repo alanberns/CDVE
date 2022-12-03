@@ -206,9 +206,10 @@ def ver_socio(socio_id):
     """
     form = SocioForm()
     query = board.find_socio_join_usuario_by_id(socio_id)
+    inscripciones = board.get_inscripcion_by_socio_id(socio_id)
     socio = query[0]
     usuario = query[1]
-    return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form)
+    return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form, inscripciones=inscripciones)
 
 
 @socio_blueprint.route("/<int:socio_id>/inscribir", methods=["get", "post"])

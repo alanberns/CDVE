@@ -617,6 +617,17 @@ def get_inscripcion_by_id(inscripcion_id):
         .first()
     )
 
+def get_inscripcion_by_socio_id(socio_id):
+    """
+    Retorna una inscripcion, dada su id
+    """
+    return (
+        Inscripcion.query.filter(
+            Inscripcion.socio_id == socio_id).join(Disciplina)
+        .filter(Disciplina.estado == True)
+        .all()
+    )
+
 
 def get_inscripcion_by_socio_and_disciplina(socio, disciplina):
     """
