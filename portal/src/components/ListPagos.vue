@@ -25,7 +25,7 @@
       <tbody>
         <tr v-for="pago in pagos" :key="pago.id">
           <td>{{ pago.monto }}</td>
-          <td>{{ pago.fecha }}</td>
+          <td>{{ formatDate(pago.fecha) }}</td>
           <td v-if="pago.comprobante">
             <div class="container comprobante-done">
               <i class="material-icons right check-icon">done_all</i>
@@ -62,6 +62,7 @@ import { apiService } from "../apiService";
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 import { useComprobanteStore } from "../stores/ComprobanteStore";
 import router from "@/router";
+import moment from "moment";
 
 export default {
   name: "ListPagos",
@@ -86,6 +87,9 @@ export default {
     this.comprobanteStore.message = null;
   },
   methods: {
+    formatDate(value) {
+      return moment(value).format("DD-MM-YYYY");
+    },
     uploadComprobante(idComprobante) {
       this.comprobanteStore.idComprobante = idComprobante;
       router.push("/comprobante");
