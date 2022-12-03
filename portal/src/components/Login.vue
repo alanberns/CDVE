@@ -26,7 +26,7 @@
               id="first_name"
               type="text"
               class="validate center-align"
-              v-model="user"
+              v-model="email"
             />
             <label for="first_name">Email</label>
           </div>
@@ -70,20 +70,36 @@ export default {
   data() {
     return {
       info: null,
-      user: "",
+      email: "",
       password: "",
       error_message: "",
     };
   },
   methods: {
+    validEmail: function (email) {
+      var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // eslint-disable-line
+      return regex.test(email);
+    },
     async login() {
+      if (!this.email) {
+        this.error_message = "Por favor ingrese su email";
+        return true;
+      } else if (!this.validEmail(this.email)) {
+        console.log("email invalido");
+        this.error_message = "Por favor ingrese un mail valido";
+        return true;
+      }
+      if (!this.password) {
+        this.error_message = "Por favor ingrese su contraseña";
+        return true;
+      }
       await apiService
         .post(
           "/login",
           {},
           {
             auth: {
-              username: this.user,
+              username: this.email,
               password: this.password,
             },
           }
