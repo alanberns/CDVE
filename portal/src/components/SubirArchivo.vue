@@ -1,5 +1,8 @@
 <template>
   <div>
+    <p class="center-align flow-text error-message" v-if="error_message">
+      {{ error_message }}
+    </p>
     <form @submit.prevent="submitFile">
       <div class="file-field input-field">
         <div class="btn">
@@ -32,6 +35,7 @@ export default {
     return {
       images: null,
       fileName: null,
+      error_message: null,
     };
   },
   setup() {
@@ -46,6 +50,10 @@ export default {
       this.fileName = e.target.files[0].name;
     },
     async submitFile() {
+      if (!this.images) {
+        this.error_message = "Por favor seleccione un archivo";
+        return true;
+      }
       apiService.defaults.headers[
         "Authorization"
       ] = `${this.loginStore.getToken}`;
@@ -76,4 +84,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.error-message {
+  color: #d50000;
+}
+</style>
