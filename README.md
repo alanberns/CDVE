@@ -27,6 +27,7 @@ Si estan presentes estas palabras, seran reemplazadas segun corresponda con los 
 Al cambiar el valor base de la cuota, el valor de las cuotas no pagadas, que tengan fecha mayor al mes actual, cambiaran su valor.
 
 ## API
+
 Para acceder al login utilizar:
 
 **email:** test@test.com
@@ -35,7 +36,8 @@ Para acceder al login utilizar:
 Cuando se envia el token a una api luego de haber iniciado sesion, este se utiliza para identificar al usuario.
 
 **POST /api/me/payment:**
-Recibe un arreglo de cuotas y ademas el nombre de la disciplina que se quiere pagar.
+Recibe un arreglo de cuotas y ademas la id de la disciplina (el nombre se podria repetir) que se quiere pagar.
+
 Ejemplo:
 {
 "cuotas": [
