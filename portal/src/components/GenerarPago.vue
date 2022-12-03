@@ -11,7 +11,7 @@
       </div>
       <div class="col l6">
         <Select2
-          v-model="selected"
+          v-model="selected_id"
           :options="myOptions"
           :settings="{ width: '50%' }"
           @select="mySelectEvent($event)"
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       myOptions: [],
-      selected: null,
+      selected_id: null,
       cuotas: [],
       has_cuotas: null,
       loading: true,
@@ -60,17 +60,16 @@ export default {
     ModalPago,
   },
   methods: {
-    mySelectEvent(e) {
+    mySelectEvent() {
       this.cuotaPickedStore.resetCuotasSelected();
-      this.selected = e.text;
-      this.cuotaPickedStore.setDisciplina(this.selected);
+      this.cuotaPickedStore.setDisciplina(this.selected_id);
       this.getCuotas();
     },
     async getCuotas() {
       await apiService
         .get("/me/cuotas", {
           params: {
-            disciplina: this.selected,
+            disciplina: this.selected_id,
           },
           headers: {
             Authorization: `${localStorage.getItem("token")}`,
@@ -97,7 +96,9 @@ export default {
         })
         .then((response) => {
           const data = response.data.data;
-          Object.values(data).forEach((item) => this.myOptions.push(item.name));
+          Object.values(data).forEach((item) =>
+            this.myOptions.push({ id: item.id, text: item.name })
+          );
           this.loading = false;
         })
         .catch((error) => {

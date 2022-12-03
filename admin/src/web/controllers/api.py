@@ -112,7 +112,7 @@ def pay(current_user):
     Si el monto no es correcto devuelve un mensaje indicando el monto necesario.
     """
     cuotas = request.json["cuotas"]
-    disciplina_nombre = request.json["disciplina"]
+    disciplina_id = request.json["disciplina"]
     cuotas_ids = []
     for c in cuotas:
         nro_cuota = c["month"]
@@ -121,13 +121,13 @@ def pay(current_user):
             amount = int(amount)
         except ValueError:
             return jsonify({"message": "El monto debe ser un numero"}), 401
-        if not nro_cuota or not amount or not disciplina_nombre:
+        if not nro_cuota or not amount or not disciplina_id:
             return (
                 jsonify({"message": "Los datos proporcionados no son correctos"}),
                 401,
             )
         try:
-            disciplina = board.find_disciplina_by_name(disciplina_nombre)
+            disciplina = board.find_disciplina_by_id(disciplina_id)
             inscripcion = board.get_inscripcion_by_socio_and_disciplina(
                 current_user.socio[0], disciplina
             )
@@ -379,6 +379,7 @@ def me_get_disciplines(current_user):
     disciplinas = []
     for discipline in disciplines:
         disc = {
+            "id": discipline.id,
             "name": discipline.nombre,
             "categoria": discipline.categoria,
             "teacher": discipline.entrenador,
@@ -400,8 +401,8 @@ def me_get_cuotas(current_user):
     """
     Devuelve las disciplinas activas  del usuario
     """
-    disciplina = request.args.get("disciplina")
-    disciplina = board.find_disciplina_by_name(disciplina)
+    disciplina_id = request.args.get("disciplina")
+    disciplina = board.find_disciplina_by_id(disciplina_id)
     inscripcion = board.get_inscripcion_by_socio_and_disciplina(
         current_user.socio[0], disciplina
     )
