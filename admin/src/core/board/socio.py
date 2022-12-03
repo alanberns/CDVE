@@ -13,7 +13,7 @@ class Socio(db.Model):
     numero_documento = db.Column(db.Integer(), nullable=False)
     genero = db.Column(db.String(255), nullable=False)
     direccion = db.Column(db.String(255), nullable=False)
-    telefono = db.Column(db.Integer(), nullable=False)
+    telefono = db.Column(db.Integer(), nullable=True)
     activo = db.Column(db.Boolean, default=True)
     disciplina = db.relationship("Inscripcion", back_populates="socio")
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
