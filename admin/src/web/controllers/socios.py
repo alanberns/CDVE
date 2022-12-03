@@ -75,16 +75,22 @@ def socios_index():
             return response
         if form.exportcsv.data:
             output = io.StringIO()
-            csvdata = ["Apellido", "Nombre", "Documento", "Genero", "Email"]
+            csvdata = ["Socio #", "Apellido", "Nombre", "Documento", "Genero", "Email", "Estado"]
             writer = csv.writer(output)
             writer.writerow(csvdata)
             for socio in socios_pag.items:
+                if socio[0].habilitado:
+                    estado="Habilitado"
+                else:
+                    estado="Deshabilitado"
                 csvdata = [
+                    socio[0].id,
                     socio[1].last_name,
                     socio[1].first_name,
-                    socio[0].numero_documento,
+                    f"{socio[0].tipo_documento} {socio[0].numero_documento}",
                     socio[0].genero,
                     socio[1].email,
+                    estado,
                 ]
                 writer.writerow(csvdata)
             response = make_response(output.getvalue())
@@ -120,7 +126,7 @@ def add_socio(usuario_id):
     """
     form = SocioForm()
     if form.validate_on_submit():
-        if board.exist_socio_documento(form.numero_documento.data):
+        if board.exist_socio_documento(form.tipo_documento.data, form.numero_documento.data):
             kwargs = {
                 "id_usuario": usuario_id,
                 "tipo_documento": form.tipo_documento.data,
@@ -158,7 +164,7 @@ def update_socio(socio_id):
     socio = board.find_socio_by_id(socio_id)
     form = SocioForm()
     if form.validate_on_submit():
-        if board.exist_socio_documento_id(form.numero_documento.data, socio_id):
+        if board.exist_socio_documento_update(socio_id, form.tipo_documento.data, form.numero_documento.data):
             kwargs = {
                 "id_usuario": socio.id_usuario,
                 "tipo_documento": form.tipo_documento.data,
