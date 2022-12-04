@@ -259,7 +259,10 @@ def get_socio_state(current_user):
             "gender": socio.genero,
             "address": socio.direccion,
             "phone": socio.telefono,
-        },
+            "first_name": usuario.first_name,
+            "last_name": usuario.last_name,
+            "created_at": usuario.created_at.strftime("%d / %m / %Y"),
+        }
     }
     if not board.es_moroso(socio.id):
         user_data["description"] = "El socio no registra deuda ni sanción."
@@ -273,11 +276,17 @@ def get_socio_state(current_user):
 
 @cross_origin
 @api_blueprint.get("/statistics/concurrencia")
-@token_required
-def get_statistics_concurrencia(current_user):
+#@token_required
+def get_statistics_concurrencia():
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
+    horas_sin_cero = {
+        "09": "9",
+        "08": "8",
+        "07": "7",
+        "06": "6",
+    }
     horas = [
         "06",
         "07",
@@ -306,7 +315,13 @@ def get_statistics_concurrencia(current_user):
         c = 0
         for disciplina in disciplinas:
             c = c + len(disciplina.socio)
+        # Si la disciplina está anotada con una hora "9:00"en lugar de "09:00"
+        if hora in ["09","08","07","06"]:
+            disciplinas = board.get_disciplinas_time(horas_sin_cero[hora])
+            for disciplina in disciplinas:
+                c = c + len(disciplina.socio)
         cantidad.append(c)
+
     data = {
         "hora": hora_data,
         "personas": cantidad,

@@ -4,29 +4,26 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="d-flex flex-column align-items-center">
-  <h1 class="mx-5"> Usuarios </h1>
+<div class="container">
+  <h2 class="mx-5"> Usuarios </h2>
 
-  <a href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
+  <a class="nav-link btn btn-link" href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
 
-  <section id="borde_contenedor"><h6>Buscar por:</h6>
-    <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="post">
+  <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="post">
+    <fieldset class="form-group">
       {{ form.csrf_token }} {{ form.hidden_tag() }}
-      <div class="form-group">
-        {{form.email.label(class="form=control-label")}}
-        {{form.email(class="form-control form=control-lg")}}
+      <div class="input-group mb-3">
+        {{form.email(class="form-control", placeholder="mail@mail.com")}}
+        {{ form.buscar(class="btn btn-primary") }}
       </div>
 
       <div class="form-group">
         {{form.estado.label(class="form=control-label")}}
-        {{form.estado(class="form-select")}}
+        {{form.estado}}
       </div>
-        <div class="d-flex flex-row justify-content-center">
-          {{form.buscar(class="btn btn-primary")}}
-        </div>
-    </form>
-  </section>
-
+    </fieldset>
+  </form>
+  <br><br>
   <table class="table table-striped">
     <thead>
       <tr class="table-dark">
@@ -75,18 +72,25 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class=pagination>
-    {%- for page in usuarios_pag.iter_pages() %}
-        {% if page %}
-            {% if page != usuarios_pag.page %}
-                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button class="btn btn-outline-primary">{{ page }}</button></a>
-            {% else %}
-                <strong class="btn btn-primary">{{ page }}</strong>
-            {% endif %}
-        {% else %}
-            <span class=ellipsis>…</span>
-        {% endif %}
-    {%- endfor %}
-  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {%- for page in usuarios_pag.iter_pages(left_edge=1, right_edge=1,
+        left_current = 1, right_current=2 ) %}
+          {% if page %}
+              {% if page != usuarios_pag.page %}
+                  <li class="page-item active">
+                    <a class="page-link" href="{{ url_for('usuarios.usuario_index', page=page, email=email, estado=estado ) }}">{{page}}</a>
+                  </li>
+              {% else %}
+                  <li class="page-item">
+                    <a class="page-link" href="{{ url_for('usuarios.usuario_index', page=page, email=email, estado=estado ) }}">{{page}}</a>
+                  </li>
+              {% endif %}
+          {% else %}
+            ...
+          {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
 </div>
 {% endblock %}
