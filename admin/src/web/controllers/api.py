@@ -244,8 +244,32 @@ def get_statistics_concurrencia(current_user):
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
-    horas = ["06", "07", "08", "09", "10", "11", "12", "13", "14",
-             "15", "16", "17", "18", "19", "20", "21", "22", "23"]
+    horas_sin_cero = {
+        "09": "9",
+        "08": "8",
+        "07": "7",
+        "06": "6",
+    }
+    horas = [
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+    ]
     hora_data = []
     cantidad = []
     for hora in horas:
@@ -254,13 +278,20 @@ def get_statistics_concurrencia(current_user):
         c = 0
         for disciplina in disciplinas:
             c = c + len(disciplina.socio)
+        # Si la disciplina está anotada con una hora "9:00"en lugar de "09:00"
+        if hora in ["09","08","07","06"]:
+            disciplinas = board.get_disciplinas_time(horas_sin_cero[hora])
+            for disciplina in disciplinas:
+                c = c + len(disciplina.socio)
         cantidad.append(c)
+
     data = {
         "hora": hora_data,
         "personas": cantidad,
     }
 
     return data
+
 
 
 @cross_origin
