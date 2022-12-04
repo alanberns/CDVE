@@ -37,6 +37,12 @@
     <br>
     <div class="row">
         <div class="col-md-2">
+            <form action="{{ url_for('socios.soft_delete_socio', socio_id=socio.id)}}" method="post" onsubmit="return confirm('¿Estás seguro que deseas eliminar el socio?');">
+                {{ form.csrf_token }}
+                <button class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+        <div class="col-md-2">
             <form action="{{ url_for('socios.update_socio', socio_id=socio.id)}}" method="post">
                 {{ form.csrf_token }}
                 <button class="btn btn-primary">Editar</button>
@@ -59,37 +65,7 @@
             </form>
         </div>
         {% endif %}
-        <div class="container">
-            {% if inscripciones %}
-            <br>
-            <h2>Inscripciones</h2>
-            <table class="table table-bordered border-primary table-responsive">
-              <thead>
-                <tr class="table-dark">
-                  <th>Disciplina</th>
-                  <th>Categoria</th>
-                  <th>Instructor</th>
-                </tr>
-              </thead>
-              <tbody>
-                {%for inscripcion in inscripciones%}
-                <tr class="table-secondary">
-                  <th class="text-center align-middle">
-                    {{inscripcion.disciplina.nombre}}
-                  </th>
-                  <th class="text-center align-middle">
-                    {{inscripcion.disciplina.categoria}}
-                  </th>
-                  <th class="text-center align-middle">
-                    {{inscripcion.disciplina.entrenador}}
-                  </th>
-                </tr>
-                {%endfor%}
-              </tbody>
-            </table>
 
-            {% endif %}
-        <br>
         <a href="{{url_for('socios.socios_index')}}"> Volver</a>
     </div>
 </div>

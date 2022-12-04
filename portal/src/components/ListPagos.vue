@@ -1,8 +1,5 @@
 <template>
   <div>
-    <p class="center-align flow-text" v-if="comprobanteStore.message">
-      {{ comprobanteStore.message }}
-    </p>
     <h1>Mis pagos</h1>
     <p
       class="center-align flow-text pago-confirm-message"
@@ -10,7 +7,6 @@
     >
       Su pago fue realizado con exito
     </p>
-
     <div v-if="loading" class="progress">
       <div class="indeterminate"></div>
     </div>
@@ -25,14 +21,11 @@
       <tbody>
         <tr v-for="pago in pagos" :key="pago.id">
           <td>{{ pago.monto }}</td>
-          <td>{{ formatDate(pago.fecha) }}</td>
+          <td>{{ pago.fecha }}</td>
           <td v-if="pago.comprobante">
-            <button
-              @click="showComprobante(pago.id)"
-              class="btn waves-effect green accent-4"
-            >
-              ver comprobante
-            </button>
+            <div class="container comprobante-done">
+              <i class="material-icons right check-icon">done_all</i>
+            </div>
           </td>
           <td v-else>
             <button
@@ -65,7 +58,6 @@ import { apiService } from "../apiService";
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 import { useComprobanteStore } from "../stores/ComprobanteStore";
 import router from "@/router";
-import moment from "moment";
 
 export default {
   name: "ListPagos",
@@ -87,19 +79,11 @@ export default {
   },
   beforeUnmount() {
     this.cuotaPickedStore.pagoIsConfirmed = false;
-    this.comprobanteStore.message = null;
   },
   methods: {
-    formatDate(value) {
-      return moment(value).format("DD-MM-YYYY");
-    },
     uploadComprobante(idComprobante) {
       this.comprobanteStore.idComprobante = idComprobante;
       router.push("/comprobante");
-    },
-    showComprobante(idComprobante) {
-      this.comprobanteStore.idComprobante = idComprobante;
-      router.push("/comprobante/show");
     },
     async nextPage(page) {
       page = page || this.current_page;
@@ -122,7 +106,6 @@ export default {
           console.log(error);
           this.loading = false;
         });
-      router.push("/pagos");
     },
   },
 };

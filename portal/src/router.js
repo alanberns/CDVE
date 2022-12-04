@@ -11,7 +11,7 @@ import Genero from "./components/Genero.vue";
 import Concurrencia from "./components/Concurrencia.vue";
 import SubirComprobante from "./components/SubirComprobante";
 import GenerarPago from "./components/GenerarPago.vue";
-import ShowComprobante from "./components/ShowComprobante.vue";
+
 // definir objeto rutas
 const routes = [
   {
@@ -54,10 +54,6 @@ const routes = [
   {
     path: "/comprobante",
     component: SubirComprobante,
-  },
-  {
-    path: "/comprobante/show",
-    component: ShowComprobante,
   },
 ];
 

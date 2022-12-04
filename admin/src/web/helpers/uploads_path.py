@@ -8,7 +8,6 @@ def getComprobantePath(filename):
     admin_path = up(abs_path(current_app.instance_path))
     return path_join(admin_path, "public", "comprobantes", filename)
 
-
 def getUploadsPath(filename):
     admin_path = up(abs_path(current_app.instance_path))
     return path_join(admin_path, "public", "uploads", filename)

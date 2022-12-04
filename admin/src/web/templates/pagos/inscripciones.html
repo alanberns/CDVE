@@ -1,31 +1,18 @@
 {% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
-%} {{ super() }} {% endblock %} {% block subnav %} {% endblock %} {% block
-content %}
-<div class="container">
-  <h2>Realizar Pago</h2>
-  <div class="row align-items-center">
-    <div class="col-auto mr-auto">
-      <p class="text-muted h5">Seleccione la inscripion que desea pagar:</p>
-    </div>
-    <div class="col-auto">
-      <a class="nav-link btn btn-link" href="{{ url_for('pagos.pagos_index') }}"
-        ><button type="button" class="btn btn-outline-danger">
-          Volver a Pagos
-        </button>
-      </a>
-    </div>
-  </div>
+%} {{ super() }} {% endblock %} {% block subnav %}
 
-  {% if inscripciones.items %}
+{% endblock %} {% block content %}
+<div class="container">
+  <h2>Inscripciones</h2>
+  <a class="nav-link btn btn-link" href="{{ url_for('pagos.pagos_index') }}"
+  ><button>Volver a Pagos</button>
+  </a>
   <table class="table table-bordered border-primary table-responsive">
     <thead>
       <tr class="table-dark">
         <th>Nro Socio</th>
         <th>Apellido</th>
         <th>Disciplina</th>
-        <th>Categoria</th>
-        <th>Instructor</th>
-        <th>Valor base</th>
         <th>Cuotas</th>
       </tr>
     </thead>
@@ -40,15 +27,6 @@ content %}
           {{inscripcion.disciplina.nombre}}
         </th>
         <th class="text-center align-middle">
-          {{inscripcion.disciplina.categoria}}
-        </th>
-        <th class="text-center align-middle">
-          {{inscripcion.disciplina.entrenador}}
-        </th>
-        <th class="text-center align-middle">
-          {{inscripcion.disciplina.costo_mensual}}
-        </th>
-        <th class="text-center align-middle">
           <a
             class="btn btn-primary"
             href="{{ url_for('pagos.cuotas_index', inscripcion_id = inscripcion.id,) }}"
@@ -59,10 +37,6 @@ content %}
       {%endfor%}
     </tbody>
   </table>
-  {% else %}
-  <h1>No existen datos para mostrar</h1>
-  {% endif %}
-
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       {% for page_num in inscripciones.iter_pages(left_edge=1, right_edge=1,

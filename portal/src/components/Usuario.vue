@@ -1,11 +1,6 @@
 <template>
     <div>
-        <h1>Mis datos</h1>   
-
-        <div v-if="loading" class="progress">
-          <div class="indeterminate"></div>
-        </div>
- 
+        <h1>Mis datos</h1>    
         <ul class="collection">
           <li class="collection-item"><strong>Numero de socio:</strong> {{ user_info.number }}</li>
           <li class="collection-item"><strong>Nombre:</strong> {{user_info.first_name}} {{ user_info.last_name }}</li>
@@ -31,7 +26,6 @@ export default {
     return {
       user_info: [],
       estado: "",
-      loading: true,
     };
   },
   created() {
@@ -46,12 +40,8 @@ export default {
       .then((response) => {
         this.user_info = response.data.profile;
         this.estado = response.data.description
-        this.loading = false;
       })
-      .catch((error) => {
-          console.log(error);
-          this.loading = false;
-        });
+      .catch((error) => console.log(error));
   },
 };
 </script>

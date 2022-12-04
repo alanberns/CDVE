@@ -33,9 +33,7 @@ class ConfigurationForm(FlaskForm):
         validators=[DataRequired(), NumberRange(min=0, max=10000)],
     )
     editar = SubmitField(label=("Editar"))
-    email_club = EmailField(
-        label=("Email del Club"),
-    )
+    email_club = EmailField(label=("Email del Club"),)
     numero_club = StringField(label=("Numero telefono del club"))
 
     def set_from_config(self, configuracion):

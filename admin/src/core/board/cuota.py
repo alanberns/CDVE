@@ -15,7 +15,8 @@ class Cuota(db.Model):
     activo = db.Column(db.Boolean, default=True)
     inscripcion_id = db.Column(db.Integer, db.ForeignKey("inscripciones.id"))
     inscripcion = db.relationship("Inscripcion", back_populates="cuota")
-    pago = db.relationship("Pago", secondary="cuotas_pagos", back_populates="cuotas")
+    pago = db.relationship(
+        "Pago", secondary="cuotas_pagos", back_populates="cuotas")
 
     def pagar(self):
         self.valor_pago = self.valor_cuota
@@ -33,5 +34,5 @@ class Cuota(db.Model):
             "fecha": self.fecha_vencimiento,
             "monto": self.valor_cuota,
             "nro_cuota": self.nro_cuota,
-            "estado": self.estado_pago,
+            "estado": self.estado_pago
         }

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, SelectField, FileField, IntegerField, widgets
-from wtforms.validators import DataRequired, Length, NumberRange, Optional
+from wtforms import StringField, SubmitField, BooleanField, SelectField, FileField
+from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileRequired
 
 
@@ -11,7 +11,7 @@ class SocioForm(FlaskForm):
         coerce=str,
         validators=[DataRequired()],
     )
-    numero_documento = IntegerField("Número", validators=[DataRequired(), NumberRange(max=999999999)])
+    numero_documento = StringField("Número", validators=[DataRequired()])
     genero = SelectField(
         "Género",
         choices=(
@@ -24,7 +24,7 @@ class SocioForm(FlaskForm):
         validators=[DataRequired()],
     )
     direccion = StringField("Dirección", validators=[DataRequired()])
-    telefono = IntegerField("Teléfono", validators=[Optional(), NumberRange(max=999999999)])
+    telefono = StringField("Teléfono", validators=[DataRequired()])
     submit = SubmitField("Guardar")
 
 
@@ -41,7 +41,6 @@ class DocumentoForm(FlaskForm):
 class CarnetUpload(FlaskForm):
     image = FileField(validators=[FileRequired()])
     submit = SubmitField("Upload")
-
 
 class CarnetExport(FlaskForm):
     submit = SubmitField("Export")

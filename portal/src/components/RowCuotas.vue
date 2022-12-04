@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>{{ cuota.nro_cuota }}</td>
-    <td>{{ formatDate(cuota.fecha) }}</td>
+    <td>{{ cuota.fecha }}</td>
     <td>{{ cuota.monto }}</td>
     <td>
       <form action="#">
@@ -23,7 +23,7 @@
 
 <script>
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
-import moment from "moment";
+
 export default {
   name: "RowCuotas",
   data() {
@@ -39,9 +39,6 @@ export default {
     cuota: Object,
   },
   methods: {
-    formatDate(value) {
-      return moment(value).format("DD-MM-YYYY");
-    },
     check() {
       this.$nextTick(() => {
         if (this.checkedCuotas) {

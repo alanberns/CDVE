@@ -5,14 +5,12 @@
 {% endblock %}
 {% block content %}
     <div class="content-section">
-        {% if usuario %}
-            <h2>{{ usuario.first_name }} {{ usuario.last_name }}</h2>
-        {% endif %}
         <form method="POST" action="">
             {{ form.csrf_token }} 
             {{ form.hidden_tag() }}
 
             <fieldset class="form-group">
+                <legend class="border-bottom mb-4"> {{ title }}</legend>
                 <div class="form-group">
                     {{ form.tipo_documento.label(class="form=control-label") }}
                     {{ form.tipo_documento(class="form-select") }}
@@ -39,9 +37,10 @@
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
-        {% if not editar %}
+        {% if title == "Crear Socio" %}
         <a href="{{url_for('socios.socios_index')}}"> Volver</a>
-        {% else %}
+        {% endif %}
+        {% if title == "Editar Socio" %}
         <a href="{{url_for('socios.socios_index')}}"> Volver</a>
         {% endif %}
     </div>

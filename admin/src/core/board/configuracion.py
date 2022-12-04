@@ -4,9 +4,7 @@ from src.core.database import db
 
 
 class Configuracion(db.Model):
-    """
-    Crea la tabla configuracion con las columnas listadas a continuacion.
-    """
+
     __tablename__ = "configuracion"
     id = db.Column(db.Integer, primary_key=True, unique=True)
     elementos_pagina = db.Column(db.Integer)
@@ -25,7 +23,7 @@ class Configuracion(db.Model):
         valor_base_cuota,
         porcentaje_cuota,
         email_club,
-        numero_club,
+        numero_club
     ):
         self.elementos_pagina = elementos_pagina
         self.estado_pago = estado_pago

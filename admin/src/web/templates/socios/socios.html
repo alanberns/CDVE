@@ -20,103 +20,87 @@
           {{ form.habilitado.label(class="form=control-label") }}
           {{ form.habilitado }}
         </div>
-        {% if clear %}
-          <a href="{{ url_for('socios.socios_index') }}">Limpiar Filtros</a>
-          <br>
-
-        {% endif %}
         {% if socios_pag.items %}
         <br>
-
-        <table class="table table-hover">
-          <thead>
-            <tr class="table-dark">
-              <th>Apellido</th>
-              <th>Nombre</th>
-              <th>Documento</th>
-              <th>Genero</th>
-              <th>Email</th>
-              <th>Estado</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for socio in socios_pag.items %}
-            <tr class="table-active">
-              <th>{{ socio[1].last_name }}</th>
-              <th>{{ socio[1].first_name }}</th>
-              <th>{{ socio[0].tipo_documento }} {{ socio[0].numero_documento }}</th>
-              <th>{{ socio[0].genero }}</th>
-              <th>{{ socio[1].email }}</th>
-              {% if socio[0].habilitado %}
-              <th>
-                <span class="badge rounded-pill bg-success">Habilitado</span>
-              </th>
-              {% endif %}
-              {% if not socio[0].habilitado %}
-              <th>
-                <span class="badge rounded-pill bg-secondary">Deshabilitado</span>
-              </th>
-              {% endif %}
-              <th>
-                <a href="{{ url_for('socios.ver_socio', socio_id=socio[0].id) }}"> Ver </a>
-              </th>
-              {% if socio[0].habilitado %}
-              <th>
-                <a href="{{ url_for('socios.inscribir_socio', socio_id=socio[0].id) }}"> Inscribir </a>
-              </th>
-              {% endif %}
-              {% if socio[2] %}
-              <th>
-                <a href="{{url_for('socios.ver_carnet', socio_id=socio[0].id)}}">Ver Carnet</a>
-              </th>
-              {% else %}
-              <th>
-                <a href="{{url_for('socios.alta_carnet', socio_id=socio[0].id)}}">Generar Carnet</a>
-              </th>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-          <div class="row">
-            <div class="col-md-2">
-              {{ form.exportpdf(class="btn btn-primary btn-sm") }}
-            </div>
-            <div class="col-md-2">
-              {{ form.exportcsv(class="btn btn-success btn-sm") }}
-            </div>
-          </div>
-        </fieldset>
-      </form>
-        <br>
-        <div class=pagination>
-          {%- for page in socios_pag.iter_pages() %}
-              {% if page %}
-                  {% if page != socios_pag.page %}
-                      <form action="{{ url_for('socios.socios_index', page=page) }}" method="post">
-                        {{ form.csrf_token }}
-                        {% if clear %}
-                          <input type="hidden" value="{{form.apellido.data}}" name="apellido">
-                          <input type="hidden" value="{{form.habilitado.data}}" name="habilitado">
-                        {% endif %}
-                        <button class="btn btn-outline-primary">{{ page }}</button>
-                      </form>
-                  {% else %}
-                      <strong class="btn btn-primary">{{ page }}</strong>
-                  {% endif %}
-              {% else %}
-                  <span class=ellipsis>â€¦</span>
-              {% endif %}
-          {%- endfor %}
+        <div class="form-group">
+          {{ form.exportpdf(class="btn btn-primary btn-sm") }}
         </div>
-        
-        {% else %}
-        <h2>No hay resultados</h2>
-        {% endif %}
-
+        <br>
+        <div class="form-group">
+          {{ form.exportcsv(class="btn btn-primary btn-sm") }}
+        </div>
+      </fieldset>
+    </form>
+    <br>
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-dark">
+          <th>Apellido</th>
+          <th>Nombre</th>
+          <th>Documento</th>
+          <th>Genero</th>
+          <th>Email</th>
+          <th>Estado</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for socio in socios_pag.items %}
+        <tr class="table-active">
+          <th>{{ socio[1].last_name }}</th>
+          <th>{{ socio[1].first_name }}</th>
+          <th>{{ socio[0].tipo_documento }} {{ socio[0].numero_documento }}</th>
+          <th>{{ socio[0].genero }}</th>
+          <th>{{ socio[1].email }}</th>
+          {% if socio[0].habilitado %}
+          <th>
+            <span class="badge rounded-pill bg-success">Habilitado</span>
+          </th>
+          {% endif %}
+          {% if not socio[0].habilitado %}
+          <th>
+            <span class="badge rounded-pill bg-secondary">Deshabilitado</span>
+          </th>
+          {% endif %}
+          <th>
+            <a href="{{ url_for('socios.ver_socio', socio_id=socio[0].id) }}"> Ver </a>
+          </th>
+          {% if socio[0].habilitado %}
+          <th>
+            <a href="{{ url_for('socios.inscribir_socio', socio_id=socio[0].id) }}"> Inscribir </a>
+          </th>
+          {% endif %}
+          {% if socio[2] %}
+          <th>
+            <a href="{{url_for('socios.ver_carnet', socio_id=socio[0].id)}}">Ver Carnet</a>
+          </th>
+          {% else %}
+          <th>
+            <a href="{{url_for('socios.alta_carnet', socio_id=socio[0].id)}}">Generar Carnet</a>
+          </th>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class=pagination>
+      {%- for page in socios_pag.iter_pages() %}
+          {% if page %}
+              {% if page != socios_pag.page %}
+                  <a href="{{ url_for('socios.socios_index', page=page ) }}"><button button class="btn btn-outline-primary">{{ page }}</button></a>
+              {% else %}
+                  <strong class="btn btn-primary">{{ page }}</strong>
+              {% endif %}
+          {% else %}
+              <span class=ellipsis>â€¦</span>
+          {% endif %}
+      {%- endfor %}
+    </div>
+    {% else %}
+    <h2>No hay resultados</h2>
+    {% endif %}
   </div>
 
 {% endblock %}

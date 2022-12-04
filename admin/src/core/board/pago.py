@@ -2,9 +2,7 @@ from src.core.database import db
 
 
 class Pago(db.Model):
-    """
-    Crea la tabla de pagos con las columnas listadas a continuacion.
-    """
+
     __tablename__ = "pagos"
     id = db.Column(db.Integer, primary_key=True, unique=True)
     fecha = db.Column(db.DateTime)
@@ -21,7 +19,7 @@ class Pago(db.Model):
             "fecha": self.fecha,
             "monto": self.monto,
             "cuotas": [cuota.nro_cuota for cuota in self.cuotas],
-            "comprobante": self.comprobante,
+            "comprobante": self.comprobante
         }
 
 

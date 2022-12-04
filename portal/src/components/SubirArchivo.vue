@@ -1,8 +1,5 @@
 <template>
   <div>
-    <p class="center-align flow-text error-message" v-if="error_message">
-      {{ error_message }}
-    </p>
     <form @submit.prevent="submitFile">
       <div class="file-field input-field">
         <div class="btn">
@@ -28,14 +25,12 @@
 import { apiService } from "../apiService";
 import { useLoginStore } from "../stores/LoginStore";
 import { useComprobanteStore } from "../stores/ComprobanteStore";
-import router from "@/router";
 export default {
   name: "SubirArchivo",
   data() {
     return {
       images: null,
       fileName: null,
-      error_message: null,
     };
   },
   setup() {
@@ -49,11 +44,7 @@ export default {
       this.images = this.$refs.file.files[0];
       this.fileName = e.target.files[0].name;
     },
-    async submitFile() {
-      if (!this.images) {
-        this.error_message = "Por favor seleccione un archivo";
-        return true;
-      }
+    submitFile() {
       apiService.defaults.headers[
         "Authorization"
       ] = `${this.loginStore.getToken}`;
@@ -64,28 +55,18 @@ export default {
         "Content-Type": "multipart/form-data",
       };
       console.log(formData);
-      await apiService
+      apiService
         .post("/me/comprobante", formData, {
           headers: headers,
         })
         .then((res) => {
           res.data.files; // binary representation of the file
           res.status; // HTTP status
-          this.comprobanteStore.message = "Hemos recibido su comprobante";
         })
-        .catch((error) => {
-          console.log(error);
-          this.comprobanteStore.message =
-            "No pudimos recibir su comprobante, asegure que el formato sea jpg,png o pdf";
-        });
-      router.push("/pagos");
+        .catch((error) => console.log(error));
     },
   },
 };
 </script>
 
-<style>
-.error-message {
-  color: #d50000;
-}
-</style>
+<style></style>
