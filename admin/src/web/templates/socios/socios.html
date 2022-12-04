@@ -93,21 +93,21 @@
               {% endif %}
           {%- endfor %}
         </div>
-        {% else %}
-        <h2>No hay resultados</h2>
-        {% endif %}
         <br>
         <div class="row">
-          <div class="col-md-1">
+          <div class="col-md-2">
             {{ form.exportpdf(class="btn btn-primary btn-sm") }}
           </div>
-          <br>
-          <div class="col-md-1">
+          <div class="col-md-2">
             {{ form.exportcsv(class="btn btn-success btn-sm") }}
           </div>
         </div>
       </fieldset>
     </form>
+        {% else %}
+        <h2>No hay resultados</h2>
+        {% endif %}
+
   </div>
 
 {% endblock %}
