@@ -23,6 +23,7 @@
         {% if clear %}
           <a href="{{ url_for('socios.socios_index') }}">Limpiar Filtros</a>
           <br>
+
         {% endif %}
         {% if socios_pag.items %}
         <br>
@@ -80,11 +81,29 @@
             {% endfor %}
           </tbody>
         </table>
+          <div class="row">
+            <div class="col-md-2">
+              {{ form.exportpdf(class="btn btn-primary btn-sm") }}
+            </div>
+            <div class="col-md-2">
+              {{ form.exportcsv(class="btn btn-success btn-sm") }}
+            </div>
+          </div>
+        </fieldset>
+      </form>
+        <br>
         <div class=pagination>
           {%- for page in socios_pag.iter_pages() %}
               {% if page %}
                   {% if page != socios_pag.page %}
-                      <a href="{{ url_for('socios.socios_index', page=page ) }}"><button button class="btn btn-outline-primary">{{ page }}</button></a>
+                      <form action="{{ url_for('socios.socios_index', page=page) }}" method="post">
+                        {{ form.csrf_token }}
+                        {% if clear %}
+                          <input type="hidden" value="{{form.apellido.data}}" name="apellido">
+                          <input type="hidden" value="{{form.habilitado.data}}" name="habilitado">
+                        {% endif %}
+                        <button class="btn btn-outline-primary">{{ page }}</button>
+                      </form>
                   {% else %}
                       <strong class="btn btn-primary">{{ page }}</strong>
                   {% endif %}
@@ -93,17 +112,7 @@
               {% endif %}
           {%- endfor %}
         </div>
-        <br>
-        <div class="row">
-          <div class="col-md-2">
-            {{ form.exportpdf(class="btn btn-primary btn-sm") }}
-          </div>
-          <div class="col-md-2">
-            {{ form.exportcsv(class="btn btn-success btn-sm") }}
-          </div>
-        </div>
-      </fieldset>
-    </form>
+        
         {% else %}
         <h2>No hay resultados</h2>
         {% endif %}

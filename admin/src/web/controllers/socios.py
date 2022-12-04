@@ -36,34 +36,15 @@ def socios_index():
     Página principal de socios. Lista, filtrado y exportado de socios.
     """
     form = DocumentoForm()
-    configuracion = board.list_configuracion()
-    elementos_pagina = configuracion.elementos_pagina
+    elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get("page", 1))
-    clear = False
     if form.validate_on_submit():
+        form = DocumentoForm(request.form)
         apellido = form.apellido.data
         habilitado = form.habilitado.data
         clear = True
-        if habilitado == 0:
-            if apellido:
-                socios_pag = board.find_socio_by_apellido(
-                    apellido, page, elementos_pagina
-                )
-            else:
-                socios_pag = board.list_socios_join_users(page, elementos_pagina)
-        else:
-            if habilitado == 1:
-                activo = True
-            else:
-                activo = False
-            if apellido:
-                socios_pag = board.find_socio_habilitado_by_apellido(
-                    apellido, activo, page, elementos_pagina
-                )
-            else:
-                socios_pag = board.list_socios_habilitado(
-                    activo, page, elementos_pagina
-                )
+        socios_pag = board.filter_socios(apellido, habilitado, page, elementos_pagina)
+
         if form.exportpdf.data:
             rendered = render_template(
                 "socios/socios_export.html", socios_pag=socios_pag
@@ -102,6 +83,10 @@ def socios_index():
             ] = "attachment; filename=listado_socios.csv"
             return response
     else:
+        configuracion = board.list_configuracion()
+
+        
+        clear = False
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
     return render_template("socios/socios.html", socios_pag=socios_pag, form=form, clear=clear)
 
@@ -163,7 +148,9 @@ def update_socio(socio_id):
     """
     Edición de un socio cargando su información en un formulario.
     """
-    socio = board.find_socio_by_id(socio_id)
+    query = board.find_socio_join_usuario_by_id(socio_id)
+    socio = query[0]
+    usuario = query[1]
     form = SocioForm()
     if form.validate_on_submit():
         if board.exist_socio_documento_update(socio_id, form.tipo_documento.data, form.numero_documento.data):
@@ -185,7 +172,7 @@ def update_socio(socio_id):
         form.numero_documento.data = socio.numero_documento
         form.tipo_documento.data = socio.tipo_documento
         form.telefono.data = socio.telefono
-    return render_template("socios/create_socio.html", form=form, title="Editar Socio")
+    return render_template("socios/create_socio.html", form=form, editar=True, usuario=usuario)
 
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])

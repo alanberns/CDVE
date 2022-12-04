@@ -416,6 +416,66 @@ def find_socio_by_id_usuario(usuario_id):
     return socio[0]
 
 
+def filter_socios(last_name, habilitado, page=1, per_page=10):
+    """
+    Filtra a socios por apellido y estado. Si el apellido ingresado es vacio y el estado que se pide es ambos
+    no se incluye en el filtrado.
+    """
+    if habilitado == 1:
+        habilitado = True
+    elif habilitado == 2:
+        habilitado = False
+    else: habilitado = ""
+    if last_name == "":
+        if habilitado == "":
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True)
+                .outerjoin(Usuario, full=True)
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        else:
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True, habilitado=habilitado)
+                .outerjoin(Usuario, full=True)
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+    else:
+        if habilitado != "":
+
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True, habilitado=habilitado)
+                .outerjoin(Usuario, full=True)
+                .filter(Usuario.last_name.ilike(f"{last_name}%"))
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        else:
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True)
+                .outerjoin(Usuario, full=True)
+                .filter(Usuario.last_name.ilike(f"{last_name}%"))
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        print (socios.items)
+    return socios
+
+
+
+
+
+
+
 def list_socios_join_users(page=1, per_page=10):
     """
     Devuelve la lista de socios activos (sin borrado lógico)
