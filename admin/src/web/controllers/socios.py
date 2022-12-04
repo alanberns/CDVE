@@ -36,32 +36,15 @@ def socios_index():
     Página principal de socios. Lista, filtrado y exportado de socios.
     """
     form = DocumentoForm()
-    configuracion = board.list_configuracion()
-    elementos_pagina = configuracion.elementos_pagina
+    elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get("page", 1))
     if form.validate_on_submit():
+        form = DocumentoForm(request.form)
         apellido = form.apellido.data
         habilitado = form.habilitado.data
-        if habilitado == 0:
-            if apellido:
-                socios_pag = board.find_socio_by_apellido(
-                    apellido, page, elementos_pagina
-                )
-            else:
-                socios_pag = board.list_socios_join_users(page, elementos_pagina)
-        else:
-            if habilitado == 1:
-                activo = True
-            else:
-                activo = False
-            if apellido:
-                socios_pag = board.find_socio_habilitado_by_apellido(
-                    apellido, activo, page, elementos_pagina
-                )
-            else:
-                socios_pag = board.list_socios_habilitado(
-                    activo, page, elementos_pagina
-                )
+        clear = True
+        socios_pag = board.filter_socios(apellido, habilitado, page, elementos_pagina)
+
         if form.exportpdf.data:
             rendered = render_template(
                 "socios/socios_export.html", socios_pag=socios_pag
@@ -75,16 +58,22 @@ def socios_index():
             return response
         if form.exportcsv.data:
             output = io.StringIO()
-            csvdata = ["Apellido", "Nombre", "Documento", "Genero", "Email"]
+            csvdata = ["Socio #", "Apellido", "Nombre", "Documento", "Genero", "Email", "Estado"]
             writer = csv.writer(output)
             writer.writerow(csvdata)
             for socio in socios_pag.items:
+                if socio[0].habilitado:
+                    estado="Habilitado"
+                else:
+                    estado="Deshabilitado"
                 csvdata = [
+                    socio[0].id,
                     socio[1].last_name,
                     socio[1].first_name,
-                    socio[0].numero_documento,
+                    f"{socio[0].tipo_documento} {socio[0].numero_documento}",
                     socio[0].genero,
                     socio[1].email,
+                    estado,
                 ]
                 writer.writerow(csvdata)
             response = make_response(output.getvalue())
@@ -94,8 +83,12 @@ def socios_index():
             ] = "attachment; filename=listado_socios.csv"
             return response
     else:
+        configuracion = board.list_configuracion()
+
+        
+        clear = False
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
-    return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
+    return render_template("socios/socios.html", socios_pag=socios_pag, form=form, clear=clear)
 
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
@@ -120,7 +113,7 @@ def add_socio(usuario_id):
     """
     form = SocioForm()
     if form.validate_on_submit():
-        if board.exist_socio_documento(form.numero_documento.data):
+        if board.exist_socio_documento(form.tipo_documento.data, form.numero_documento.data):
             kwargs = {
                 "id_usuario": usuario_id,
                 "tipo_documento": form.tipo_documento.data,
@@ -155,10 +148,12 @@ def update_socio(socio_id):
     """
     Edición de un socio cargando su información en un formulario.
     """
-    socio = board.find_socio_by_id(socio_id)
+    query = board.find_socio_join_usuario_by_id(socio_id)
+    socio = query[0]
+    usuario = query[1]
     form = SocioForm()
     if form.validate_on_submit():
-        if board.exist_socio_documento_id(form.numero_documento.data, socio_id):
+        if board.exist_socio_documento_update(socio_id, form.tipo_documento.data, form.numero_documento.data):
             kwargs = {
                 "id_usuario": socio.id_usuario,
                 "tipo_documento": form.tipo_documento.data,
@@ -177,7 +172,7 @@ def update_socio(socio_id):
         form.numero_documento.data = socio.numero_documento
         form.tipo_documento.data = socio.tipo_documento
         form.telefono.data = socio.telefono
-    return render_template("socios/create_socio.html", form=form, title="Editar Socio")
+    return render_template("socios/create_socio.html", form=form, editar=True, usuario=usuario)
 
 
 @socio_blueprint.route("/<int:socio_id>/switch", methods=["get", "post"])
@@ -200,9 +195,10 @@ def ver_socio(socio_id):
     """
     form = SocioForm()
     query = board.find_socio_join_usuario_by_id(socio_id)
+    inscripciones = board.get_inscripcion_by_socio_id(socio_id)
     socio = query[0]
     usuario = query[1]
-    return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form)
+    return render_template("socios/socio.html", socio=socio, usuario=usuario, form=form, inscripciones=inscripciones)
 
 
 @socio_blueprint.route("/<int:socio_id>/inscribir", methods=["get", "post"])

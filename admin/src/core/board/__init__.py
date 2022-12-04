@@ -416,6 +416,66 @@ def find_socio_by_id_usuario(usuario_id):
     return socio[0]
 
 
+def filter_socios(last_name, habilitado, page=1, per_page=10):
+    """
+    Filtra a socios por apellido y estado. Si el apellido ingresado es vacio y el estado que se pide es ambos
+    no se incluye en el filtrado.
+    """
+    if habilitado == 1:
+        habilitado = True
+    elif habilitado == 2:
+        habilitado = False
+    else: habilitado = ""
+    if last_name == "":
+        if habilitado == "":
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True)
+                .outerjoin(Usuario, full=True)
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        else:
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True, habilitado=habilitado)
+                .outerjoin(Usuario, full=True)
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+    else:
+        if habilitado != "":
+
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True, habilitado=habilitado)
+                .outerjoin(Usuario, full=True)
+                .filter(Usuario.last_name.ilike(f"{last_name}%"))
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        else:
+            socios = (
+                db.session.query(Socio, Usuario, Carnet)
+                .filter_by(activo=True)
+                .outerjoin(Usuario, full=True)
+                .filter(Usuario.last_name.ilike(f"{last_name}%"))
+                .order_by(Usuario.last_name)
+                .outerjoin(Carnet, full=True)
+                .paginate(page=page, per_page=per_page, error_out=False)
+            )
+        print (socios.items)
+    return socios
+
+
+
+
+
+
+
 def list_socios_join_users(page=1, per_page=10):
     """
     Devuelve la lista de socios activos (sin borrado lógico)
@@ -499,25 +559,30 @@ def find_socio_join_usuario_by_id(socio_id):
     return socio
 
 
-def exist_socio_documento(documento):
+def exist_socio_documento(tipo, documento):
     """
     Verifica que el documento dado está disponible y no le pertenece a otro socio activo
     """
     return (
         Socio.query.filter(
-            Socio.numero_documento == documento, Socio.activo == True
+            Socio.tipo_documento == tipo,
+            Socio.numero_documento == documento, 
+            Socio.activo == True
         ).first()
         == None
     )
 
-
-def exist_socio_documento_id(documento, id):
+def exist_socio_documento_update(id, tipo, documento):
     """
-    Verifica que existe un socio con un documento dado y sólo pertenece al ingresado
+    Verifica que el documento dado está disponible y no le pertenece a otro socio activo y no sea el mismo
     """
     return (
-        Socio.query.filter(Socio.numero_documento ==
-                           documento, Socio.id != id).first()
+        Socio.query.filter(
+            Socio.id != id,
+            Socio.tipo_documento == tipo,
+            Socio.numero_documento == documento, 
+            Socio.activo == True
+        ).first()
         == None
     )
 
@@ -610,6 +675,17 @@ def get_inscripcion_by_id(inscripcion_id):
             Inscripcion.id == inscripcion_id).join(Disciplina)
         .filter(Disciplina.estado == True)
         .first()
+    )
+
+def get_inscripcion_by_socio_id(socio_id):
+    """
+    Retorna una inscripcion, dada su id
+    """
+    return (
+        Inscripcion.query.filter(
+            Inscripcion.socio_id == socio_id).join(Disciplina)
+        .filter(Disciplina.estado == True)
+        .all()
     )
 
 
