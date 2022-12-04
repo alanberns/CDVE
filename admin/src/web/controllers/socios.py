@@ -39,9 +39,11 @@ def socios_index():
     configuracion = board.list_configuracion()
     elementos_pagina = configuracion.elementos_pagina
     page = int(request.args.get("page", 1))
+    clear = False
     if form.validate_on_submit():
         apellido = form.apellido.data
         habilitado = form.habilitado.data
+        clear = True
         if habilitado == 0:
             if apellido:
                 socios_pag = board.find_socio_by_apellido(
@@ -101,7 +103,7 @@ def socios_index():
             return response
     else:
         socios_pag = board.list_socios_join_users(page, elementos_pagina)
-    return render_template("socios/socios.html", socios_pag=socios_pag, form=form)
+    return render_template("socios/socios.html", socios_pag=socios_pag, form=form, clear=clear)
 
 
 @socio_blueprint.route("/<int:socio_id>/delete", methods=["get", "post"])
