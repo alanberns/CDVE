@@ -1,0 +1,109 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block subnav %} {% endblock %} {% block
+content %}
+<script>
+  function validateNotEmpty(event) {
+    let result = false;
+    $(".form-check-input").each(function (index, obj) {
+      if (this.checked === true) {
+        result = true;
+      }
+    });
+    console.log(result);
+    if (!result) {
+      event.preventDefault();
+      alert("¡Debe seleccionar al menos una cuota!");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+<div class="container">
+  <div class="row">
+    <h2>Generar Pago</h2>
+  </div>
+
+  {%if form.items%}
+  <p class="text-muted h5">
+    Para Realizar un pago, por favor seleccione las cuotas a pagar
+  </p>
+
+  <div class="card border-dark mb-3">
+    <div class="card-header">
+      Usuario:
+      <strong
+        >{{inscripcion.socio.usuario.first_name}}
+        {{inscripcion.socio.usuario.last_name}}
+      </strong>
+      con numero de socio
+      <strong>{{inscripcion.socio.id}}</strong>
+    </div>
+    <div class="card-body text-dark">
+      <h5 class="card-title">
+        <strong>{{inscripcion.disciplina.nombre}}</strong>
+      </h5>
+      <p class="card-text">
+        Dictado por <strong>{{inscripcion.disciplina.entrenador}}</strong> en la
+        categoria de
+        <strong>{{inscripcion.disciplina.categoria}}</strong>
+      </p>
+    </div>
+  </div>
+
+  <form
+    action="{{ url_for('pagos.pago') }}"
+    method="POST"
+    onsubmit="validateNotEmpty(event)"
+  >
+    {{ form.hidden_tag() }}
+    <table class="table table-bordered border-primary table-responsive">
+      <thead>
+        <tr class="table-dark">
+          <th>Vencimiento</th>
+          <th>Valor Cuota</th>
+          <th>estado_pago</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for cuota in form.items%}
+        <tr class="table-secondary">
+          {{cuota.hidden_tag()}}
+          <th>{{cuota.data.fecha_vencimiento.strftime('%d-%m-%Y')}}</th>
+          <th>{{cuota.data.valor_cuota}}</th>
+          <th>{{ 'Impaga' if not cuota.data.estado_pago else 'Pagada' }}</th>
+          <th>
+            <div class="form-check">
+              {%if not cuota.data.estado_pago%}
+              {{cuota.check(class_="form-check-input", readonly="readonly")}}
+              {%else%}
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDisabled"
+                disabled
+              />
+              {%endif%}
+            </div>
+          </th>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+    <div class="row">{{form.pagar(class="btn btn-success")}}</div>
+  </form>
+  <div class="row">
+    <a
+      class="nav-link btn btn-link"
+      href="{{ url_for('pagos.inscripciones_index') }}"
+      ><button type="button" class="btn btn-outline-danger">
+        Volver atras
+      </button>
+    </a>
+  </div>
+</div>
+{%else%}
+<p class="h1 text-muted">No hay contenido para Mostrar</p>
+{%endif%} {% endblock %}

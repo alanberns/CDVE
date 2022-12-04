@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}Mi perfil{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center">
+  <h1 class="mx-5"> Mi perfil </h1>
+
+    <form class="row g-3 mx-5" action=" {{ url_for('perfil.modify_perfil', id=usuario.id)}}" method="post" 
+    onsubmit="return confirm('¿Estas seguro que deseas modificar tus datos?');">
+      {{ form.csrf_token }} 
+      <div class="form-floating mb-3">
+        <input type="hidden" name="id" id="floatingInput" value="{{ usuario.id }}" class="form-control" readonly>
+      </div>
+      {% if usuario.activo %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="Si" class="form-control" readonly>
+        <label for="floatingInput">Activo</label>
+      </div>
+      {% endif %}
+      {% if not usuario.activo %}
+      <div class="form-floating mb-3">
+        <input type="text" name="" id="floatingInput" value="No" class="form-control" readonly>
+        <label for="floatingInput">Activo</label>
+      </div>
+      {% endif %}
+  
+      <div class="form-floating mb-3">
+        {{form.email(class="form-control")}}
+        <label for="email">{{form.email.label}}</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.username(class="form-control")}}
+        <label for="username">{{form.username.label}}</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.first_name(class="form-control")}}
+        <label for="first_name">{{form.first_name.label}}</label>
+      </div>
+      <div class="form-floating mb-3">
+        {{form.last_name(class="form-control")}}
+        <label for="last_name">{{form.last_name.label}}</label>
+      </div>
+      <div class="d-flex flex-row justify-content-center">
+        {{ form.modificar(class="btn btn-primary")}}
+      </div>
+    </form>
+
+    <!---contraseña-->
+    <a href="{{url_for('perfil.change_password_view')}}"  id="borde_boton"><button>Cambiar mi contraseña</button></a>
+
+    <hr><br>
+    
+    <h4 id="borde_boton">Roles</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr class="table-dark">
+          <th>Mis roles</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rol in usuario.roles %}
+        <tr>
+          <th>{{rol.nombre}}</th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="{{url_for('home')}}"><button>Volver al inicio</button> </a>
+  
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+<div style="border: 0.35rem solid black; padding: 0.5rem">
+
+  <h2><strong>Listado de Socios</strong></h2>
+  <ul style="list-style-type: none; margin: 0; padding: 0">
+    {%for socio in socios_pag.items%}
+    <li style="font-size: 1.2rem">
+        <strong>Socio # {{ socio[0].id }}</strong>
+      <div>
+        <strong>Apellido:</strong>
+        {{ socio[1].last_name }}
+      </div>
+      <div>
+        <strong>Nombre</strong>
+        {{ socio[1].first_name }}
+      </div>
+      <div>
+        <strong>Documento:</strong>
+        {{ socio[0].tipo_documento }} {{ socio[0].numero_documento }}
+      </div>
+      <div>
+        <strong>Genero:</strong>
+        {{ socio[0].genero }}
+      </div>
+      <div>
+        <strong>Email:</strong>
+        {{ socio[1].email }}
+      </div>
+      <div>
+        <strong>Estado:</strong>
+        {% if socio[0].habilitado %}
+        Habilitado.
+        {%else%}
+        Deshabilitado temporalmente.
+        {%endif%}
+      </div>
+    </li>
+    <br />
+    {%endfor%}
+  </ul>
+</div>

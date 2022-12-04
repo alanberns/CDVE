@@ -1,17 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
- <head>
-     {% block head %} 
-     <link
-       rel="stylesheet"
-       href="{{url_for('static', filename='style.css') }}"
-     />
-     <title>{% block title %}{% endblock %}</title>  
-     {% endblock %}
-  </head>
-  <body>
-    <div id="navbar">{% block navbar %} {% endblock %} </div>
-    <div id="main">{% block content %} {% endblock %} </div>
-    <div id="footer">{% block footer %} {% endblock %} </div>
-  </body>
-</html>
+{% extends "base.html" %} {% block navbar %} {% if is_authenticated(session) %}
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="container-fluid">
+    <div
+      class="collapse navbar-collapse justify-content-center"
+      id="navbarNavAltMarkup"
+    >
+      <div class="col">
+        <div class="navbar-nav">
+          <a class="nav-link" aria-current="page" href="{{ url_for('home') }}"
+            >Home</a
+          >
+          {%if has_permission("user_index",session)%}
+          <a class="nav-link" href="{{ url_for('usuarios.usuario_index')}}"
+            >Usuarios</a
+          >
+          {%endif%} {%if has_permission("disciplina_index",session)%}
+          <a
+            class="nav-link"
+            href="{{ url_for('disciplinas.disciplina_index') }}"
+            >Disciplinas</a
+          >
+          {%endif%} {%if has_permission("socio_index",session)%}
+          <a class="nav-link" href="{{ url_for('socios.socios_index') }}"
+            >Socios</a
+          >
+          {%endif%} {%if has_permission("inscripcion_index",session)%}
+          <a
+            class="nav-link"
+            href="{{ url_for('inscripciones.inscripciones_index') }}"
+            >Inscripciones</a
+          >
+          {%endif%} {%if has_permission("pago_index",session)%}
+          <a class="nav-link" href="{{ url_for('pagos.pagos_index') }}"
+            >Pagos</a
+          >
+          {%endif%} {%if has_permission("configuracion_all",session)%}
+          <a
+            class="nav-link"
+            href="{{ url_for('configuracion.configuracion_index') }}"
+            >Configuracion</a
+          >
+          {%endif%}
+        </div>
+      </div>
+      <div class="col d-flex flex-row-reverse">
+        <div class="navbar-nav justify-content-end">
+          <span class="h5 text-light pe-3">
+            <i class="bi bi-person-circle">{{session["user"]}}</i>
+          </span>
+          <div class="dropdown">
+            <a
+              class="btn btn-secondary dropdown-toggle"
+              href="#"
+              role="button"
+              id="dropdownMenuLink"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Perfil
+            </a>
+            <div
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownMenuLink"
+            >
+              <a class="dropdown-item" href="{{url_for('perfil.show_perfil')}}"
+                >Editar Perfil</a
+              >
+              <a
+                class="dropdown-item"
+                href="{{url_for('auth.logout')}}"
+                onclick="return confirm('¿Seguro que deseas cerrar sesion?')"
+                >Cerrar Sesion</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+{%else%}
+<nav class="navbar navbar-expand navbar-dark bg-dark pt-4">
+  <div class="container-fluid">
+    <div
+      class="collapse navbar-collapse justify-content-center"
+      id="navbarNavAltMarkup"
+    ></div>
+  </div>
+</nav>
+{% endif %} {% endblock %} {% block footer %} {{super()}}{% endblock %}

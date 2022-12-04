@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField,BooleanField
+from wtforms import StringField, IntegerField, BooleanField
 from wtforms.validators import ValidationError, DataRequired, Length, NumberRange
 
 class DisciplinaForm(FlaskForm):
@@ -12,12 +12,10 @@ class DisciplinaForm(FlaskForm):
      costo_mensual = IntegerField(label=('costo_mensual'), validators=[DataRequired(),NumberRange(min=1, max=500000)])
 
 
-
-def set_from_disciplinas(self,disciplina):
+def set_from_disciplinas(self, disciplina):
     self.nombre.data = disciplina.nombre
     self.categoria.data = disciplina.categoria
     self.entrenador.data = disciplina.entrenador
     self.dia.data = disciplina.dia
     self.hora.data = disciplina.hora
     self.costo_mensual.data = disciplina.costo_mensual
-    

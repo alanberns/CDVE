@@ -1,0 +1,73 @@
+{% extends "layout.html" %} {% block title %}Pagos{% endblock %} {% block head
+%} {{ super() }} {% endblock %} {% block subnav %} {% endblock %} {% block
+content %}
+<div class="container">
+  <h2>Inscripciones</h2>
+  {% if inscripciones.items %}
+  <table class="table table-bordered border-primary table-responsive">
+    <thead>
+      <tr class="table-dark">
+        <th>Nro Socio</th>
+        <th>Apellido</th>
+        <th>Disciplina</th>
+        <th>Categoria</th>
+        <th>Instructor</th>
+        <th>Valor base</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for inscripcion in inscripciones.items%}
+      <tr class="table-secondary">
+        <th class="text-center align-middle">{{inscripcion.socio.id}}</th>
+        <th class="text-center align-middle">
+          {{inscripcion.socio.usuario.last_name}}
+        </th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.nombre}}
+        </th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.categoria}}
+        </th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.entrenador}}
+        </th>
+        <th class="text-center align-middle">
+          {{inscripcion.disciplina.costo_mensual}}
+        </th>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+  {% else %}
+  <h1>No existen datos para mostrar</h1>
+  {% endif %}
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {% for page_num in inscripciones.iter_pages(left_edge=1, right_edge=1,
+      left_current = 1, right_current=2 ) %} {% if page_num %} {% if page_num ==
+      inscripciones.page %}
+      <li class="page-item active">
+        <a
+          class="page-link"
+          href="{{url_for('pagos.inscripciones_index', page=page_num)}}"
+        >
+          {{page_num}}
+        </a>
+      </li>
+      {%else%}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{{url_for('pagos.inscripciones_index', page=page_num)}}"
+        >
+          {{page_num}}
+        </a>
+      </li>
+
+      {% endif %} {% else %} ... {% endif %} {% endfor %}
+    </ul>
+  </nav>
+</div>
+
+{% endblock %}
