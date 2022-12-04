@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField,BooleanField
 from wtforms.validators import ValidationError, DataRequired, Length, NumberRange
 
-class DisciplinaNewForm(FlaskForm):
+class DisciplinaForm(FlaskForm):
      nombre = StringField(label=('nombre'), validators=[DataRequired(),Length(min=4, max=255)])
      categoria = StringField(label=('categoria'), validators=[DataRequired(),Length(min=4, max=255)])
      entrenador = StringField(label=('entrenador'), validators=[DataRequired(),Length(min=4, max=255)])

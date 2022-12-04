@@ -13,9 +13,9 @@
    <nav class="navbar navbar-dark bg-dark"></nav>
    <div class="container my-3">
    <div class="d-grid gap-2">
+     <h3> Disciplinas </h3> 
      <th><a href="{{url_for('disciplinas.inscribir_Disciplina')}}"><button class="btn btn-primary"> Crear Nuevo + </button></a></th>
      <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
-         <h3> Disciplinas </h3> 
          <table class="table table-striped">
             <thead>
                <tr class="table-dark">
@@ -42,8 +42,8 @@
                         <th>{{disciplina.costo_mensual}}</th>
                         <th>{{disciplina.estado}}</th>
                         <td width="30">
-                          <th><a href="{{url_for('disciplinas.edit_discip',id=disciplina.id)}}"><button class="btn btn-link">Editar</button></a></th>
-                          <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button class="btn btn-link">Cambiar</button></a></th>
+                           <th><a href="{{url_for('disciplinas.edit_discip',id=disciplina.id)}}"><button class="btn btn-link">Editar</button></a></th> 
+                           <th><a href="{{url_for('disciplinas.modify_state',id=disciplina.id)}}"><button class="btn btn-link">Cambiar</button></a></th>
                         </td>
                      </tr>
                     {% endfor %} 
@@ -80,6 +80,3 @@
 </body>
 </html>
 {% endblock %}
-
-
-         

@@ -55,9 +55,11 @@ def get_elementos_pagina():
   return elementos_pagina
   
 # Actualiza la informacion de una Disciplina  
-def update_disciplina(id, **kwargs):
+ 
+def updatedisciplina(id, kwargs):
   disciplina = get_disciplina(id)
   disciplina.update(**kwargs)
+  db.session.merge(disciplina)
   db.session.commit()
   return disciplina
 
