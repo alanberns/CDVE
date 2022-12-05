@@ -23,44 +23,49 @@ from src.web.helpers.permissions.user_permission import (
 )
 
 
-disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplinas")
+disciplina_blueprint = Blueprint(
+    "disciplinas", __name__, url_prefix="/disciplinas")
 
 # Paginacion del listado de Disciplinas
+
+
 @disciplina_blueprint.get("/")
 @login_required
 @disciplina_show_req
 def disciplina_index():
-   elem_pagina = board.get_elementos_pagina()
-   page = int(request.args.get('page', 1))
-   disciplinas_pag = board.list_disciplinas(page, elem_pagina)
-   return render_template('disciplinas/disciplinas.html', disciplinas_pag= disciplinas_pag)
+    elem_pagina = board.get_elementos_pagina()
+    page = int(request.args.get('page', 1))
+    disciplinas_pag = board.list_disciplinas_paginadas(page, elem_pagina)
+    return render_template('disciplinas/disciplinas.html', disciplinas_pag=disciplinas_pag)
 
-#Creacion de una nueva disciplina
+# Creacion de una nueva disciplina
+
+
 @disciplina_blueprint.post("/")
 @login_required
 @disciplina_create_req
 def newdcp():
-     form = DisciplinaForm(request.form)
-     checkDiscipline = board.find_same_discipline(form.nombre.data, form.categoria.data, form.entrenador.data,  form.dia.data, form.hora.data)
-     if not form.validate:
+    form = DisciplinaForm(request.form)
+    checkDiscipline = board.find_same_discipline(
+        form.nombre.data, form.categoria.data, form.entrenador.data,  form.dia.data, form.hora.data)
+    if not form.validate:
         flash("No se puede hacer el ingreso de nueva disciplina")
-     if (not checkDiscipline):
-         disciplina = board.create_disciplina(
-         nombre= form.nombre.data,
-         categoria= form.categoria.data,
-         entrenador= form.entrenador.data,
-         dia = form.dia.data,
-         hora = form.hora.data,
-         costo_mensual = form.costo_mensual.data,
-         estado = True,
-       )
-         flash ("Se creo una nueva Disciplina", "success")
-         return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id)) 
-     flash ("Error: Disciplina Existente") 
-     return redirect(url_for('disciplinas.disciplina_index'))
-   
-    
-          
+    if (not checkDiscipline):
+        disciplina = board.create_disciplina(
+            nombre=form.nombre.data,
+            categoria=form.categoria.data,
+            entrenador=form.entrenador.data,
+            dia=form.dia.data,
+            hora=form.hora.data,
+            costo_mensual=form.costo_mensual.data,
+            estado=True,
+        )
+        flash("Se creo una nueva Disciplina", "success")
+        return redirect(url_for('disciplinas.disciplina_index', id=disciplina.id))
+    flash("Error: Disciplina Existente")
+    return redirect(url_for('disciplinas.disciplina_index'))
+
+
 # Actualiza la informacion de una Disciplina
 @disciplina_blueprint.get("/editdiscip/<int:id>")
 @login_required
@@ -77,32 +82,32 @@ def inscribir_Disciplina():
     return render_template('disciplinas/inscribirDisciplina.html')
 
 
-#Actualiza la informacion de una Disciplina
+# Actualiza la informacion de una Disciplina
 @disciplina_blueprint.post("/update/<int:id>")
 @login_required
 @disciplina_update_req
 def update_disciplina(id):
-   disciplina = board.get_disciplina(id)
-   form = DisciplinaForm()
-   checkDiscipline = board.find_same_discipline(form.nombre.data, form.categoria.data, form.entrenador.data,  form.dia.data, form.hora.data)
-   if not form.validate:
+    disciplina = board.get_disciplina(id)
+    form = DisciplinaForm()
+    checkDiscipline = board.find_same_discipline(
+        form.nombre.data, form.categoria.data, form.entrenador.data,  form.dia.data, form.hora.data)
+    if not form.validate:
         flash("No se puede hacer el ingreso de nueva disciplina")
-   if (not checkDiscipline):
-      kwargs = {
-             "id": id,
-             "nombre": disciplina.nombre,
-             "categoria" : disciplina.categoria,
-             "entrenador": form.entrenador.data,
-             "dia": form.dia.data,
-             "hora": form.hora.data,
-             "costo_mensual" : form.costo_mensual.data,
-             "estado" : disciplina.estado,
-      }
-      board.updatedisciplina(id, kwargs)
-      flash ("Se actualizo la informacion de Disciplina", "success")
-      return redirect(url_for('disciplinas.disciplina_index', id=id))
-        
-   
+    if (not checkDiscipline):
+        kwargs = {
+            "id": id,
+            "nombre": disciplina.nombre,
+            "categoria": disciplina.categoria,
+            "entrenador": form.entrenador.data,
+            "dia": form.dia.data,
+            "hora": form.hora.data,
+            "costo_mensual": form.costo_mensual.data,
+            "estado": disciplina.estado,
+        }
+        board.updatedisciplina(id, kwargs)
+        flash("Se actualizo la informacion de Disciplina", "success")
+        return redirect(url_for('disciplinas.disciplina_index', id=id))
+
 
 # Modifica el estado Activo o Inactivo de una disciplina
 @disciplina_blueprint.get("/modifyState/<int:id>")
