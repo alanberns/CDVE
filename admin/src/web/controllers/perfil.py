@@ -7,6 +7,7 @@ from flask import url_for
 from flask import flash
 from datetime import datetime
 from flask import session
+import re
 
 from src.core import board
 from src.web.helpers.auth import login_required
@@ -115,7 +116,7 @@ def change_password():
         return redirect(url_for("perfil.change_password_view"))
 
     # Contraseñas deben coincidir. No funciona EqualTo
-    if not form.password_nueva == form.password_repetir:
+    if not form.password_nueva.data == form.password_repetir.data:
         flash("Las contraseñas deben coincidir", "danger")
         return redirect(url_for("perfil.change_password_view"))
 
@@ -138,7 +139,7 @@ def validate_only_letters(string):
         if char not in valid_chars:
             return False
     return True
-    
+
 
 def validate_email(email):
     """
