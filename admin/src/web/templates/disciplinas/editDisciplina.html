@@ -24,6 +24,7 @@
                 <h6></h6> 
                 <h3>Ingrese nueva informacion</h3>
                 <form action = "{{url_for('disciplinas.update_disciplina', id=disciplina.id)}}" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                    <div class="ms-3">
                       <label for="entrenador" class="form-label">* Instructor</label>
                       <input type="text" class="form-control" id="entrenador" name = "entrenador" placeholder= "" required="1">
