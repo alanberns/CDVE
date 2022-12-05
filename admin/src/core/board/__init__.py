@@ -12,6 +12,7 @@ from src.core.board.inscripcion import Inscripcion
 from src.core.board.usuario_tiene_rol import Usuario_tiene_rol
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from sqlalchemy import func
 
 
 # Lista todas las disciplinas
@@ -130,14 +131,14 @@ def exist_email(email):
     """
     Verifica que un email existe en la BD
     """
-    return Usuario.query.filter(Usuario.email == email).first() != None
+    return db.session.query(Usuario).filter(func.lower(Usuario.email) == func.lower(email)).first() != None
 
 
 def exist_username(username):
     """
     Verifica que un username existe en la BD
     """
-    return Usuario.query.filter(Usuario.username == username).first() != None
+    return db.session.query(Usuario).filter(func.lower(Usuario.username) == func.lower(username)).first() != None
 
 
 def filter_usuarios(email, activo, page=1, per_page=10):
