@@ -31,7 +31,7 @@
                 @click="showComprobante(pago.id)"
                 class="btn waves-effect green accent-4"
               >
-                ver comprobante
+                ver<i class="material-icons right">photo_library</i>
               </button>
             </td>
             <td v-else>
