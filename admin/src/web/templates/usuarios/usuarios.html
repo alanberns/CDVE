@@ -79,11 +79,13 @@
         left_current = 1, right_current=2 ) %}
           {% if page %}
               {% if page != usuarios_pag.page %}
-                  <li class="page-item active">
-                    <a class="page-link" href="{{ url_for('usuarios.usuario_index', page=page ) }}">{{page}}</a>
-                  </li>
+                <li class="page-item active">
+                  <a class="page-link" href="{{ url_for('usuarios.usuario_index', page=page, email=email, estado=estado ) }}">{{page}}</a>
+                </li>
               {% else %}
-                  <li class="page-item"><a class="page-link" href="{{ url_for('usuarios.usuario_index', page=page ) }}">{{page}}</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('usuarios.usuario_index', page=page, email=email, estado=estado ) }}">{{page}}</a>
+                </li>
               {% endif %}
           {% else %}
             ...

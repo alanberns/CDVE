@@ -36,10 +36,14 @@ def usuario_index():
     form = BusquedaUsuarioForm()
     elementos_pagina = board.get_elementos_pagina()
     page = int(request.args.get("page", 1))
+    email = request.args.get('email', default="")
+    estado = request.args.get('estado', default="")
+    if email != "" or estado != "":
+        form.set_from_busqueda(email,estado)
 
-    usuarios_pag = board.list_usuarios(page, elementos_pagina)
+    usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
     return render_template(
-        "usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form
+        "usuarios/usuarios.html", usuarios_pag=usuarios_pag, form=form, email=email, estado=estado,
     )
 
 
@@ -56,24 +60,7 @@ def busqueda_filtrada():
         estado = form.estado.data
         email = form.email.data
 
-        # Paginación
-        elementos_pagina = board.get_elementos_pagina()
-        page = int(request.args.get("page", 1))
-        usuarios_pag = board.filter_usuarios(email, estado, page, elementos_pagina)
-
-        estado_choices = {
-            "": "Todos",
-            "true": "Activo",
-            "false": "Inactivo",
-        }
-        estado_choice = estado_choices[estado]
-
-        return render_template("usuarios/usuarios.html",
-            usuarios_pag=usuarios_pag,
-            email=email,
-            estado=estado_choice,
-            form=form,
-        )
+        return redirect(url_for('usuarios.usuario_index', email=email, estado=estado))
     else:
         flash("No se pudo realizar la busqueda", "danger")
         return redirect(url_for("usuarios.usuario_index"))
