@@ -58,21 +58,6 @@ def modify_perfil():
             flash("el username ingresado ya está registrado", "danger")
             return redirect(url_for("perfil.show_perfil"))
 
-    # Validar email
-    if not validate_email(form.email.data):
-        flash("Ingrese un email con un formato válido", "danger")
-        return redirect(url_for("perfil.show_perfil"))
-    # Validar nombre, apellido y username
-    if not validate_only_letters(form.username.data):
-        flash("el nombre de usuario solo debe contener letras", "danger")
-        return redirect(url_for("perfil.show_perfil"))
-    if not validate_only_letters(form.first_name.data):
-        flash("el nombre solo debe contener letras", "danger")
-        return redirect(url_for("perfil.show_perfil"))
-    if not validate_only_letters(form.last_name.data):
-        flash("el apellido solo debe contener letras", "danger")
-        return redirect(url_for("perfil.show_perfil"))
-
     kwargs = {
         "id": usuario.id,
         "email": form.email.data,
@@ -114,7 +99,7 @@ def change_password():
         return redirect(url_for("perfil.change_password_view"))
 
     # Contraseñas deben coincidir. No funciona EqualTo
-    if not form.password_nueva.data == form.password_repetir.data:
+    if not form.password_nueva == form.password_repetir:
         flash("Las contraseñas deben coincidir", "danger")
         return redirect(url_for("perfil.change_password_view"))
 
@@ -126,22 +111,3 @@ def change_password():
     board.update_password(**kwargs)
     flash("Se cambió su contraseña", "success")
     return redirect(url_for("perfil.change_password_view"))
-
-
-def validate_only_letters(string):
-    """
-    Verifica que el string solo contenga letras
-    """
-    valid_chars = " qwertyuiopasdfghjklñzxcvbnmQWERTYUIOPASDFGHJKLÑZXCVBNMÁÉÚÍÓáéíóú"
-    for char in string:
-        if char not in valid_chars:
-            return False
-    return True
-
-
-def validate_email(email):
-    """
-    verifica que el email ingresado tenga un formato valido
-    """
-    expresion_regular = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
-    return re.match(expresion_regular, email) is not None

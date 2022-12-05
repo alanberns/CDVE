@@ -4,27 +4,19 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
+
 <div class="d-flex flex-column align-items-center">
-  <h1 class="mx-5"> Usuarios </h1>
+  <h1 class="mx-5">Usuarios </h1>
 
-  <a href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
-
-  <section id="borde_contenedor"><h6>Buscar por:</h6>
-    <form  class="row g-3 mx-5" action="{{ url_for('usuarios.busqueda_filtrada') }}" method="post">
-      {{ form.csrf_token }} {{ form.hidden_tag() }}
-      <div class="form-group">
-        {{form.email.label(class="form=control-label")}}
-        {{form.email(class="form-control form=control-lg")}}
+  <section id="borde_contenedor">
+    <h5>Resultados de la busqueda:</h5>
+    <div class="form-group">
+      <p><strong>Email: </strong> {{email}}</p>
+      <p><strong>Estado: </strong> {{estado}}</p>
+      <div style=text-align:center;>
+        <a href="{{ url_for('usuarios.usuario_index') }}"><button id="borde_boton"><i class="bi bi-trash3-fill"></i> Limpiar filtros</button></a>
       </div>
-
-      <div class="form-group">
-        {{form.estado.label(class="form=control-label")}}
-        {{form.estado(class="form-select")}}
-      </div>
-        <div class="d-flex flex-row justify-content-center">
-          {{form.buscar(class="btn btn-primary")}}
-        </div>
-    </form>
+    </div>
   </section>
 
   <table class="table table-striped">
@@ -79,7 +71,12 @@
     {%- for page in usuarios_pag.iter_pages() %}
         {% if page %}
             {% if page != usuarios_pag.page %}
-                <a href="{{ url_for('usuarios.usuario_index', page=page ) }}"><button class="btn btn-outline-primary">{{ page }}</button></a>
+                <form action="{{ url_for('usuarios.busqueda_filtrada', page=page) }}" method="post">
+                  {{ form.csrf_token }}
+                  <input type="hidden" value="{{email}}" name="email">
+                  <input type="hidden" value="{{activo}}" name="estado">
+                  <button class="btn btn-outline-primary">{{ page }}</button>
+                </form>
             {% else %}
                 <strong class="btn btn-primary">{{ page }}</strong>
             {% endif %}

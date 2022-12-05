@@ -4,7 +4,13 @@
       class="center-align flow-text token-expired-message"
       v-if="loginStore.tokenExpired"
     >
-      Token expirado, por favor inicie sesion nuevamente
+      Token Expirado
+    </p>
+    <p
+      class="center-align flow-text token-expired-message"
+      v-if="error_message"
+    >
+      {{ error_message }}
     </p>
     <div class="row">
       <form
@@ -20,7 +26,7 @@
               id="first_name"
               type="text"
               class="validate center-align"
-              v-model="user"
+              v-model="email"
             />
             <label for="first_name">Email</label>
           </div>
@@ -64,19 +70,36 @@ export default {
   data() {
     return {
       info: null,
-      user: "",
+      email: "",
       password: "",
+      error_message: "",
     };
   },
   methods: {
+    validEmail: function (email) {
+      var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // eslint-disable-line
+      return regex.test(email);
+    },
     async login() {
+      if (!this.email) {
+        this.error_message = "Por favor ingrese su email";
+        return true;
+      } else if (!this.validEmail(this.email)) {
+        console.log("email invalido");
+        this.error_message = "Por favor ingrese un mail valido";
+        return true;
+      }
+      if (!this.password) {
+        this.error_message = "Por favor ingrese su contraseña";
+        return true;
+      }
       await apiService
         .post(
           "/login",
           {},
           {
             auth: {
-              username: this.user,
+              username: this.email,
               password: this.password,
             },
           }
@@ -84,9 +107,9 @@ export default {
         .then((response) => {
           localStorage.setItem("token", response.data.token);
           this.loginStore.signIn(response.data.token);
+          router.push("/");
         })
-        .catch((error) => console.log(error));
-      router.push("/");
+        .catch((error) => (this.error_message = error.response.data.message));
     },
   },
 };
