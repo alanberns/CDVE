@@ -2,8 +2,12 @@ import { defineStore } from "pinia";
 
 export const useConfigStore = defineStore("configStore", {
   state: () => ({
-    config: [],
+    config: {},
   }),
   actions: {},
-  getters: {},
+  getters: {
+    showListPagos(state) {
+      return state.config.tabla_pagos;
+    },
+  },
 });

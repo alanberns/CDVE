@@ -176,7 +176,7 @@ def config():
     Funcion que devuelve el email y numero de telefono del club.
     """
     config = board.list_configuracion()
-    return jsonify(info=config.serialize_config)
+    return jsonify(config.serialize_config)
 
 
 @cross_origin
