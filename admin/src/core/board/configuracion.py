@@ -50,3 +50,11 @@ class Configuracion(db.Model):
             "email": self.email_club,
             "phone": self.numero_club,
         }
+
+    @property
+    def serialize_config(self):
+        """Devuelve email y telefono en formato json"""
+        return {
+            "elementos_pagina": self.elementos_pagina,
+            "tabla_pagos": self.estado_pago
+        }

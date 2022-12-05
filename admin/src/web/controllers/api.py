@@ -170,6 +170,16 @@ def info_club():
 
 
 @cross_origin
+@api_blueprint.get("/club/config")
+def config():
+    """
+    Funcion que devuelve el email y numero de telefono del club.
+    """
+    config = board.list_configuracion()
+    return jsonify(info=config.serialize_config)
+
+
+@cross_origin
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
     """
@@ -315,7 +325,7 @@ def get_statistics_concurrencia(current_user):
         for disciplina in disciplinas:
             c = c + len(disciplina.socio)
         # Si la disciplina está anotada con una hora "9:00"en lugar de "09:00"
-        if hora in ["09","08","07","06"]:
+        if hora in ["09", "08", "07", "06"]:
             disciplinas = board.get_disciplinas_time(horas_sin_cero[hora])
             for disciplina in disciplinas:
                 c = c + len(disciplina.socio)

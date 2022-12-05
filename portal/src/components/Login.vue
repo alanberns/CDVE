@@ -60,12 +60,14 @@
 import router from "@/router";
 import { apiService } from "../apiService";
 import { useLoginStore } from "../stores/LoginStore.js";
+import { useConfigStore } from "../stores/ConfigStore";
 
 export default {
   name: "Login",
   setup() {
     const loginStore = useLoginStore();
-    return { loginStore };
+    const configStore = useConfigStore();
+    return { loginStore, configStore };
   },
   data() {
     return {
@@ -93,6 +95,10 @@ export default {
         this.error_message = "Por favor ingrese su contraseña";
         return true;
       }
+      await this.getUser();
+      await this.getConfig();
+    },
+    async getUser() {
       await apiService
         .post(
           "/login",
@@ -110,6 +116,15 @@ export default {
           router.push("/");
         })
         .catch((error) => (this.error_message = error.response.data.message));
+    },
+    async getConfig() {
+      let url = "club/config";
+      apiService
+        .get(url)
+        .then((response) => (this.configStore.config = response.data))
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };
