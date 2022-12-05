@@ -11,7 +11,7 @@
             <router-link to="/user">Perfil</router-link>
           </li>
           <!-- <li><router-link to="/login">Login</router-link></li> -->
-          <li v-if="loginStore.isAuthenticated">
+          <li v-if="loginStore.isAuthenticated && configStore.showListPagos">
             <router-link to="/pagos">Pagos</router-link>
           </li>
           <li v-if="loginStore.isAuthenticated">
@@ -30,6 +30,7 @@
 
 <script>
 import { useLoginStore } from "../stores/LoginStore";
+import { useConfigStore } from "../stores/ConfigStore";
 import LoginButton from "./LoginButton.vue";
 export default {
   name: "NavbarComponent",
@@ -38,7 +39,8 @@ export default {
   },
   setup() {
     const loginStore = useLoginStore();
-    return { loginStore };
+    const configStore = useConfigStore();
+    return { loginStore, configStore };
   },
 };
 </script>

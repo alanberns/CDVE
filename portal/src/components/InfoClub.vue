@@ -27,16 +27,18 @@
                     </div>
                     <div class="card-action grey">
                         <router-link to="/disciplinas"><p class="white-text">Nuestras disciplinas</p></router-link>
-                        <router-link to="/statistics/sociosPorDisciplina"><p class="white-text">Inscriptos por disciplina</p></router-link>
-                        <router-link to="/statistics/concurrencia"><p class="white-text">Concurrencia por hora</p></router-link>
-                        <router-link to="/statistics/genero"><p class="white-text">Socios por género</p></router-link>
+                        <div v-if="loginStore.isAuthenticated">
+                            <router-link to="/statistics/sociosPorDisciplina"><p class="white-text">Inscriptos por disciplina</p></router-link>
+                            <router-link to="/statistics/concurrencia"><p class="white-text">Concurrencia por hora</p></router-link>
+                            <router-link to="/statistics/genero"><p class="white-text">Socios por género</p></router-link>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="personal">
+    <section id="personal" v-if="loginStore.isAuthenticated">
         <div class="row">
             <div class="col s12 m6">
                 <div class="card grey darken-1">
@@ -76,6 +78,7 @@
 </template>
 
 <script>
+import { useLoginStore } from "../stores/LoginStore";
 import { apiService } from "../apiService";
     export default {
     name: "InfoClub",
@@ -83,6 +86,10 @@ import { apiService } from "../apiService";
         return {
         club_info: [],
         };
+    },
+    setup() {
+        const loginStore = useLoginStore();
+        return { loginStore };
     },
     created() {
         let url = "club/info";

@@ -10,52 +10,58 @@
     >
       Su pago fue realizado con exito
     </p>
-
-    <div v-if="loading" class="progress">
-      <div class="indeterminate"></div>
+    <div v-if="configStore.showListPagos">
+      <div v-if="loading" class="progress">
+        <div class="indeterminate"></div>
+      </div>
+      <table class="responsive-table centered highlight">
+        <thead>
+          <tr>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Comprobante</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="pago in pagos" :key="pago.id">
+            <td>{{ pago.monto }}</td>
+            <td>{{ formatDate(pago.fecha) }}</td>
+            <td v-if="pago.comprobante">
+              <button
+                @click="showComprobante(pago.id)"
+                class="btn waves-effect green accent-4"
+              >
+                ver<i class="material-icons right">photo_library</i>
+              </button>
+            </td>
+            <td v-else>
+              <button
+                @click="uploadComprobante(pago.id)"
+                class="btn waves-effect red accent-4"
+              >
+                Subir<i class="material-icons right">cloud_upload</i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="container">
+        <ul class="pagination">
+          <li
+            v-for="page in pages"
+            v-bind:key="page"
+            v-bind:class="{ active: page == current_page }"
+            class="waves-effect"
+          >
+            <a @click="nextPage(page)" href="#">{{ page }}</a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <table class="responsive-table centered highlight">
-      <thead>
-        <tr>
-          <th>Monto</th>
-          <th>Fecha</th>
-          <th>Comprobante</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="pago in pagos" :key="pago.id">
-          <td>{{ pago.monto }}</td>
-          <td>{{ formatDate(pago.fecha) }}</td>
-          <td v-if="pago.comprobante">
-            <button
-              @click="showComprobante(pago.id)"
-              class="btn waves-effect green accent-4"
-            >
-              ver comprobante
-            </button>
-          </td>
-          <td v-else>
-            <button
-              @click="uploadComprobante(pago.id)"
-              class="btn waves-effect red accent-4"
-            >
-              Subir<i class="material-icons right">cloud_upload</i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="container">
-      <ul class="pagination">
-        <li
-          v-for="page in pages"
-          v-bind:key="page"
-          v-bind:class="{ active: page == current_page }"
-          class="waves-effect"
-        >
-          <a @click="nextPage(page)" href="#">{{ page }}</a>
-        </li>
-      </ul>
+    <div v-else>
+      <p class="center-align flow-text">
+        La tabla de pagos se encuentra deshabilitada por el momento
+      </p>
     </div>
   </div>
 </template>
@@ -64,6 +70,8 @@
 import { apiService } from "../apiService";
 import { useCuotaPickedStore } from "../stores/CuotaPickedStore";
 import { useComprobanteStore } from "../stores/ComprobanteStore";
+import { useConfigStore } from "../stores/ConfigStore";
+
 import router from "@/router";
 import moment from "moment";
 
@@ -72,7 +80,8 @@ export default {
   setup() {
     const cuotaPickedStore = useCuotaPickedStore();
     const comprobanteStore = useComprobanteStore();
-    return { cuotaPickedStore, comprobanteStore };
+    const configStore = useConfigStore();
+    return { cuotaPickedStore, comprobanteStore, configStore };
   },
   data() {
     return {
@@ -83,6 +92,7 @@ export default {
     };
   },
   async mounted() {
+    await this.getConfig();
     await this.nextPage();
   },
   beforeUnmount() {
@@ -123,6 +133,15 @@ export default {
           this.loading = false;
         });
       router.push("/pagos");
+    },
+    async getConfig() {
+      let url = "club/config";
+      apiService
+        .get(url)
+        .then((response) => (this.configStore.config = response.data))
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

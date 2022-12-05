@@ -8,7 +8,7 @@ from datetime import datetime
 from datetime import timedelta
 from flask import current_app
 from functools import wraps
-from flask_cors import cross_origin
+# from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
 from src.web.helpers.uploads_path import getComprobantePath
 from flask import send_file
@@ -41,7 +41,7 @@ def token_required(f):
     return decorated
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.post("/login")
 def login():
     """
@@ -82,7 +82,7 @@ def login():
     )
 
 
-@cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
+# @cross_origin  # Sin esto no permite hacer la peticion localmente desde el front
 @api_blueprint.get("/me/payments")
 @token_required
 def list_payments(current_user):
@@ -103,7 +103,7 @@ def list_payments(current_user):
     return jsonify(payments)
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.post("/me/payments")
 @token_required
 def pay(current_user):
@@ -159,7 +159,7 @@ def pay(current_user):
     return jsonify(payments=pago.serialize)
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/club/info")
 def info_club():
     """
@@ -169,7 +169,17 @@ def info_club():
     return jsonify(info=config.serialize_info_club)
 
 
-@cross_origin
+# @cross_origin
+@api_blueprint.get("/club/config")
+def config():
+    """
+    Funcion que devuelve el email y numero de telefono del club.
+    """
+    config = board.list_configuracion()
+    return jsonify(config.serialize_config)
+
+
+# @cross_origin
 @api_blueprint.get("/club/disciplines")
 def get_disciplines():
     """
@@ -196,7 +206,7 @@ def get_disciplines():
     return data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/me/profile")
 @token_required
 def get_user_info(current_user):
@@ -221,7 +231,7 @@ def get_user_info(current_user):
     return usuario_data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/statistics/inscripcionesPorDisciplina")
 @token_required
 def get_statistics_inscripcionesPorDisciplina(current_user):
@@ -259,6 +269,8 @@ def get_socio_state(current_user):
             "gender": socio.genero,
             "address": socio.direccion,
             "phone": socio.telefono,
+            "first_name": usuario.first_name,
+            "last_name": usuario.last_name,
         },
     }
     if not board.es_moroso(socio.id):
@@ -271,13 +283,19 @@ def get_socio_state(current_user):
     return usuario_data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/statistics/concurrencia")
 @token_required
 def get_statistics_concurrencia(current_user):
     """
     Retorna la cantidad de personas que asisten al club por hora
     """
+    horas_sin_cero = {
+        "09": "9",
+        "08": "8",
+        "07": "7",
+        "06": "6",
+    }
     horas = [
         "06",
         "07",
@@ -306,6 +324,11 @@ def get_statistics_concurrencia(current_user):
         c = 0
         for disciplina in disciplinas:
             c = c + len(disciplina.socio)
+        # Si la disciplina está anotada con una hora "9:00"en lugar de "09:00"
+        if hora in ["09", "08", "07", "06"]:
+            disciplinas = board.get_disciplinas_time(horas_sin_cero[hora])
+            for disciplina in disciplinas:
+                c = c + len(disciplina.socio)
         cantidad.append(c)
     data = {
         "hora": hora_data,
@@ -315,7 +338,7 @@ def get_statistics_concurrencia(current_user):
     return data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/statistics/genero")
 @token_required
 def get_statistics_genero(current_user):
@@ -349,7 +372,7 @@ def _allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.post("/me/comprobante")
 @token_required
 def comprobante(current_user):
@@ -369,7 +392,7 @@ def comprobante(current_user):
     return jsonify({"message": f"Comprobante guardado satisfactoriamente"}), 200
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/me/disciplines")
 @token_required
 def me_get_disciplines(current_user):
@@ -395,7 +418,7 @@ def me_get_disciplines(current_user):
     return data
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/me/cuotas")
 @token_required
 def me_get_cuotas(current_user):
@@ -411,7 +434,7 @@ def me_get_cuotas(current_user):
     return jsonify(cuotas=[cuota.serialize for cuota in cuotas])
 
 
-@cross_origin
+# @cross_origin
 @api_blueprint.get("/me/comprobante")
 @token_required
 def get_comprobante(current_user):

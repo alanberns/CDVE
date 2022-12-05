@@ -90,3 +90,7 @@ class BusquedaUsuarioForm(FlaskForm):
         validators=[],
     )
     buscar = SubmitField(label=("Buscar"))
+
+    def set_from_busqueda(self, email, estado):
+        self.email.data = email
+        self.estado.data = estado
