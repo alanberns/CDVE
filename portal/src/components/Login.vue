@@ -112,7 +112,7 @@ export default {
         )
         .then((response) => {
           localStorage.setItem("token", response.data.token);
-          this.loginStore.signIn(response.data.token);
+          this.loginStore.signIn(response.data.token,response.data.usuario);
           router.push("/");
         })
         .catch((error) => (this.error_message = error.response.data.message));

@@ -19,6 +19,12 @@
           </li>
         </ul>
         <ul id="nav-mobile2" class="right left hide-on-med-and-down">
+          <li v-if="loginStore.isAuthenticated">
+            <i class="material-icons">perm_identity</i>
+          </li>
+          <li v-if="loginStore.isAuthenticated">
+            {{usuario}}
+          </li>
           <li>
             <LoginButton></LoginButton>
           </li>
@@ -37,10 +43,18 @@ export default {
   components: {
     LoginButton,
   },
+  data() {
+    return {
+      usuario: "",
+    }
+  },
   setup() {
     const loginStore = useLoginStore();
     const configStore = useConfigStore();
     return { loginStore, configStore };
+  },
+  mounted() {
+    this.usuario = this.loginStore.usuario
   },
 };
 </script>
