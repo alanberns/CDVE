@@ -1,3 +1,12 @@
+# Sistema web para administrar un club deportivo y portal de acceso a socios.
+Proyecto de la materia: Proyecto de Software. 
+El sistema web administra socios, disciplinas, inscripciones, cuotas y pagos.
+Se utilizó la aquitectura MVC. El sistema cuenta con una API, la cual es consumida por la aplicación para socios.
+El portal de socios permite que estos vean sus cuotas, inscripciones y puedan realizar sus pagos.
+
+
+
+
 # Grupo 14
 
 Pablo Ormeño 05706/4
