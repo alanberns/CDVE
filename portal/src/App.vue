@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="position: relative; min-height: 100vh;">
     <br />
     <NavbarComponent></NavbarComponent>
     <br />

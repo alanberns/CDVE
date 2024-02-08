@@ -4,8 +4,8 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="container">
-  <h2 class="mx-5"> Usuarios </h2>
+<div class="container m-o row justify-content-center">
+  <h2 class="mx-5 col-auto text-center" > Usuarios </h2>
 
   <a class="nav-link btn btn-link" href="{{url_for('usuarios.add_usuario_view')}}"> <button><i class="bi bi-person-plus"></i> Nuevo</button></a>
 

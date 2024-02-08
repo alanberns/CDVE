@@ -1,5 +1,5 @@
 <template>
-    <footer class="page-footer black ">
+    <footer class="page-footer black " style="position: absolute; bottom: 0; width: 100%;">
         <div class="footer-copyright">
             <div class="container">
                 <div class="text-footer">
